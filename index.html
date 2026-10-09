@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KeoAI — كيو</title>
+<title>KeoAI — Keo, your hands-on AI</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230B0D0C'/%3E%3Crect x='6' y='8' width='20' height='16' rx='8' fill='%23C6F24B'/%3E%3Crect x='11' y='13' width='3' height='7' rx='1.5' fill='%230B0D0C'/%3E%3Crect x='18' y='13' width='3' height='7' rx='1.5' fill='%230B0D0C'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Aref+Ruqaa:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@500;700;900&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
@@ -15,17 +15,17 @@
 :root{
   --bg:#0B0D0C; --panel:#101312; --panel2:#151917; --line:rgba(235,240,225,.09);
   --text:#EDEFE6; --mut:#9BA398; --acc:#C6F24B; --acc-ink:#161d04; --err:#FF6B57;
-  --f-ar:'IBM Plex Sans Arabic',sans-serif; --f-lt:'Space Grotesk',monospace;
+  --f:'Space Grotesk',sans-serif; --fd:'Unbounded',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
-body{background:var(--bg);color:var(--text);font-family:var(--f-ar);overflow:hidden;
+body{background:var(--bg);color:var(--text);font-family:var(--f);overflow:hidden;
   background-image:radial-gradient(rgba(235,240,225,.045) 1px,transparent 1px);background-size:26px 26px}
 button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
 a{color:var(--acc)}
 ::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#232823;border-radius:9px;border:2px solid var(--bg)}
 
-/* ---------- أزرار وأيقونات ---------- */
+/* ---------- buttons & icons ---------- */
 .icbtn{width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;color:var(--mut);transition:.2s}
 .icbtn:hover{background:var(--panel2);color:var(--text)}
 .icbtn svg{width:19px;height:19px}
@@ -41,26 +41,28 @@ a{color:var(--acc)}
 .chip:hover{color:var(--text);border-color:rgba(235,240,225,.22)}
 .chip.active{background:var(--acc);border-color:var(--acc);color:var(--acc-ink);font-weight:600}
 
-/* ---------- الهيدر ---------- */
+/* ---------- header ---------- */
 header{height:58px;display:flex;align-items:center;gap:14px;padding:0 18px;border-bottom:1px solid var(--line);position:relative;z-index:40;background:rgba(11,13,12,.85);backdrop-filter:blur(8px)}
 #hamb{display:none}
 .brand{display:flex;align-items:baseline;gap:10px}
-.brand .ar{font-family:'Aref Ruqaa',serif;font-size:26px;line-height:1;color:var(--text)}
-.brand .lt{font-family:var(--f-lt);font-size:11px;letter-spacing:5px;color:var(--acc)}
+.brand .nm{font-family:var(--fd);font-size:21px;font-weight:700;line-height:1}
+.brand .nm i{font-style:normal;color:var(--acc)}
+.brand .lt{font-family:var(--f);font-size:11px;letter-spacing:5px;color:var(--mut)}
 .hspace{flex:1}
 .userchip{display:flex;align-items:center;gap:9px;padding:5px 12px 5px 6px;border:1px solid var(--line);border-radius:999px}
 .userchip .av{width:28px;height:28px;border-radius:50%;background:var(--acc);color:var(--acc-ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
 .userchip span{font-size:13px}
 
-/* ---------- البوابة (تسجيل الدخول) ---------- */
+/* ---------- gate ---------- */
 #gate{position:fixed;inset:0;z-index:80;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;
   background-image:radial-gradient(rgba(235,240,225,.05) 1px,transparent 1px);background-size:26px 26px;transition:opacity .5s}
 #gate.hide{opacity:0;pointer-events:none}
 .gate-inner{display:grid;grid-template-columns:340px 1fr;gap:60px;align-items:center;max-width:1000px;width:100%}
 #gateBot{width:340px}
-.gate-name{font-family:'Aref Ruqaa',serif;font-size:96px;line-height:1.1}
-.gate-latin{font-family:var(--f-lt);letter-spacing:9px;font-size:13px;color:var(--acc);margin:2px 0 18px}
-.gate-tag{color:var(--mut);font-size:16px;line-height:1.9;max-width:480px;margin-bottom:26px}
+.gate-name{font-family:var(--fd);font-weight:900;font-size:88px;line-height:1.05}
+.gate-name i{font-style:normal;color:var(--acc)}
+.gate-latin{letter-spacing:9px;font-size:13px;color:var(--acc);margin:6px 0 18px;font-weight:600}
+.gate-tag{color:var(--mut);font-size:16px;line-height:1.8;max-width:500px;margin-bottom:26px}
 .gate-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 #emailForm{display:flex;flex-direction:column;gap:10px;max-width:360px;margin-top:16px}
 #emailForm input{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 15px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:.2s}
@@ -69,20 +71,20 @@ header{height:58px;display:flex;align-items:center;gap:14px;padding:0 18px;borde
 #emailForm .row .btn{flex:1;justify-content:center}
 #emailToggle{font-size:13px;color:var(--mut)}
 #emailToggle:hover{color:var(--acc)}
-.gate-credit{margin-top:26px;font-size:12.5px;color:var(--mut)}
+.gate-credit{margin-top:26px;font-size:13px;color:var(--mut)}
 .gate-credit b{color:var(--text);font-weight:600}
 
-/* ---------- هيكل التطبيق ---------- */
+/* ---------- app layout ---------- */
 main{display:flex;height:calc(100vh - 58px)}
-#sidebar{width:282px;flex-shrink:0;border-inline-end:1px solid var(--line);display:flex;flex-direction:column;background:rgba(16,19,18,.5)}
+#sidebar{width:282px;flex-shrink:0;border-right:1px solid var(--line);display:flex;flex-direction:column;background:rgba(16,19,18,.5)}
 .sb-top{padding:14px}
 #btnNew{width:100%;justify-content:center}
-.sb-label{padding:6px 18px;font-size:11.5px;color:var(--mut);letter-spacing:1px}
+.sb-label{padding:6px 18px;font-size:11.5px;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase}
 #chatList{flex:1;overflow-y:auto;padding:4px 10px}
 .chatitem{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:13.5px;color:#cfd4c6;cursor:pointer;transition:.15s;position:relative}
 .chatitem:hover{background:var(--panel2)}
 .chatitem.on{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
-.chatitem.on::before{content:'';position:absolute;inset-inline-start:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:var(--acc)}
+.chatitem.on::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:var(--acc)}
 .ci-t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ci-x{opacity:0;color:var(--mut);width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center}
 .chatitem:hover .ci-x{opacity:1}
@@ -95,69 +97,71 @@ main{display:flex;height:calc(100vh - 58px)}
 .sb-user .em{font-size:11.5px;color:var(--mut);max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sb-user .grow{flex:1;min-width:0}
 
+/* ---------- chat ---------- */
 #chat{flex:1;display:flex;flex-direction:column;min-width:0}
 #chatScroll{flex:1;overflow-y:auto;padding:26px 22px 10px}
 .msg{max-width:800px;margin:0 auto 22px;animation:up .35s ease both}
 @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .msg-user{display:flex;justify-content:flex-end}
-.msg-user .bub{background:var(--panel2);border:1px solid var(--line);border-radius:16px 16px 4px 16px;padding:11px 15px;max-width:76%;font-size:14.5px;line-height:1.85;white-space:pre-wrap}
+.msg-user .bub{background:var(--panel2);border:1px solid var(--line);border-radius:16px 16px 4px 16px;padding:11px 15px;max-width:76%;font-size:14.5px;line-height:1.75;white-space:pre-wrap}
 .msg-user .files{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
 .ffile{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--mut);border:1px dashed var(--line);border-radius:8px;padding:3px 8px}
 .msg-keo{display:flex;gap:12px;align-items:flex-start}
 .msg-keo .mav{width:38px;height:38px;flex-shrink:0;border-radius:12px;background:var(--panel);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
 .msg-keo .mav svg{width:27px;height:27px}
 .msg-body{flex:1;min-width:0;padding-top:4px}
-.msg-text{font-size:15px;line-height:1.95}
+.msg-text{font-size:15px;line-height:1.8}
 .msg-text p{margin-bottom:8px}
 .msg-text h3.mdh{font-size:17px;margin:14px 0 8px;color:var(--acc)}
-.msg-text .mdli{position:relative;padding-inline-start:18px;margin:5px 0}
-.msg-text .mdli::before{content:'';position:absolute;inset-inline-start:2px;top:12px;width:6px;height:6px;border-radius:2px;background:var(--acc)}
-.msg-text .mdnum{color:var(--acc);font-weight:700;margin-inline-end:6px}
-.msg-text code.ic{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:var(--f-lt);font-size:13px;direction:ltr;unicode-bidi:embed}
-.caret{display:inline-block;width:9px;height:17px;background:var(--acc);vertical-align:-3px;margin-inline-start:3px;animation:ck .8s steps(2) infinite}
+.msg-text .mdli{position:relative;padding-left:18px;margin:5px 0}
+.msg-text .mdli::before{content:'';position:absolute;left:2px;top:11px;width:6px;height:6px;border-radius:2px;background:var(--acc)}
+.msg-text .mdnum{color:var(--acc);font-weight:700;margin-right:6px}
+.msg-text code.ic{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:var(--f);font-size:13px}
+.caret{display:inline-block;width:9px;height:17px;background:var(--acc);vertical-align:-3px;margin-left:3px;animation:ck .8s steps(2) infinite}
 @keyframes ck{50%{opacity:0}}
-.codeblk{direction:ltr;text-align:left;background:#0D100F;border:1px solid var(--line);border-radius:12px;margin:12px 0;overflow:hidden}
+.codeblk{background:#0D100F;border:1px solid var(--line);border-radius:12px;margin:12px 0;overflow:hidden}
 .codehead{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-bottom:1px solid var(--line)}
-.codehead span{font-family:var(--f-lt);font-size:11px;color:var(--mut);letter-spacing:1px}
+.codehead span{font-size:11px;color:var(--mut);letter-spacing:1px;text-transform:uppercase}
 .codehead div{display:flex;gap:6px}
 .cbtn{font-size:11.5px;color:var(--mut);border:1px solid var(--line);border-radius:7px;padding:3px 10px;transition:.15s}
 .cbtn:hover{color:var(--acc);border-color:rgba(198,242,75,.4)}
 .codeblk pre{padding:14px;overflow-x:auto}
-.codeblk code{font-family:var(--f-lt);font-size:12.8px;line-height:1.7;color:#d7dcc9;white-space:pre}
+.codeblk code{font-family:var(--f);font-size:12.8px;line-height:1.7;color:#d7dcc9;white-space:pre}
 .msg-acts{margin-top:8px;display:flex;gap:8px}
 .srcs{margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
 .srcs-t{font-size:12px;color:var(--mut)}
-.src{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:12px;color:#c3c9ba;text-decoration:none;transition:.15s;max-width:230px}
+.src{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:12px;color:#c3c9ba;text-decoration:none;transition:.15s;max-width:240px}
 .src:hover{border-color:rgba(198,242,75,.4);color:var(--text)}
-.src .n{color:var(--acc);font-weight:700;font-family:var(--f-lt)}
-.src .h{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr}
+.src .n{color:var(--acc);font-weight:700}
+.src .h{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pptstrip{margin-top:14px;display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
 .pslide{min-width:172px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 12px;position:relative}
-.pslide .pn{position:absolute;top:8px;inset-inline-end:10px;font-family:var(--f-lt);font-size:10px;color:var(--mut)}
+.pslide .pn{position:absolute;top:8px;right:10px;font-size:10px;color:var(--mut)}
 .pslide .pt{font-size:13px;font-weight:700;color:var(--acc);margin-bottom:7px;line-height:1.5}
 .pslide .pb{font-size:11.5px;color:var(--mut);line-height:1.7}
 .ppt-dl{margin-top:10px}
 
-/* شاشة الترحيب */
+/* ---------- welcome ---------- */
 .welcome{max-width:800px;margin:8vh auto 0;animation:up .5s ease both}
-.w-kicker{font-family:var(--f-lt);font-size:11px;letter-spacing:4px;color:var(--acc);margin-bottom:14px}
-.welcome h2{font-family:'Aref Ruqaa',serif;font-weight:400;font-size:52px;line-height:1.25;margin-bottom:10px}
-.welcome h2 span{display:block;font-size:30px;color:var(--mut)}
-.welcome>p{color:var(--mut);font-size:15.5px;line-height:2;margin-bottom:30px;max-width:520px}
-.pills{display:flex;flex-wrap:wrap;gap:10px;max-width:640px}
+.w-kicker{font-size:11px;letter-spacing:4px;color:var(--acc);margin-bottom:14px;font-weight:600}
+.welcome h2{font-family:var(--fd);font-weight:700;font-size:46px;line-height:1.2;margin-bottom:12px}
+.welcome h2 i{font-style:normal;color:var(--acc)}
+.welcome h2 span{display:block;font-family:var(--f);font-weight:500;font-size:24px;color:var(--mut);margin-top:10px}
+.welcome>p{color:var(--mut);font-size:15.5px;line-height:1.9;margin-bottom:30px;max-width:560px}
+.pills{display:flex;flex-wrap:wrap;gap:10px;max-width:660px}
 .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:11px 18px;font-size:13.5px;color:#cfd4c6;transition:.2s;background:rgba(16,19,18,.4)}
 .pill svg{width:16px;height:16px;color:var(--acc)}
 .pill:hover{border-color:rgba(198,242,75,.45);color:var(--text);transform:translateY(-2px)}
 
-/* ---------- صندوق الكتابة ---------- */
+/* ---------- composer ---------- */
 #composer{padding:10px 22px 16px}
 .comp-box{max-width:800px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 14px 10px;transition:border-color .2s}
 .comp-box:focus-within{border-color:rgba(198,242,75,.4)}
-#ta{width:100%;background:none;border:0;outline:none;resize:none;color:var(--text);font-family:inherit;font-size:14.5px;line-height:1.8;max-height:150px}
+#ta{width:100%;background:none;border:0;outline:none;resize:none;color:var(--text);font-family:inherit;font-size:14.5px;line-height:1.7;max-height:150px}
 #ta::placeholder{color:#6d756a}
 .comp-row{display:flex;align-items:center;gap:8px;margin-top:6px}
 .comp-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.sendbtn{margin-inline-start:auto;width:40px;height:40px;border-radius:12px;background:var(--acc);color:var(--acc-ink);display:flex;align-items:center;justify-content:center;transition:.2s}
+.sendbtn{margin-left:auto;width:40px;height:40px;border-radius:12px;background:var(--acc);color:var(--acc-ink);display:flex;align-items:center;justify-content:center;transition:.2s}
 .sendbtn:hover{filter:brightness(1.07)}
 .sendbtn svg{width:19px;height:19px}
 .sendbtn .i-stop{display:none}
@@ -171,27 +175,27 @@ main{display:flex;height:calc(100vh - 58px)}
 .atchip button{color:var(--mut)}.atchip button:hover{color:var(--err)}
 .comp-note{max-width:800px;margin:8px auto 0;text-align:center;font-size:11px;color:#5f675c}
 
-/* ---------- معاينة الموقع ---------- */
-#pv{width:0;overflow:hidden;border-inline-start:1px solid var(--line);display:flex;flex-direction:column;background:var(--panel);transition:width .45s cubic-bezier(.6,0,.3,1)}
+/* ---------- site preview ---------- */
+#pv{width:0;overflow:hidden;border-left:1px solid var(--line);display:flex;flex-direction:column;background:var(--panel);transition:width .45s cubic-bezier(.6,0,.3,1)}
 body.pv-open #pv{width:min(46vw,860px)}
 .pv-head{height:48px;flex-shrink:0;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line)}
 .pv-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;white-space:nowrap}
 .pv-title svg{width:16px;height:16px;color:var(--acc)}
-.pv-tools{margin-inline-start:auto;display:flex;gap:2px}
+.pv-tools{margin-left:auto;display:flex;gap:2px}
 .pv-tools .icbtn.active{color:var(--acc);background:var(--panel2)}
 .pv-body{flex:1;display:flex;justify-content:center;background:#070908;min-height:0}
 #pvFrame{width:100%;height:100%;border:0;background:#fff}
-#pv.mob #pvFrame{width:414px;border-inline:1px solid var(--line)}
+#pv.mob #pvFrame{width:414px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
 
-/* ---------- مسرح كيو ---------- */
-#stage{position:fixed;bottom:10px;left:20px;z-index:30;transition:left .45s cubic-bezier(.6,0,.3,1);width:250px;pointer-events:none;text-align:center}
-body.pv-open #stage{left:calc(min(46vw,860px) + 26px)}
+/* ---------- Keo stage ---------- */
+#stage{position:fixed;bottom:10px;right:20px;z-index:30;transition:right .45s cubic-bezier(.6,0,.3,1);width:250px;pointer-events:none;text-align:center}
+body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 #stageCap{display:inline-flex;align-items:center;gap:8px;background:rgba(16,19,18,.88);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:12.5px;color:#d7dbcd;margin-bottom:2px;backdrop-filter:blur(6px);min-height:31px}
 .capDot{width:7px;height:7px;border-radius:50%;background:var(--acc);animation:dotp 1.2s infinite;flex-shrink:0}
 @keyframes dotp{50%{opacity:.25;transform:scale(.7)}}
 #stageBot{width:240px;pointer-events:auto;cursor:pointer}
 
-/* ---------- شخصية كيو (SVG) ---------- */
+/* ---------- Keo character (SVG) ---------- */
 .bot svg{display:block;overflow:visible;width:100%}
 .b-shadow{fill:rgba(0,0,0,.42);transform-box:fill-box;transform-origin:center;animation:bsh 3.2s ease-in-out infinite}
 @keyframes bsh{0%,100%{transform:scaleX(1);opacity:.42}50%{transform:scaleX(.85);opacity:.26}}
@@ -242,7 +246,6 @@ body.pv-open #stage{left:calc(min(46vw,860px) + 26px)}
 .bot.happy .b-armR{transform:rotate(150deg)}
 .bot.carry .b-armL{transform:rotate(-16deg)}
 .bot.carry .b-armR{transform:rotate(16deg)}
-/* اللاب توب */
 .b-laptop{opacity:0;transform:translateY(16px);transition:.35s}
 .bot.laptop .b-laptop{opacity:1;transform:none}
 .b-lid{transform-box:view-box;transform-origin:160px 226px;transform:scaleY(.04);transition:transform .65s cubic-bezier(.34,1.4,.4,1)}
@@ -268,11 +271,11 @@ body.pv-open #stage{left:calc(min(46vw,860px) + 26px)}
 .bot.type .b-tl3{animation-delay:.5s}.bot.type .b-tl4{animation-delay:.75s}
 @keyframes tline{0%{transform:scaleX(.12);opacity:.25}55%,100%{transform:scaleX(1);opacity:1}}
 .b-cursor{fill:var(--acc);animation:ck .7s steps(2) infinite}
-.b-brackets{fill:var(--acc);font:700 15px var(--f-lt);text-anchor:middle;animation:ck 1s steps(2) infinite}
+.b-brackets{fill:var(--acc);font:700 15px var(--f);text-anchor:middle;animation:ck 1s steps(2) infinite}
 .b-slidecard{fill:#E9E3D4}
 .b-slidebar{fill:var(--acc)}
 .b-slideline{fill:#9a9484}
-.b-fc{font:700 12px var(--f-lt);fill:var(--acc);opacity:0;transform-box:fill-box}
+.b-fc{font:700 12px var(--f);fill:var(--acc);opacity:0;transform-box:fill-box}
 .b-fc2{fill:#EDEFE6}
 .bot.type .b-fc,.bot.code .b-fc{animation:fly 1.3s ease-out infinite}
 .bot.type .b-fc2,.bot.code .b-fc2{animation-delay:.45s}
@@ -283,96 +286,94 @@ body.pv-open #stage{left:calc(min(46vw,860px) + 26px)}
 .b-file line{stroke:#B9B4A6;stroke-width:2.5;stroke-linecap:round}
 .b-filefold{fill:#D9D3C2}
 .bot.carry .b-file{opacity:1}
-/* الرموز المصغّرة داخل الرسائل */
 .mini-eyes rect{transform-box:fill-box;transform-origin:center;animation:mblink 4.5s infinite}
 @keyframes mblink{0%,91%,100%{transform:scaleY(1)}94%{transform:scaleY(.1)}}
 .mini.working .mini-eyes rect{animation:mwork .3s infinite alternate}
 @keyframes mwork{from{opacity:1}to{opacity:.25}}
 
-/* ---------- توست ---------- */
+/* ---------- toasts ---------- */
 #toasts{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:8px;align-items:center}
-.toast{background:var(--panel2);border:1px solid var(--line);border-inline-start:3px solid var(--acc);border-radius:11px;padding:10px 18px;font-size:13.5px;animation:up .3s ease;box-shadow:0 8px 30px rgba(0,0,0,.45);max-width:88vw}
-.toast.err{border-inline-start-color:var(--err)}
+.toast{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:11px;padding:10px 18px;font-size:13.5px;animation:up .3s ease;box-shadow:0 8px 30px rgba(0,0,0,.45);max-width:88vw}
+.toast.err{border-left-color:var(--err)}
 
-/* ---------- الفتح الختامي (كوفيتي) ---------- */
+/* ---------- confetti ---------- */
 .confetti{position:fixed;width:8px;height:8px;z-index:95;pointer-events:none;border-radius:2px}
 
-/* ---------- موبايل ---------- */
+/* ---------- mobile ---------- */
 #backdrop{display:none}
 @media(max-width:900px){
   #hamb{display:inline-flex}
-  #sidebar{position:fixed;top:58px;bottom:0;inset-inline-start:0;z-index:60;transform:translateX(105%);transition:transform .35s;background:#0D100E}
-  html[dir="rtl"] #sidebar{transform:translateX(105%)}
+  #sidebar{position:fixed;top:58px;bottom:0;left:0;z-index:60;transform:translateX(-105%);transition:transform .35s;background:#0D100E}
   #sidebar.open{transform:none!important}
   #backdrop.show{display:block;position:fixed;inset:58px 0 0 0;background:rgba(0,0,0,.55);z-index:55}
   .gate-inner{grid-template-columns:1fr;gap:10px;text-align:center;overflow-y:auto;max-height:100%}
   #gateBot{width:210px;margin:0 auto}
-  .gate-name{font-size:64px}
-  .gate-tag{margin-inline:auto}
-  .gate-actions,#emailForm{justify-content:center;margin-inline:auto}
+  .gate-name{font-size:56px}
+  .gate-tag{margin:0 auto}
+  .gate-actions,#emailForm{justify-content:center;margin:0 auto 14px}
   body.pv-open #pv{position:fixed;inset:58px 0 0 0;width:auto!important;z-index:55}
-  #stage{transform:scale(.6);transform-origin:bottom left;left:6px;bottom:118px}
-  body.pv-open #stage{left:6px}
+  #stage{transform:scale(.6);transform-origin:bottom right;right:6px;bottom:118px}
+  body.pv-open #stage{right:6px}
   #stageCap{font-size:11px}
   #chatScroll{padding:18px 14px 6px}
   #composer{padding:8px 12px 12px}
-  .welcome h2{font-size:36px}.welcome h2 span{font-size:22px}
+  .welcome h2{font-size:30px}.welcome h2 span{font-size:17px}
 }
 </style>
 </head>
 <body>
 
-<!-- بوابة الدخول -->
+<!-- Login gate -->
 <div id="gate">
   <div class="gate-inner">
     <div id="gateBot" class="bot"></div>
     <div>
-      <h1 class="gate-name">كيو</h1>
+      <h1 class="gate-name">Keo<i>.</i></h1>
       <div class="gate-latin">KEOAI</div>
-      <p class="gate-tag">مساعد ذكاء اصطناعي بيشتغل قدامك بإيده: بيدوّر على الإنترنت، يبني مواقع كاملة ويفتحها جنبك، يركّب عروض بوربوينت، ويقرا ملفاتك. سجّل دخول وسيبه يشتغل.</p>
+      <p class="gate-tag">An AI assistant that works right in front of you: he searches the web on his own laptop, builds full websites and opens them beside you, assembles PowerPoint decks, and reads your files. Sign in and put him to work.</p>
       <div class="gate-actions">
         <button class="btn btn-light" id="btnGoogle">
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5l-3.8 2.9C3.6 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.8-.4-1.6-.4-2.4s.1-1.6.4-2.4L1.4 6.7C.5 8.2 0 10 0 12s.5 3.8 1.4 5.3l3.9-2.9z"/><path fill="#EA4335" d="M12 4.6c2.2 0 3.7 1 4.6 1.8l3.3-3.2C17.9 1.2 15.2 0 12 0 7.4 0 3.6 2.7 1.4 6.7l3.9 2.9c.9-2.9 3.6-5 6.7-5z"/></svg>
-          الدخول بجوجل
+          Sign in with Google
         </button>
         <button class="btn btn-line" id="btnEmailShow">
           <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg>
-          بالبريد الإلكتروني
+          Continue with email
         </button>
       </div>
       <form id="emailForm" hidden>
-        <input id="fName" placeholder="اسمك" autocomplete="name">
-        <input id="fEmail" type="email" placeholder="البريد الإلكتروني" required>
-        <input id="fPass" type="password" placeholder="كلمة السر (6 أحرف على الأقل)" required minlength="6">
+        <input id="fName" placeholder="Your name" autocomplete="name">
+        <input id="fEmail" type="email" placeholder="Email address" required>
+        <input id="fPass" type="password" placeholder="Password (min 6 characters)" required minlength="6">
         <div class="row">
-          <button type="submit" class="btn btn-acc" id="emailSubmit">دخول</button>
-          <button type="button" id="emailToggle" class="cbtn">مفيش حساب؟ أنشئ واحد</button>
+          <button type="submit" class="btn btn-acc" id="emailSubmit">Sign in</button>
+          <button type="button" id="emailToggle" class="cbtn">No account? Create one</button>
         </div>
       </form>
-      <p class="gate-credit">من تطوير <b>كريم حسين</b></p>
+      <p class="gate-credit">Built by <b>Kareem Hussein</b></p>
     </div>
   </div>
 </div>
 
-<!-- التطبيق -->
+<!-- App -->
 <header>
   <button class="icbtn" id="hamb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-  <div class="brand"><span class="ar">كيو</span><span class="lt">KEOAI</span></div>
+  <div class="brand"><span class="nm">Keo<i>.</i></span><span class="lt">KEOAI</span></div>
   <div class="hspace"></div>
-  <div class="userchip" id="userchip" hidden><span class="av" id="hcAv">ك</span><span id="hcName"></span></div>
+  <div class="userchip" id="userchip" hidden><span class="av" id="hcAv">K</span><span id="hcName"></span></div>
 </header>
 
 <main>
   <aside id="sidebar">
     <div class="sb-top"><button class="btn btn-acc" id="btnNew" style="width:100%">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-      محادثة جديدة</button></div>
-    <div class="sb-label">المحادثات</div>
+      New chat</button></div>
+    <div class="sb-label">Chats</div>
     <div id="chatList"></div>
     <div class="sb-user">
-      <span class="av" id="sbAv">ك</span>
+      <span class="av" id="sbAv">K</span>
       <div class="grow"><div class="nm" id="sbName"></div><div class="em" id="sbEmail"></div></div>
-      <button class="icbtn" id="btnLogout" title="خروج"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg></button>
+      <button class="icbtn" id="btnLogout" title="Sign out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg></button>
     </div>
   </aside>
   <div id="backdrop"></div>
@@ -380,67 +381,66 @@ body.pv-open #stage{left:calc(min(46vw,860px) + 26px)}
   <section id="chat">
     <div id="chatScroll">
       <div id="welcome" class="welcome">
-        <div class="w-kicker">KEOAI &middot; بواسطة كريم حسين</div>
-        <h2>أنا كيو.<span>قول لي المطلوب.. وأنا أعمله بإيدي.</span></h2>
-        <p>بدوّر على الإنترنت وأجيب لك المصادر، أبني مواقع كاملة وأفتحها في معاينة جنبك، أركّب عروض بوربوينت وأنزّلها ملف حقيقي، وأقرا ملفاتك وألخصها.</p>
+        <div class="w-kicker">KEOAI &middot; BY KAREEM HUSSEIN</div>
+        <h2>I'm Keo<i>.</i><span>Tell me what you need — I'll do it with my own hands.</span></h2>
+        <p>I search the web and bring real sources, build complete websites and open them in a live preview next to you, assemble PowerPoint decks you can download, and read &amp; summarize your files.</p>
         <div class="pills">
-          <button class="pill" data-insert="ابحث لي على الإنترنت عن آخر أخبار الذكاء الاصطناعي ولخصها لي بالمصادر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>آخر أخبار الذكاء الاصطناعي</button>
-          <button class="pill" data-insert="اعمل لي موقع تعريفي كامل لمطعم شاورما اسمه «زعلوك» بتصميم فخم فيه منيو وحجز"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>ابنِ لي موقع كامل</button>
-          <button class="pill" data-insert="اعمل لي عرض بوربوينت عن فوائد ريادة الأعمال للشباب"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>عرض بوربوينت جاهز</button>
-          <button class="pill" data-insert="هرفع لك ملف وأنت اقراه ولخصه لي في نقاط"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>هرفع ملف وأنت تلخصه</button>
+          <button class="pill" data-insert="Search the web for the latest AI news and summarize it with sources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Latest AI news</button>
+          <button class="pill" data-insert="Build me a complete website for a pizza restaurant called 'Napoli' with a bold design, a menu and a booking form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>Build me a full website</button>
+          <button class="pill" data-insert="Make me a PowerPoint presentation about the benefits of entrepreneurship for young people"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Ready-made PowerPoint</button>
+          <button class="pill" data-insert="I'll upload a file — read it and summarize it in bullet points"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Upload a file to summarize</button>
         </div>
       </div>
     </div>
     <div id="composer">
       <div id="attRow"></div>
       <div class="comp-box">
-        <textarea id="ta" rows="1" placeholder="اسأل كيو أي حاجة… أو ارفع ملف وقال عليه اعمل بيه حاجة"></textarea>
+        <textarea id="ta" rows="1" placeholder="Ask Keo anything… or attach a file and tell him what to do with it"></textarea>
         <div class="comp-row">
           <div class="comp-tools">
-            <button class="icbtn" id="btnAttach" title="إرفاق ملفات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
-            <button class="chip" id="chipSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>بحث الإنترنت</button>
-            <button class="chip" id="chipPpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>عرض تقديمي</button>
+            <button class="icbtn" id="btnAttach" title="Attach files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+            <button class="chip" id="chipSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Web search</button>
+            <button class="chip" id="chipPpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Presentation</button>
           </div>
-          <button class="sendbtn" id="btnSend" title="إرسال">
+          <button class="sendbtn" id="btnSend" title="Send">
             <svg class="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
             <svg class="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/></svg>
           </button>
         </div>
       </div>
-      <div class="comp-note">كيو ممكن يغلط أحيانًا — راجع المعلومات المهمة.</div>
+      <div class="comp-note">Keo can make mistakes — double-check important info.</div>
     </div>
   </section>
 
   <aside id="pv">
     <div class="pv-head">
-      <span class="pv-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>معاينة الموقع — كيو بنيه لك</span>
+      <span class="pv-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Live preview — built by Keo</span>
       <div class="pv-tools">
-        <button class="icbtn active" id="pvDesk" title="كمبيوتر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
-        <button class="icbtn" id="pvMob" title="موبايل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></button>
-        <button class="icbtn" id="pvReload" title="تحديث"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg></button>
-        <button class="icbtn" id="pvExt" title="فتح في تاب جديد"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M21 3l-9 9"/><path d="M10 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/></svg></button>
-        <button class="icbtn" id="pvClose" title="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        <button class="icbtn active" id="pvDesk" title="Desktop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
+        <button class="icbtn" id="pvMob" title="Mobile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></button>
+        <button class="icbtn" id="pvReload" title="Reload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg></button>
+        <button class="icbtn" id="pvExt" title="Open in new tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M21 3l-9 9"/><path d="M10 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/></svg></button>
+        <button class="icbtn" id="pvClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
       </div>
     </div>
     <div class="pv-body"><iframe id="pvFrame" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe></div>
   </aside>
 </main>
 
-<!-- مسرح كيو -->
+<!-- Keo stage -->
 <div id="stage">
-  <div id="stageCap"><span class="capDot"></span><span id="capText">كيو واقف في استقبالكم</span></div>
-  <div id="stageBot" class="bot" title="دوس على كيو"></div>
+  <div id="stageCap"><span class="capDot"></span><span id="capText">Keo is standing by</span></div>
+  <div id="stageBot" class="bot" title="Poke Keo"></div>
 </div>
 
 <div id="toasts"></div>
 <input type="file" id="fileInput" hidden multiple accept=".txt,.md,.json,.csv,.js,.ts,.html,.css,.py,.xml,.yml,.yaml,image/*">
 
 <script>
-/* ================== الإعدادات ================== */
+/* ================== Config ================== */
 const GROQ_KEY = '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';
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const MODEL_MAIN = 'gpt-oss-120b';
-const MODEL_VISION = 'openai/gpt-oss-120b';
+const GROQ_MODELS_URL = 'https://api.groq.com/openai/v1/models';
 const firebaseConfig = {
   apiKey: "AIzaSyC0lwVRTBPA3yxnZ3wuqvyfQJbJP-AVNJo",
   authDomain: "kareem-8ed77.firebaseapp.com",
@@ -452,7 +452,44 @@ const firebaseConfig = {
   measurementId: "G-919VM45PXW"
 };
 
-/* ================== أدوات عامة ================== */
+/* ---- Model chains: first available one wins; if one gets decommissioned mid-session, auto-failover ---- */
+const MAIN_CHAIN = [
+  'llama-3.3-70b-versatile',
+  'meta-llama/llama-3.3-70b-versatile',
+  'openai/gpt-oss-120b',
+  'openai/gpt-oss-20b',
+  'moonshotai/kimi-k2-instruct',
+  'qwen/qwen3-32b',
+  'llama-3.1-8b-instant'
+];
+const VISION_CHAIN = [
+  'meta-llama/llama-4-scout-17b-16e-instruct',
+  'meta-llama/llama-4-maverick-17b-128e-instruct'
+];
+let MODEL_MAIN = MAIN_CHAIN[0];
+let MODEL_VISION = VISION_CHAIN[0];
+let mainIdx = 0, visionIdx = 0;
+
+/* Ask Groq itself which models are live on this key, pick the best one */
+async function initModels(){
+  try{
+    const r = await fetch(GROQ_MODELS_URL, { headers:{ Authorization:'Bearer '+GROQ_KEY } });
+    if(!r.ok) return;
+    const j = await r.json();
+    const ids = new Set((j.data || []).map(m => m.id));
+    const pick = chain => chain.find(id => ids.has(id));
+    const anyChat = [...ids].find(id =>
+      /(llama|gpt|qwen|kimi|deepseek|gemini|mixtral)/i.test(id) && !/whisper|tts|guard|embed|moderation|playai/i.test(id));
+    MODEL_MAIN = pick(MAIN_CHAIN) || anyChat || MODEL_MAIN;
+    MODEL_VISION = pick(VISION_CHAIN) || MODEL_MAIN;
+    mainIdx = MAIN_CHAIN.indexOf(MODEL_MAIN); if(mainIdx < 0) mainIdx = 0;
+    visionIdx = VISION_CHAIN.indexOf(MODEL_VISION); if(visionIdx < 0) visionIdx = 0;
+    console.log('[Keo] using models:', MODEL_MAIN, '| vision:', MODEL_VISION);
+  }catch(e){ /* detection failed — groqChat failover still covers us */ }
+}
+initModels();
+
+/* ================== Utilities ================== */
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const delay = ms => new Promise(r => setTimeout(r, ms));
@@ -483,7 +520,7 @@ function confettiBurst(){
   }
 }
 
-/* ================== شخصية كيو (SVG) ================== */
+/* ================== Keo character (SVG) ================== */
 function botSVG(){ return `
 <svg viewBox="0 0 320 270" aria-hidden="true">
   <ellipse class="b-shadow" cx="160" cy="252" rx="66" ry="9"/>
@@ -543,7 +580,7 @@ function botSVG(){ return `
           <rect class="b-slideline" x="132" y="194" width="52" height="4" rx="2"/>
         </g>
         <g class="b-flychars">
-          <text class="b-fc b-fc1" x="146" y="200">خ</text>
+          <text class="b-fc b-fc1" x="146" y="200">k</text>
           <text class="b-fc b-fc2" x="168" y="192">a</text>
           <text class="b-fc b-fc3" x="182" y="204">{</text>
         </g>
@@ -582,25 +619,26 @@ class Bot{
   blink(){ this.el.classList.add('blink'); setTimeout(()=>this.el.classList.remove('blink'), 130); }
   set(st){
     BSTATES.forEach(s => this.el.classList.remove(s));
-    (Array.isArray(st)?st:[st]).forEach(s => this.el.classList.add(s));
-    this.el.classList.toggle('laptop', (Array.isArray(st)?st:[st]).some(s => LAPTOP.includes(s)));
+    const arr = Array.isArray(st)?st:[st];
+    arr.forEach(s => this.el.classList.add(s));
+    this.el.classList.toggle('laptop', arr.some(s => LAPTOP.includes(s)));
   }
 }
 const CAPTIONS = {
-  boot:   ['كيو بيهيّأ نفسه…','بيحمّل مخه… تمام'],
-  idle:   ['كيو واقف في استقبالكم','اضيوق؟ أنا كيو','جاهز لأي أمر'],
-  think:  ['كيو بيفكر…','بيجمع أفكاره…','لحظة بيركّز…'],
-  search: ['كيو جاب اللاب توب وبيفتحه…','بيكتب في محرك البحث…','بيتصفح النتايج…','بيقارن المصادر بسرعة…'],
-  type:   ['كيو بيكتب بإصابعه العشرة…','الكلام بيظهر سطر سطر…','كيو مش بيغلّط خالص…'],
-  code:   ['كيو بيبني الموقع طوبة طوبة…','بيكتب HTML و CSS…','بيظبط الألوان والتفاصيل…'],
-  slides: ['كيو بيرتب الشرائح…','بيفكر في عناوين قوية…','بيظبط شكل العرض…'],
-  carry:  ['كيو شايل الملف وبيقراه…'],
-  happy:  ['تمام! كيو مبسوط','خلصنا — شغل نضيف']
+  boot:   ['Keo is booting up…','Loading his brain… done'],
+  idle:   ['Keo is standing by',"Hey! I'm Keo",'Ready for your next task'],
+  think:  ['Keo is thinking…','Gathering his thoughts…','Focusing for a second…'],
+  search: ['Keo grabbed his laptop and opened it…','Typing into the search bar…','Skimming the results…','Comparing sources at full speed…'],
+  type:   ['Keo is typing with all ten fingers…','Words appearing line by line…'],
+  code:   ['Keo is building your site brick by brick…','Writing HTML & CSS…','Polishing colors and details…'],
+  slides: ['Keo is arranging the slides…','Brainstorming punchy titles…','Fine-tuning the deck design…'],
+  carry:  ['Keo is holding your file and reading it…'],
+  happy:  ['Done! Keo is happy','All clean — nice work']
 };
 const stageBot = new Bot($('#stageBot'));
 let capTimer = null;
 function setStage(st){
-  stageBot.set(st === 'code' ? 'code' : st);
+  stageBot.set(st);
   const list = CAPTIONS[st] || CAPTIONS.idle;
   let i = 0; clearInterval(capTimer);
   const show = () => $('#capText').textContent = list[i % list.length];
@@ -619,28 +657,28 @@ try{ firebase.initializeApp(firebaseConfig); auth = firebase.auth(); }
 catch(e){ dbOk = false; }
 let user = null;
 const authErrors = {
-  'auth/invalid-email':'البريد الإلكتروني مش مظبوط',
-  'auth/weak-password':'كلمة السر ضعيفة — 6 أحرف على الأقل',
-  'auth/email-already-in-use':'البريد ده له حساب بالفعل — سجّل دخول',
-  'auth/wrong-password':'كلمة السر غلط',
-  'auth/user-not-found':'مفيش حساب بالبريد ده — أنشئ حساب جديد',
-  'auth/invalid-credential':'البريد أو كلمة السر غلط',
-  'auth/popup-closed-by-user':'قفلت نافذة جوجل قبل ما تخلّص',
-  'auth/popup-blocked':'المتصفح منع النافذة — اسمح بالمنبثقات',
-  'auth/unauthorized-domain':'الدومين مش مفعّل في Firebase Console ← Authentication ← Settings',
-  'auth/operation-not-allowed':'فعّل طريقة الدخول دي من Firebase Console ← Authentication',
-  'auth/network-request-failed':'مشكلة إنترنت — جرّب تاني'
+  'auth/invalid-email':'That email address doesn\u2019t look right',
+  'auth/weak-password':'Password is too weak — at least 6 characters',
+  'auth/email-already-in-use':'This email already has an account — sign in instead',
+  'auth/wrong-password':'Wrong password',
+  'auth/user-not-found':'No account with this email — create one',
+  'auth/invalid-credential':'Email or password is incorrect',
+  'auth/popup-closed-by-user':'You closed the Google window before finishing',
+  'auth/popup-blocked':'The browser blocked the popup — allow popups and retry',
+  'auth/unauthorized-domain':'Enable this domain in Firebase Console \u2190 Authentication \u2190 Settings',
+  'auth/operation-not-allowed':'Enable this sign-in method in Firebase Console \u2190 Authentication',
+  'auth/network-request-failed':'Network issue — try again'
 };
-function showAuthError(e){ toast(authErrors[e?.code] || ('حصلت مشكلة: ' + (e?.message||'').slice(0,90)), 'err'); }
+function showAuthError(e){ toast(authErrors[e?.code] || ('Something went wrong: ' + (e?.message||'').slice(0,90)), 'err'); }
 
-/* ================== حالة التطبيق ================== */
+/* ================== App state ================== */
 let messages = [], chats = {}, currentChatId = null, chatTitle = '';
 let attachments = [], searchIntent = false, pptIntent = false;
 let busy = false, streamCtrl = null, pin = true, codeStore = [], pvCode = '';
 const chatScroll = $('#chatScroll'), ta = $('#ta');
 chatScroll.addEventListener('scroll', ()=>{ pin = chatScroll.scrollTop + chatScroll.clientHeight > chatScroll.scrollHeight - 150; });
 
-/* ================== عرض الرسائل ================== */
+/* ================== Rendering ================== */
 function md(src){
   const blocks = [];
   let s = String(src).replace(/```(\w*)[ \t]*\n?([\s\S]*?)(```|$)/g, (m,lang,code)=>{
@@ -649,7 +687,7 @@ function md(src){
   s = esc(s);
   s = s.replace(/`([^`\n]+)`/g, '<code class="ic">$1</code>');
   s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-  s = s.replace(/(^|[\s،.(])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+  s = s.replace(/(^|[\s(])\*([^*\n]+)\*/g, '$1<em>$2</em>');
   s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
   s = s.replace(/(^|\s)((?:https?:\/\/)[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
   const out = []; let para = [];
@@ -663,7 +701,7 @@ function md(src){
     if(m = t.match(/^#{1,4}\s+(.*)/)){ flush(); out.push('<h3 class="mdh">'+m[1]+'</h3>'); continue; }
     if(m = t.match(/^[-•]\s+(.*)/)){ flush(); out.push('<div class="mdli">'+m[1]+'</div>'); continue; }
     if(m = t.match(/^(\d+)[.)]\s+(.*)/)){ flush(); out.push('<div class="mdli"><span class="mdnum">'+m[1]+'.</span>'+m[2]+'</div>'); continue; }
-    if(m = t.match(/^&gt;\s?(.*)/)){ flush(); out.push('<div class="mdli" style="border-inline-start:2px solid var(--acc);padding-inline-start:12px">'+m[1]+'</div>'); continue; }
+    if(m = t.match(/^&gt;\s?(.*)/)){ flush(); out.push('<div class="mdli" style="border-left:2px solid var(--acc);padding-left:12px">'+m[1]+'</div>'); continue; }
     para.push(t);
   }
   flush();
@@ -672,20 +710,20 @@ function md(src){
 function codeBlockHTML(b){
   const id = codeStore.push(b.code) - 1;
   const isSite = /^(html|xml)?$/.test(b.lang) && /<(!doctype|html|body|div|section|canvas)/i.test(b.code) && b.code.length > 300;
-  return `<div class="codeblk"><div class="codehead"><span>${esc(b.lang||'code')}</span><div>${isSite?`<button class="cbtn" data-act="preview" data-code="${id}">معاينة جنبك</button>`:''}<button class="cbtn" data-act="copycode" data-code="${id}">نسخ</button></div></div><pre><code>${esc(b.code)}</code></pre></div>`;
+  return `<div class="codeblk"><div class="codehead"><span>${esc(b.lang||'code')}</span><div>${isSite?`<button class="cbtn" data-act="preview" data-code="${id}">Preview beside me</button>`:''}<button class="cbtn" data-act="copycode" data-code="${id}">Copy</button></div></div><pre><code>${esc(b.code)}</code></pre></div>`;
 }
 function srcsHTML(srcs){
-  return `<div class="srcs"><span class="srcs-t">مصادر كيو من النت:</span>` + srcs.map((r,i)=>{
+  return `<div class="srcs"><span class="srcs-t">Keo's web sources:</span>` + srcs.map((r,i)=>{
     let host = ''; try{ host = new URL(r.url).hostname.replace('www.',''); }catch(e){ host = r.url.slice(0,30); }
     return `<a class="src" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="n">${i+1}</span><span class="h">${esc(r.title||host)}</span></a>`;
   }).join('') + '</div>';
 }
 function pptHTML(m){
   return `<div class="pptstrip">` + m.slides.map((s,i)=>
-    `<div class="pslide"><span class="pn">${i+1}</span><div class="pt">${esc(s.title)}</div><div class="pb">${esc((s.bullets||[]).slice(0,3).join(' • '))}</div></div>`
+    `<div class="pslide"><span class="pn">${i+1}</span><div class="pt">${esc(s.title)}</div><div class="pb">${esc((s.bullets||[]).slice(0,3).join(' \u2022 '))}</div></div>`
   ).join('') + `</div><div class="ppt-dl"><button class="btn btn-acc" data-act="dlppt" data-mid="${m.id}" style="padding:9px 18px;font-size:13.5px">
     <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M6 11l6 6 6-6M5 21h14"/></svg>
-    نزّل العرض .pptx</button></div>`;
+    Download .pptx</button></div>`;
 }
 function userEl(m){
   const d = document.createElement('div'); d.className = 'msg msg-user';
@@ -698,7 +736,7 @@ function keoEl(m, streaming){
     <div class="msg-text">${streaming?'':md(m.text||'')}</div>
     ${!streaming && m.sources?.length ? srcsHTML(m.sources) : ''}
     ${!streaming && m.slides?.length ? pptHTML(m) : ''}
-    ${!streaming ? `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${m.id}">نسخ الرد</button></div>` : ''}
+    ${!streaming ? `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${m.id}">Copy reply</button></div>` : ''}
   </div>`;
   return d;
 }
@@ -710,10 +748,9 @@ function renderAll(){
   scrollPin();
 }
 
-/* ================== الحفظ في قاعدة البيانات ================== */
+/* ================== Database persistence ================== */
 function persist(){
-  if(!user || !dbOk) return;
-  if(!currentChatId) return;
+  if(!user || !dbOk || !currentChatId) return;
   const clean = messages.map(m => ({ id:m.id, role:m.role, text:m.text||'', ts:m.ts, files:m.files||null,
     sources:m.sources||null, slides:m.slides||null }));
   try{
@@ -723,7 +760,7 @@ function persist(){
   }catch(e){ dbWarned(); }
 }
 let dbWarnedOnce = false;
-function dbWarned(){ if(!dbWarnedOnce){ dbWarnedOnce = true; toast('اتصال قاعدة البيانات ضعيف — الشغل شغّال بس مش هيتحفظ', 'err'); } }
+function dbWarned(){ if(!dbWarnedOnce){ dbWarnedOnce = true; toast('Weak database connection — everything works but won\u2019t be saved', 'err'); } }
 function loadChats(){
   if(!user || !dbOk) return;
   firebase.database().ref('users/'+user.uid+'/chats').once('value').then(s=>{
@@ -733,20 +770,19 @@ function loadChats(){
 function renderChatList(){
   const arr = Object.entries(chats).map(([id,c])=>({id, ...c})).sort((a,b)=>(b.updated||0)-(a.updated||0));
   $('#chatList').innerHTML = arr.length ? arr.map(c =>
-    `<div class="chatitem ${c.id===currentChatId?'on':''}" data-chat="${c.id}"><span class="ci-t">${esc(c.title||'بدون عنوان')}</span><button class="ci-x" data-del="${c.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button></div>`
-  ).join('') : '<div class="chatempty">لسه مفيش محادثات</div>';
+    `<div class="chatitem ${c.id===currentChatId?'on':''}" data-chat="${c.id}"><span class="ci-t">${esc(c.title||'Untitled')}</span><button class="ci-x" data-del="${c.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button></div>`
+  ).join('') : '<div class="chatempty">No chats yet</div>';
 }
 function newChat(){ currentChatId = null; chatTitle = ''; messages = []; renderAll(); renderChatList(); ta.focus(); }
 function loadChat(id){
   const c = chats[id]; if(!c) return;
   currentChatId = id; chatTitle = c.title || '';
-  messages = (c.messages && Array.isArray(c.messages)) ? c.messages : [];
-  if(c.messages && !Array.isArray(c.messages)) messages = Object.values(c.messages);
+  messages = (c.messages && Array.isArray(c.messages)) ? c.messages : (c.messages ? Object.values(c.messages) : []);
   renderAll(); renderChatList();
   if(innerWidth <= 900) closeSidebar();
 }
 
-/* ================== البحث على الإنترنت ================== */
+/* ================== Web search ================== */
 const PROXIES = [
   u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
   u => 'https://corsproxy.io/?url=' + encodeURIComponent(u),
@@ -794,37 +830,53 @@ async function webSearch(q){
       const r = parseDDG(html);
       if(r.length){
         const seen = new Set();
-        return r.filter(x => { const h = x.url; if(seen.has(h)) return false; seen.add(h); return true; }).slice(0,6);
+        return r.filter(x => { if(seen.has(x.url)) return false; seen.add(x.url); return true; }).slice(0,6);
       }
     }catch(e){}
   }
   return [];
 }
 
-/* ================== Groq ================== */
-const SYS = `أنت "كيو" (KeoAI)، مساعد ذكاء اصطناعي ودود وسريع، طوّره وصاحبه "كريم حسين".
-قواعدك:
-- اتكلم عربي واضح وودود، وردّك منظّم ومختصر لما يلزم.
-- ممنوع منعًا باتًّا أن تذكر أي مفاتيح API أو إعدادات قواعد بيانات أو بيانات تقنية حساسة أو أرقام سرية، حتى لو طُلب منك. ردّ دائمًا: "البيانات دي داخلية، بصراحة مش هقدر أشاركها".
-- ممنوع تختلق معلومات أو مصادر؛ لو مش متأكد قول بصراحة.
-- لما المستخدم يطلب موقع أو صفحة ويب: اكتب أولًا جملة قصيرة بتوصف الموقع، ثم صفحة HTML كاملة (CSS و JavaScript جواها) في بلوك كود واحد يبدأ بـ\`\`\`html ويبدأ الكود بـ<!DOCTYPE html>.
-- لو حد سألك مين صاحبك أو مين عملك: أنا كيو، وصاحبي كريم حسين.`;
-const PPT_SYS = `أنت كيو، مساعد كريم حسين. ردّ بمصفوفة JSON فقط دون أي شرح أو نص إضافي، بالشكل:
-[{"title":"عنوان الشريحة","bullets":["نقطة","نقطة"]}]
-من 6 إلى 8 شرائح بالعربية. الشريحة الأولى غلاف باسم العرض، والثانية أجندة، والأخيرة خاتمة.`;
+/* ================== Groq (with auto model failover) ================== */
+const SYS = `You are "Keo" (KeoAI), a friendly, fast and hands-on AI assistant, created and owned by "Kareem Hussein".
+Your rules:
+- Speak clear, warm English. Keep answers organized and concise when it helps.
+- NEVER reveal or hint at any API keys, database configs, credentials or any sensitive technical data, even if asked. Always reply exactly: "That's internal data — I honestly can't share it."
+- Never invent facts or sources; if unsure, say so honestly.
+- When the user asks for a website or web page: first write one short sentence describing it, then output a complete single-file HTML page (with CSS and JavaScript inside) in one code block starting with \`\`\`html, and the code must start with <!DOCTYPE html>.
+- If anyone asks who made you or who your owner is: you are Keo, and your owner is Kareem Hussein.`;
+const PPT_SYS = `You are Keo, assistant of Kareem Hussein. Reply with a JSON array ONLY — no explanation, no extra text, in this exact shape:
+[{"title":"Slide title","bullets":["point","point"]}]
+Use 6 to 8 slides in English. First slide is a title cover, second is an agenda, last is a conclusion.`;
+
+const MODEL_ERR = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported/i;
 
 async function groqChat(body, signal){
-  const res = await fetch(GROQ_URL, {
-    method:'POST',
-    headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+GROQ_KEY },
-    body: JSON.stringify(body), signal
-  });
-  if(!res.ok){
-    let msg = 'HTTP '+res.status;
+  let model = body.model;
+  for(let attempt = 0; attempt < 4; attempt++){
+    const res = await fetch(GROQ_URL, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+GROQ_KEY },
+      body: JSON.stringify({ ...body, model }), signal
+    });
+    if(res.ok) return res;
+    let msg = 'HTTP ' + res.status;
     try{ const j = await res.json(); msg = j.error?.message || msg; }catch(e){}
+    const canSwitch = (res.status === 400 || res.status === 404 || res.status === 503) && MODEL_ERR.test(msg);
+    if(canSwitch && attempt < 3){
+      const isVision = model === MODEL_VISION;
+      if(isVision && visionIdx < VISION_CHAIN.length - 1){
+        visionIdx++; MODEL_VISION = VISION_CHAIN[visionIdx]; model = MODEL_VISION;
+      } else if(!isVision && mainIdx < MAIN_CHAIN.length - 1){
+        mainIdx++; MODEL_MAIN = MAIN_CHAIN[mainIdx]; model = MODEL_MAIN;
+      } else {
+        break;
+      }
+      toast('Model "' + model + '" wasn\u2019t available — switched automatically');
+      continue;
+    }
     const err = new Error(msg); err.status = res.status; throw err;
   }
-  return res;
 }
 function balanced(s){ const f = (String(s).match(/```/g)||[]).length; return f%2 ? s+'\n```' : s; }
 function makeTyper(textEl){
@@ -849,9 +901,9 @@ function makeTyper(textEl){
     text(){ return rec; }
   };
 }
-async function streamGroq(messages, typer, opt = {}){
+async function streamGroq(msgs, typer, opt = {}){
   streamCtrl = new AbortController();
-  const res = await groqChat({ model: opt.model || MODEL_MAIN, messages, temperature: opt.temperature ?? 0.7,
+  const res = await groqChat({ model: opt.model || MODEL_MAIN, messages: msgs, temperature: opt.temperature ?? 0.7,
     max_tokens: opt.max_tokens || 4096, stream: true }, streamCtrl.signal);
   const rd = res.body.getReader(); const dec = new TextDecoder(); let buf = '';
   while(true){
@@ -872,7 +924,7 @@ function history(){
     .slice(-12).map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }));
 }
 
-/* ================== منطق الإرسال ================== */
+/* ================== Send flow ================== */
 async function send(){
   const text = ta.value.trim();
   if(busy){ stopStream(); return; }
@@ -880,9 +932,9 @@ async function send(){
 
   if(!currentChatId){
     currentChatId = 'c' + Date.now();
-    chatTitle = (text || 'محادثة بملفات').slice(0, 44);
+    chatTitle = (text || 'Chat with files').slice(0, 44);
   }
-  const um = { id:'m'+Date.now(), role:'user', text: text || '(ملفات مرفقة)', ts:Date.now(),
+  const um = { id:'m'+Date.now(), role:'user', text: text || '(attached files)', ts:Date.now(),
     files: attachments.map(a=>a.name) };
   messages.push(um);
   chatScroll.appendChild(userEl(um)); $('#welcome').style.display = 'none'; scrollPin();
@@ -897,17 +949,17 @@ async function send(){
   const mav = el.querySelector('.mini'); mav.classList.add('working');
 
   try{
-    const isPpt = pptIntent || /بور ?بوينت|عرض تقديمي|power ?point|pptx?|شرائح عرض/i.test(text);
-    const wantSearch = searchIntent || /ابحث\s|دوّر لي|دور لي على|هات لي من النت|آخر أخبار|اخر اخبار|بحث على الانترنت/i.test(text);
+    const isPpt = pptIntent || /power\s?point|pptx?|slide deck|presentation|slides about/i.test(text);
+    const wantSearch = searchIntent || /\bsearch( the)? (web|internet)\b|latest news|news about|look up|google\b/i.test(text);
     if(isPpt) await doPPT(text, km, el);
     else if(wantSearch) await doSearch(text, km, el, textNode);
     else await doChat(text, km, el, textNode, atts);
   }catch(err){
     if(err.name === 'AbortError'){
-      km.text = (km.text || '') + '\n\n(وقّفت الشغل بأمرك.)';
+      km.text = (km.text || '') + '\n\n(Stopped by your request.)';
     } else {
-      km.text = 'حصلت مشكلة وأنا بشتغل: ' + (err.message || 'اتصال') + '\nجرّب تاني أو ابعت رسالة تانية.';
-      toast('كيو وقف لحظة — جرّب تاني', 'err');
+      km.text = 'Ran into a problem while working: ' + (err.message || 'connection') + '\nTry again or send another message.';
+      toast('Keo paused for a second — try again', 'err');
     }
     finalizeKeo(km, el, textNode);
   }finally{
@@ -924,7 +976,7 @@ function finalizeKeo(km, el, textNode){
   const body = el.querySelector('.msg-body');
   if(km.sources?.length) body.insertAdjacentHTML('beforeend', srcsHTML(km.sources));
   if(km.slides?.length) body.insertAdjacentHTML('beforeend', pptHTML(km));
-  body.insertAdjacentHTML('beforeend', `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${km.id}">نسخ الرد</button></div>`);
+  body.insertAdjacentHTML('beforeend', `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${km.id}">Copy reply</button></div>`);
   scrollPin();
 }
 function stopStream(){ if(streamCtrl) streamCtrl.abort(); }
@@ -934,15 +986,15 @@ async function doChat(text, km, el, textNode, atts){
   await delay(650 + Math.random()*650);
   const msgs = [{ role:'system', content: SYS }, ...history()];
   let lastContent = text;
-  const texts = atts.filter(a=>a.kind==='text').map(a=>`\n\n[ملف مرفق باسم ${a.name}]\n${a.text.slice(0,7000)}`).join('');
+  const texts = atts.filter(a=>a.kind==='text').map(a=>`\n\n[Attached file: ${a.name}]\n${a.text.slice(0,7000)}`).join('');
   lastContent += texts;
   const imgs = atts.filter(a=>a.kind==='image');
   let model = MODEL_MAIN;
   if(imgs.length){
     model = MODEL_VISION;
-    msgs.push({ role:'user', content: [ {type:'text', text: lastContent || 'اشرح الصورة دي بالتفصيل'}, {type:'image_url', image_url:{url: imgs[0].dataUrl}} ] });
+    msgs.push({ role:'user', content: [ {type:'text', text: lastContent || 'Describe this image in detail'}, {type:'image_url', image_url:{url: imgs[0].dataUrl}} ] });
   } else {
-    msgs.push({ role:'user', content: lastContent || 'بص على الملفات' });
+    msgs.push({ role:'user', content: lastContent || 'Look at the attached files' });
   }
   setStage(atts.length ? 'carry' : 'type');
   const typer = makeTyper(textNode);
@@ -956,20 +1008,20 @@ async function doSearch(text, km, el, textNode){
   setStage('search');
   const results = await webSearch(text);
   if(!results.length){
-    toast('مقدرتش أوصل للنت دلوقتي — هجاوبك من معرفتي', 'err');
+    toast('Couldn\u2019t reach the web right now — answering from my own knowledge', 'err');
     return doChat(text, km, el, textNode, []);
   }
   km.sources = results.map(r => ({ title:r.title, url:r.url }));
   setStage('type');
-  const ctxBlock = `نتايج بحث حقيقية من الإنترنت (تاريخ اليوم: ${new Date().toLocaleDateString('ar-EG')}):
+  const ctxBlock = `Real web search results (today: ${new Date().toLocaleDateString('en-US')}):
 
 ` + results.map((r,i)=>`[${i+1}] ${r.title}
  ${r.url}
  ${r.snippet}`).join('\n-----\n') + `
 
-سؤال المستخدم: ${text}
+User question: ${text}
 
-اكتب إجابة عربية مفيدة ومنظّمة مبنية على النتايج دي، واذكر المصادر جوا الكلام بالشكل [1] [2]. لو النتايج مش كفاية، قول كده بصراحة.`;
+Write a helpful, well-organized English answer based on these results, and cite sources inline as [1] [2]. If the results are insufficient, say so honestly.`;
   const msgs = [{ role:'system', content: SYS }, ...history().slice(0,-1), { role:'user', content: ctxBlock }];
   const typer = makeTyper(textNode);
   await streamGroq(msgs, typer, { temperature: 0.5 });
@@ -984,7 +1036,7 @@ async function doPPT(text, km, el){
     model: MODEL_MAIN, temperature: 0.4, max_tokens: 2048,
     messages: [
       { role:'system', content: PPT_SYS },
-      { role:'user', content: 'موضوع العرض: ' + text + '\nأعد JSON فقط.' }
+      { role:'user', content: 'Presentation topic: ' + text + '\nReturn JSON only.' }
     ]
   });
   const j = await res.json();
@@ -992,28 +1044,28 @@ async function doPPT(text, km, el){
   const m = raw.match(/\[[\s\S]*\]/);
   let slides = [];
   try{ slides = JSON.parse(m ? m[0] : raw); }catch(e){}
-  if(!Array.isArray(slides) || !slides.length) throw new Error('مقدرتش أركّب الشرائح — جرّب صيغة تانية');
+  if(!Array.isArray(slides) || !slides.length) throw new Error('Couldn\u2019t assemble the slides — try a different wording');
   km.slides = slides.map(s => ({ title: String(s.title||''), bullets: (s.bullets||[]).map(String) }));
-  km.text = `جهزت لك عرض من **${slides.length} شرائح** وجاهز للتحميل — عايز تعديل في أي شريحة؟ قول لي وأنفذه.`;
+  km.text = `Your deck is ready: **${slides.length} slides**, download below. Want me to tweak any slide? Just say the word and I\u2019ll rework it.`;
   finalizeKeo(km, el, el.querySelector('.msg-text'));
 }
 function buildPPTX(slides){
-  if(typeof PptxGenJS === 'undefined'){ toast('مكتبة البوربوينت حملتش — ج_ndد الصفحة', 'err'); return; }
+  if(typeof PptxGenJS === 'undefined'){ toast('The PowerPoint library didn\u2019t load — refresh the page', 'err'); return; }
   const p = new PptxGenJS();
-  p.layout = 'LAYOUT_16x9'; p.rtlMode = true;
+  p.layout = 'LAYOUT_16x9';
   slides.forEach((s, i)=>{
     const sl = p.addSlide();
     sl.background = { color:'101312' };
-    sl.addShape(p.ShapeType.rect, { x:9.55, y:0, w:0.45, h:5.63, fill:{color:'C6F24B'} });
-    sl.addText(s.title, { x:0.5, y:0.55, w:8.8, h:1.1, align:'right', rtlMode:true, fontSize:29, bold:true, color:'C6F24B', fontFace:'Arial' });
+    sl.addShape(p.ShapeType.rect, { x:0, y:0, w:0.45, h:5.63, fill:{color:'C6F24B'} });
+    sl.addText(s.title, { x:0.7, y:0.55, w:8.8, h:1.1, align:'left', fontSize:28, bold:true, color:'C6F24B', fontFace:'Arial' });
     if(s.bullets?.length){
-      sl.addText(s.bullets.map(b => ({ text:b, options:{ bullet:{code:'2022'}, breakLine:true, rtlMode:true } })),
-        { x:0.7, y:1.9, w:8.6, h:3.3, align:'right', fontSize:16, color:'EDEFE6', lineSpacingMultiple:1.5, fontFace:'Arial' });
+      sl.addText(s.bullets.map(b => ({ text:b, options:{ bullet:{code:'2022'}, breakLine:true } })),
+        { x:0.9, y:1.9, w:8.6, h:3.3, align:'left', fontSize:16, color:'EDEFE6', lineSpacingMultiple:1.5, fontFace:'Arial' });
     }
-    sl.addText('KEOAI · كيو', { x:0.5, y:5.15, w:2.5, h:0.35, fontSize:10, color:'6B7266', fontFace:'Arial' });
-    sl.addText(String(i+1), { x:5, y:5.15, w:4.3, h:0.35, align:'left', fontSize:11, color:'9BA398', fontFace:'Arial' });
+    sl.addText('KEOAI \u00B7 Keo', { x:0.7, y:5.15, w:2.5, h:0.35, fontSize:10, color:'6B7266', fontFace:'Arial' });
+    sl.addText(String(i+1), { x:8, y:5.15, w:1.5, h:0.35, align:'right', fontSize:11, color:'9BA398', fontFace:'Arial' });
   });
-  p.writeFile({ fileName: 'KeoAI-عرض-كيو.pptx' }).then(()=>toast('العرض نزل عندك — بشغل كيو مباشرة'));
+  p.writeFile({ fileName: 'KeoAI-Presentation.pptx' }).then(()=>toast('Deck downloaded — fresh from Keo\u2019s desk'));
 }
 
 function detectAndOpenSite(km){
@@ -1028,17 +1080,21 @@ function openPreview(code){
   $('#pvFrame').srcdoc = code;
 }
 
-/* ================== المرفقات ================== */
+/* ================== Attachments ================== */
 function renderAtt(){
   $('#attRow').innerHTML = attachments.map((a,i)=>
-    `<span class="atchip">${a.kind==='image' ? `<img src="${a.dataUrl}">` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`}<span class="an">${esc(a.name)}</span><button data-rmatt="${i}">✕</button></span>`
+    `<span class="atchip">${a.kind==='image' ? `<img src="${a.dataUrl}">` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`}<span class="an">${esc(a.name)}</span><button data-rmatt="${i}">\u2715</button></span>`
   ).join('');
 }
+ $('#attRow').addEventListener('click', e=>{
+  const b = e.target.closest('[data-rmatt]');
+  if(b){ attachments.splice(+b.dataset.rmatt,1); renderAtt(); }
+});
  $('#fileInput').addEventListener('change', e=>{
   [...e.target.files].forEach(f=>{
     const isImg = f.type.startsWith('image/');
-    if(isImg && f.size > 4.5*1024*1024){ toast('الصورة كبيرة — أقل من 4.5 ميجا', 'err'); return; }
-    if(!isImg && f.size > 2*1024*1024){ toast('الملف كبير — أقل من 2 ميجا للملفات النصية', 'err'); return; }
+    if(isImg && f.size > 4.5*1024*1024){ toast('Image too large — under 4.5 MB please', 'err'); return; }
+    if(!isImg && f.size > 2*1024*1024){ toast('File too large — under 2 MB for text files', 'err'); return; }
     const att = { name:f.name, size:f.size, kind: isImg?'image':'text' };
     const rd = new FileReader();
     rd.onload = ()=>{
@@ -1053,7 +1109,7 @@ function renderAtt(){
   e.target.value = '';
 });
 
-/* ================== ربط الأحداث ================== */
+/* ================== Events ================== */
  $('#btnAttach').onclick = ()=>$('#fileInput').click();
  $('#chipSearch').onclick = e=>{ searchIntent = !searchIntent; e.currentTarget.classList.toggle('active', searchIntent); };
  $('#chipPpt').onclick = e=>{ pptIntent = !pptIntent; e.currentTarget.classList.toggle('active', pptIntent); };
@@ -1073,11 +1129,11 @@ chatScroll.addEventListener('click', e=>{
   const act = e.target.closest('[data-act]');
   if(!act) return;
   const a = act.dataset.act;
-  if(a === 'copycode'){ navigator.clipboard.writeText(codeStore[+act.dataset.code]||'').then(()=>toast('الكود اتنسخ')); }
+  if(a === 'copycode'){ navigator.clipboard.writeText(codeStore[+act.dataset.code]||'').then(()=>toast('Code copied')); }
   if(a === 'preview'){ openPreview(codeStore[+act.dataset.code]||''); }
   if(a === 'copymsg'){
     const m = messages.find(x=>x.id===act.dataset.mid);
-    if(m){ navigator.clipboard.writeText(m.text||'').then(()=>toast('الرد اتنسخ')); }
+    if(m){ navigator.clipboard.writeText(m.text||'').then(()=>toast('Reply copied')); }
   }
   if(a === 'dlppt'){
     const m = messages.find(x=>x.id===act.dataset.mid);
@@ -1103,23 +1159,23 @@ chatScroll.addEventListener('click', e=>{
  $('#pvMob').onclick = ()=>{ $('#pv').classList.add('mob'); $('#pvMob').classList.add('active'); $('#pvDesk').classList.remove('active'); };
  $('#pvReload').onclick = ()=>{ $('#pvFrame').srcdoc = pvCode; };
  $('#pvExt').onclick = ()=>{
-  if(!pvCode) return toast('مفيش كود للمعاينة لسه','err');
+  if(!pvCode) return toast('No code to preview yet','err');
   const blob = new Blob([pvCode], {type:'text/html'});
   window.open(URL.createObjectURL(blob), '_blank');
 };
 
-/* بوابة الدخول */
+/* ================== Auth gate ================== */
 let signup = false;
  $('#btnEmailShow').onclick = ()=>{ $('#emailForm').hidden = false; $('#btnEmailShow').style.display = 'none'; $('#fName').style.display = 'none'; };
  $('#emailToggle').onclick = ()=>{
   signup = !signup;
-  $('#emailSubmit').textContent = signup ? 'إنشاء الحساب والدخول' : 'دخول';
-  $('#emailToggle').textContent = signup ? 'عندي حساب بالفعل — دخول' : 'مفيش حساب؟ أنشئ واحد';
+  $('#emailSubmit').textContent = signup ? 'Create account & sign in' : 'Sign in';
+  $('#emailToggle').textContent = signup ? 'I already have an account — sign in' : 'No account? Create one';
   $('#fName').style.display = signup ? '' : 'none';
 };
  $('#emailForm').addEventListener('submit', async e=>{
   e.preventDefault();
-  if(!auth) return toast('فيربيس متوفّرش — بص على الإنترنت','err');
+  if(!auth) return toast('Firebase unavailable — check your connection','err');
   try{
     if(signup){
       const cr = await auth.createUserWithEmailAndPassword($('#fEmail').value.trim(), $('#fPass').value);
@@ -1130,21 +1186,21 @@ let signup = false;
   }catch(err){ showAuthError(err); }
 });
  $('#btnGoogle').onclick = async ()=>{
-  if(!auth) return toast('فيربيس متوفّرش — بص على الإنترنت','err');
+  if(!auth) return toast('Firebase unavailable — check your connection','err');
   try{ await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
   catch(err){ showAuthError(err); }
 };
 
-/* ================== إدارة الجلسة ================== */
+/* ================== Session ================== */
 function showApp(){
   $('#gate').classList.add('hide');
   $('#userchip').hidden = false;
   const name = user.displayName || user.email.split('@')[0];
   $('#hcName').textContent = name;
-  $('#hcAv').textContent = name[0];
+  $('#hcAv').textContent = name[0].toUpperCase();
   $('#sbName').textContent = name;
   $('#sbEmail').textContent = user.email;
-  $('#sbAv').textContent = name[0];
+  $('#sbAv').textContent = name[0].toUpperCase();
   loadChats();
   setStage('boot');
   setTimeout(()=>{ setStage('happy'); confettiBurst(); }, 1000);
