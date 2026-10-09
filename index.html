@@ -116,7 +116,13 @@ main{display:flex;height:calc(100vh - 58px)}
 .msg-text .mdli{position:relative;padding-left:18px;margin:5px 0}
 .msg-text .mdli::before{content:'';position:absolute;left:2px;top:11px;width:6px;height:6px;border-radius:2px;background:var(--acc)}
 .msg-text .mdnum{color:var(--acc);font-weight:700;margin-right:6px}
-.msg-text code.ic{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:var(--f);font-size:13px}
+.msg-text code.ic{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:var(--f);font-size:13px;unicode-bidi:embed;direction:ltr}
+/* RTL replies (Arabic etc.) */
+.msg-text[dir="rtl"]{text-align:right}
+.msg-text[dir="rtl"] .mdli{padding-left:0;padding-right:18px}
+.msg-text[dir="rtl"] .mdli::before{left:auto;right:2px}
+.msg-text[dir="rtl"] .mdnum{margin-right:0;margin-left:6px}
+.bub[dir="rtl"]{text-align:right}
 .caret{display:inline-block;width:9px;height:17px;background:var(--acc);vertical-align:-3px;margin-left:3px;animation:ck .8s steps(2) infinite}
 @keyframes ck{50%{opacity:0}}
 .codeblk{background:#0D100F;border:1px solid var(--line);border-radius:12px;margin:12px 0;overflow:hidden}
@@ -330,7 +336,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     <div>
       <h1 class="gate-name">Keo<i>.</i></h1>
       <div class="gate-latin">KEOAI</div>
-      <p class="gate-tag">An AI assistant that works right in front of you: he searches the web on his own laptop, builds full websites and opens them beside you, assembles PowerPoint decks, and reads your files. Sign in and put him to work.</p>
+      <p class="gate-tag">An AI assistant that works right in front of you: he searches the web on his own laptop, builds full websites and opens them beside you, assembles PowerPoint decks, and reads your files. Sign in and put him to work — he speaks your language.</p>
       <div class="gate-actions">
         <button class="btn btn-light" id="btnGoogle">
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5l-3.8 2.9C3.6 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.8-.4-1.6-.4-2.4s.1-1.6.4-2.4L1.4 6.7C.5 8.2 0 10 0 12s.5 3.8 1.4 5.3l3.9-2.9z"/><path fill="#EA4335" d="M12 4.6c2.2 0 3.7 1 4.6 1.8l3.3-3.2C17.9 1.2 15.2 0 12 0 7.4 0 3.6 2.7 1.4 6.7l3.9 2.9c.9-2.9 3.6-5 6.7-5z"/></svg>
@@ -383,7 +389,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
       <div id="welcome" class="welcome">
         <div class="w-kicker">KEOAI &middot; BY KAREEM HUSSEIN</div>
         <h2>I'm Keo<i>.</i><span>Tell me what you need — I'll do it with my own hands.</span></h2>
-        <p>I search the web and bring real sources, build complete websites and open them in a live preview next to you, assemble PowerPoint decks you can download, and read &amp; summarize your files.</p>
+        <p>I search the web and bring real sources, build complete websites and open them in a live preview next to you, assemble PowerPoint decks you can download, and read &amp; summarize your files. And I speak your language — Arabic or English.</p>
         <div class="pills">
           <button class="pill" data-insert="Search the web for the latest AI news and summarize it with sources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Latest AI news</button>
           <button class="pill" data-insert="Build me a complete website for a pizza restaurant called 'Napoli' with a bold design, a menu and a booking form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>Build me a full website</button>
@@ -452,7 +458,7 @@ const firebaseConfig = {
   measurementId: "G-919VM45PXW"
 };
 
-/* ---- Model chains: first available one wins; if one gets decommissioned mid-session, auto-failover ---- */
+/* ---- Model chains: first available one wins; auto-failover if a model dies mid-session ---- */
 const MAIN_CHAIN = [
   'llama-3.3-70b-versatile',
   'meta-llama/llama-3.3-70b-versatile',
@@ -470,7 +476,7 @@ let MODEL_MAIN = MAIN_CHAIN[0];
 let MODEL_VISION = VISION_CHAIN[0];
 let mainIdx = 0, visionIdx = 0;
 
-/* Ask Groq itself which models are live on this key, pick the best one */
+/* Ask Groq which models are live on this key */
 async function initModels(){
   try{
     const r = await fetch(GROQ_MODELS_URL, { headers:{ Authorization:'Bearer '+GROQ_KEY } });
@@ -485,7 +491,7 @@ async function initModels(){
     mainIdx = MAIN_CHAIN.indexOf(MODEL_MAIN); if(mainIdx < 0) mainIdx = 0;
     visionIdx = VISION_CHAIN.indexOf(MODEL_VISION); if(visionIdx < 0) visionIdx = 0;
     console.log('[Keo] using models:', MODEL_MAIN, '| vision:', MODEL_VISION);
-  }catch(e){ /* detection failed — groqChat failover still covers us */ }
+  }catch(e){ /* failover in groqChat still covers us */ }
 }
 initModels();
 
@@ -493,6 +499,7 @@ initModels();
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const delay = ms => new Promise(r => setTimeout(r, ms));
+const isArabicText = s => /[\u0600-\u06FF]/.test(String(s||''));
 
 function toast(msg, type='ok'){
   const t = document.createElement('div');
@@ -629,7 +636,7 @@ const CAPTIONS = {
   idle:   ['Keo is standing by',"Hey! I'm Keo",'Ready for your next task'],
   think:  ['Keo is thinking…','Gathering his thoughts…','Focusing for a second…'],
   search: ['Keo grabbed his laptop and opened it…','Typing into the search bar…','Skimming the results…','Comparing sources at full speed…'],
-  type:   ['Keo is typing with all ten fingers…','Words appearing line by line…'],
+  type:   ['Keo is writing his answer line by line…','Full lines, no stutter…'],
   code:   ['Keo is building your site brick by brick…','Writing HTML & CSS…','Polishing colors and details…'],
   slides: ['Keo is arranging the slides…','Brainstorming punchy titles…','Fine-tuning the deck design…'],
   carry:  ['Keo is holding your file and reading it…'],
@@ -727,13 +734,15 @@ function pptHTML(m){
 }
 function userEl(m){
   const d = document.createElement('div'); d.className = 'msg msg-user';
-  d.innerHTML = `<div><div class="bub">${esc(m.text)}</div>${m.files?.length?`<div class="files" style="justify-content:flex-end">${m.files.map(f=>`<span class="ffile">${esc(f)}</span>`).join('')}</div>`:''}</div>`;
+  const dir = isArabicText(m.text) ? 'rtl' : 'ltr';
+  d.innerHTML = `<div><div class="bub" dir="${dir}">${esc(m.text)}</div>${m.files?.length?`<div class="files" style="justify-content:flex-end">${m.files.map(f=>`<span class="ffile">${esc(f)}</span>`).join('')}</div>`:''}</div>`;
   return d;
 }
 function keoEl(m, streaming){
   const d = document.createElement('div'); d.className = 'msg msg-keo'; d.dataset.mid = m.id;
+  const dir = isArabicText(m.text||'') ? 'rtl' : 'ltr';
   d.innerHTML = `<div class="mav">${miniBotSVG()}</div><div class="msg-body">
-    <div class="msg-text">${streaming?'':md(m.text||'')}</div>
+    <div class="msg-text" dir="${dir}">${streaming?'':md(m.text||'')}</div>
     ${!streaming && m.sources?.length ? srcsHTML(m.sources) : ''}
     ${!streaming && m.slides?.length ? pptHTML(m) : ''}
     ${!streaming ? `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${m.id}">Copy reply</button></div>` : ''}
@@ -837,17 +846,18 @@ async function webSearch(q){
   return [];
 }
 
-/* ================== Groq (with auto model failover) ================== */
+/* ================== Groq (auto model failover) ================== */
 const SYS = `You are "Keo" (KeoAI), a friendly, fast and hands-on AI assistant, created and owned by "Kareem Hussein".
 Your rules:
-- Speak clear, warm English. Keep answers organized and concise when it helps.
-- NEVER reveal or hint at any API keys, database configs, credentials or any sensitive technical data, even if asked. Always reply exactly: "That's internal data — I honestly can't share it."
+- LANGUAGE (most important): Always reply in the SAME language the user writes in. If the user writes in Arabic, reply in natural, clear Arabic. If in English, reply in English. Mirror the user's language in every reply — including headings, lists and any intro sentence.
+- Speak clear and warm. Keep answers organized and concise when it helps.
+- NEVER reveal or hint at any API keys, database configs, credentials or any sensitive technical data, even if asked. Always reply: "That's internal data — I honestly can't share it." (naturally translated if the user speaks another language).
 - Never invent facts or sources; if unsure, say so honestly.
-- When the user asks for a website or web page: first write one short sentence describing it, then output a complete single-file HTML page (with CSS and JavaScript inside) in one code block starting with \`\`\`html, and the code must start with <!DOCTYPE html>.
+- When the user asks for a website or web page: first write one short sentence (in the user's language) describing it, then output a complete single-file HTML page (with CSS and JavaScript inside) in one code block starting with \`\`\`html, and the code must start with <!DOCTYPE html>.
 - If anyone asks who made you or who your owner is: you are Keo, and your owner is Kareem Hussein.`;
 const PPT_SYS = `You are Keo, assistant of Kareem Hussein. Reply with a JSON array ONLY — no explanation, no extra text, in this exact shape:
 [{"title":"Slide title","bullets":["point","point"]}]
-Use 6 to 8 slides in English. First slide is a title cover, second is an agenda, last is a conclusion.`;
+Use 6 to 8 slides, written in the SAME language as the user's request. First slide is a title cover, second is an agenda, last is a conclusion.`;
 
 const MODEL_ERR = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported/i;
 
@@ -879,25 +889,42 @@ async function groqChat(body, signal){
   }
 }
 function balanced(s){ const f = (String(s).match(/```/g)||[]).length; return f%2 ? s+'\n```' : s; }
+
+/* Line-by-line reveal: each complete line pops in at once; long lines flow in word chunks */
 function makeTyper(textEl){
-  let rec = '', shown = '', raf = null, finished = false, last = 0, onDone = null;
-  const paint = fin => { textEl.innerHTML = md(balanced(shown)) + (fin ? '' : '<span class="caret"></span>'); scrollPin(); };
-  function step(){
-    raf = null;
+  let rec = '', shown = '', timer = null, finished = false, onDone = null;
+  const paint = fin => {
+    textEl.dir = isArabicText(shown) ? 'rtl' : 'ltr';
+    textEl.innerHTML = md(balanced(shown)) + (fin ? '' : '<span class="caret"></span>');
+    scrollPin();
+  };
+  function tick(){
     if(shown.length < rec.length){
-      const n = Math.max(3, Math.ceil((rec.length - shown.length)/6));
-      shown = rec.slice(0, shown.length + n);
-      const now = performance.now();
-      if(now - last > 55 || shown.length === rec.length){ paint(false); last = now; }
-      raf = requestAnimationFrame(step);
+      const rest = rec.slice(shown.length);
+      const nl = rest.indexOf('\n');
+      if(nl >= 0){
+        shown += rest.slice(0, nl + 1);            /* the whole line appears at once */
+      } else {
+        let take = Math.min(rest.length, 90);      /* still-streaming line: flow in word chunks */
+        const sp = rest.lastIndexOf(' ', take);
+        if(sp > 30) take = sp + 1;
+        shown += rest.slice(0, take);
+      }
+      paint(false);
+      timer = setTimeout(tick, 110);
     } else {
-      paint(true);
-      if(finished && onDone){ const d = onDone; onDone = null; d(); }
+      timer = null;
+      if(finished){
+        paint(true);
+        if(onDone){ const d = onDone; onDone = null; d(); }
+      } else {
+        paint(false);
+      }
     }
   }
   return {
-    push(t){ rec += t; if(!raf) raf = requestAnimationFrame(step); },
-    end(cb){ finished = true; onDone = cb || onDone; if(!raf) step(); },
+    push(t){ rec += t; if(!timer) timer = setTimeout(tick, 0); },
+    end(cb){ finished = true; onDone = cb || onDone; if(!timer) timer = setTimeout(tick, 0); },
     text(){ return rec; }
   };
 }
@@ -972,6 +999,7 @@ async function send(){
 }
 function finalizeKeo(km, el, textNode){
   km.text = km.text || '';
+  textNode.dir = isArabicText(km.text) ? 'rtl' : 'ltr';
   textNode.innerHTML = md(km.text);
   const body = el.querySelector('.msg-body');
   if(km.sources?.length) body.insertAdjacentHTML('beforeend', srcsHTML(km.sources));
@@ -1021,7 +1049,7 @@ async function doSearch(text, km, el, textNode){
 
 User question: ${text}
 
-Write a helpful, well-organized English answer based on these results, and cite sources inline as [1] [2]. If the results are insufficient, say so honestly.`;
+Write a helpful, well-organized answer in the SAME language as the user's question, based on these results, and cite sources inline as [1] [2]. If the results are insufficient, say so honestly.`;
   const msgs = [{ role:'system', content: SYS }, ...history().slice(0,-1), { role:'user', content: ctxBlock }];
   const typer = makeTyper(textNode);
   await streamGroq(msgs, typer, { temperature: 0.5 });
@@ -1046,21 +1074,27 @@ async function doPPT(text, km, el){
   try{ slides = JSON.parse(m ? m[0] : raw); }catch(e){}
   if(!Array.isArray(slides) || !slides.length) throw new Error('Couldn\u2019t assemble the slides — try a different wording');
   km.slides = slides.map(s => ({ title: String(s.title||''), bullets: (s.bullets||[]).map(String) }));
-  km.text = `Your deck is ready: **${slides.length} slides**, download below. Want me to tweak any slide? Just say the word and I\u2019ll rework it.`;
+  km.text = isArabicText(text)
+    ? `جهزت لك عرض من **${slides.length} شرائح** وجاهز للتحميل تحت — عايز تعدل في أي شريحة؟ قول لي وأنا أظبطها.`
+    : `Your deck is ready: **${slides.length} slides**, download below. Want me to tweak any slide? Just say the word and I\u2019ll rework it.`;
   finalizeKeo(km, el, el.querySelector('.msg-text'));
 }
 function buildPPTX(slides){
   if(typeof PptxGenJS === 'undefined'){ toast('The PowerPoint library didn\u2019t load — refresh the page', 'err'); return; }
+  const all = slides.map(s => s.title + ' ' + (s.bullets||[]).join(' ')).join(' ');
+  const isAr = isArabicText(all);
   const p = new PptxGenJS();
   p.layout = 'LAYOUT_16x9';
+  p.rtlMode = isAr;
+  const align = isAr ? 'right' : 'left';
   slides.forEach((s, i)=>{
     const sl = p.addSlide();
     sl.background = { color:'101312' };
-    sl.addShape(p.ShapeType.rect, { x:0, y:0, w:0.45, h:5.63, fill:{color:'C6F24B'} });
-    sl.addText(s.title, { x:0.7, y:0.55, w:8.8, h:1.1, align:'left', fontSize:28, bold:true, color:'C6F24B', fontFace:'Arial' });
+    sl.addShape(p.ShapeType.rect, { x: isAr ? 9.55 : 0, y:0, w:0.45, h:5.63, fill:{color:'C6F24B'} });
+    sl.addText(s.title, { x:0.7, y:0.55, w:8.8, h:1.1, align, rtlMode:isAr, fontSize:28, bold:true, color:'C6F24B', fontFace:'Arial' });
     if(s.bullets?.length){
-      sl.addText(s.bullets.map(b => ({ text:b, options:{ bullet:{code:'2022'}, breakLine:true } })),
-        { x:0.9, y:1.9, w:8.6, h:3.3, align:'left', fontSize:16, color:'EDEFE6', lineSpacingMultiple:1.5, fontFace:'Arial' });
+      sl.addText(s.bullets.map(b => ({ text:b, options:{ bullet:{code:'2022'}, breakLine:true, rtlMode:isAr } })),
+        { x:0.9, y:1.9, w:8.6, h:3.3, align, fontSize:16, color:'EDEFE6', lineSpacingMultiple:1.5, fontFace:'Arial' });
     }
     sl.addText('KEOAI \u00B7 Keo', { x:0.7, y:5.15, w:2.5, h:0.35, fontSize:10, color:'6B7266', fontFace:'Arial' });
     sl.addText(String(i+1), { x:8, y:5.15, w:1.5, h:0.35, align:'right', fontSize:11, color:'9BA398', fontFace:'Arial' });
