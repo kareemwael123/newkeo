@@ -25,23 +25,18 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 a{color:var(--acc)}
 ::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#232823;border-radius:9px;border:2px solid var(--bg)}
 
-/* ---------- buttons & icons ---------- */
 .icbtn{width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;color:var(--mut);transition:.2s}
 .icbtn:hover{background:var(--panel2);color:var(--text)}
 .icbtn svg{width:19px;height:19px}
 .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:12px;font-size:15px;font-weight:600;transition:.2s;border:1px solid transparent}
-.btn-light{background:#EDEFE6;color:#11130f}
-.btn-light:hover{background:#fff}
-.btn-line{border-color:var(--line);color:var(--text)}
-.btn-line:hover{background:var(--panel2)}
-.btn-acc{background:var(--acc);color:var(--acc-ink)}
-.btn-acc:hover{filter:brightness(1.06)}
+.btn-light{background:#EDEFE6;color:#11130f}.btn-light:hover{background:#fff}
+.btn-line{border-color:var(--line);color:var(--text)}.btn-line:hover{background:var(--panel2)}
+.btn-acc{background:var(--acc);color:var(--acc-ink)}.btn-acc:hover{filter:brightness(1.06)}
 .chip{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--mut);transition:.2s}
 .chip svg{width:15px;height:15px}
 .chip:hover{color:var(--text);border-color:rgba(235,240,225,.22)}
 .chip.active{background:var(--acc);border-color:var(--acc);color:var(--acc-ink);font-weight:600}
 
-/* ---------- header ---------- */
 header{height:58px;display:flex;align-items:center;gap:14px;padding:0 18px;border-bottom:1px solid var(--line);position:relative;z-index:40;background:rgba(11,13,12,.85);backdrop-filter:blur(8px)}
 #hamb{display:none}
 .brand{display:flex;align-items:baseline;gap:10px}
@@ -53,7 +48,6 @@ header{height:58px;display:flex;align-items:center;gap:14px;padding:0 18px;borde
 .userchip .av{width:28px;height:28px;border-radius:50%;background:var(--acc);color:var(--acc-ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
 .userchip span{font-size:13px}
 
-/* ---------- gate ---------- */
 #gate{position:fixed;inset:0;z-index:80;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;
   background-image:radial-gradient(rgba(235,240,225,.05) 1px,transparent 1px);background-size:26px 26px;transition:opacity .5s}
 #gate.hide{opacity:0;pointer-events:none}
@@ -74,11 +68,12 @@ header{height:58px;display:flex;align-items:center;gap:14px;padding:0 18px;borde
 .gate-credit{margin-top:26px;font-size:13px;color:var(--mut)}
 .gate-credit b{color:var(--text);font-weight:600}
 
-/* ---------- app layout ---------- */
 main{display:flex;height:calc(100vh - 58px)}
 #sidebar{width:282px;flex-shrink:0;border-right:1px solid var(--line);display:flex;flex-direction:column;background:rgba(16,19,18,.5)}
-.sb-top{padding:14px}
+.sb-top{padding:14px;display:flex;flex-direction:column;gap:8px}
 #btnNew{width:100%;justify-content:center}
+.sb-row{display:flex;gap:8px}
+.sb-row .btn{flex:1;justify-content:center;padding:10px 8px;font-size:13px}
 .sb-label{padding:6px 18px;font-size:11.5px;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase}
 #chatList{flex:1;overflow-y:auto;padding:4px 10px}
 .chatitem{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:13.5px;color:#cfd4c6;cursor:pointer;transition:.15s;position:relative}
@@ -96,8 +91,8 @@ main{display:flex;height:calc(100vh - 58px)}
 .sb-user .nm{font-size:13.5px;font-weight:600}
 .sb-user .em{font-size:11.5px;color:var(--mut);max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sb-user .grow{flex:1;min-width:0}
+.cdot{width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(198,242,75,.7)}
 
-/* ---------- chat ---------- */
 #chat{flex:1;display:flex;flex-direction:column;min-width:0}
 #chatScroll{flex:1;overflow-y:auto;padding:26px 22px 10px}
 .msg{max-width:800px;margin:0 auto 22px;animation:up .35s ease both}
@@ -117,7 +112,6 @@ main{display:flex;height:calc(100vh - 58px)}
 .msg-text .mdli::before{content:'';position:absolute;left:2px;top:11px;width:6px;height:6px;border-radius:2px;background:var(--acc)}
 .msg-text .mdnum{color:var(--acc);font-weight:700;margin-right:6px}
 .msg-text code.ic{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:var(--f);font-size:13px;unicode-bidi:embed;direction:ltr}
-/* RTL replies (Arabic etc.) */
 .msg-text[dir="rtl"]{text-align:right}
 .msg-text[dir="rtl"] .mdli{padding-left:0;padding-right:18px}
 .msg-text[dir="rtl"] .mdli::before{left:auto;right:2px}
@@ -133,7 +127,7 @@ main{display:flex;height:calc(100vh - 58px)}
 .cbtn:hover{color:var(--acc);border-color:rgba(198,242,75,.4)}
 .codeblk pre{padding:14px;overflow-x:auto}
 .codeblk code{font-family:var(--f);font-size:12.8px;line-height:1.7;color:#d7dcc9;white-space:pre}
-.msg-acts{margin-top:8px;display:flex;gap:8px}
+.msg-acts{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
 .srcs{margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
 .srcs-t{font-size:12px;color:var(--mut)}
 .src{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:12px;color:#c3c9ba;text-decoration:none;transition:.15s;max-width:240px}
@@ -147,19 +141,17 @@ main{display:flex;height:calc(100vh - 58px)}
 .pslide .pb{font-size:11.5px;color:var(--mut);line-height:1.7}
 .ppt-dl{margin-top:10px}
 
-/* ---------- welcome ---------- */
 .welcome{max-width:800px;margin:8vh auto 0;animation:up .5s ease both}
 .w-kicker{font-size:11px;letter-spacing:4px;color:var(--acc);margin-bottom:14px;font-weight:600}
 .welcome h2{font-family:var(--fd);font-weight:700;font-size:46px;line-height:1.2;margin-bottom:12px}
 .welcome h2 i{font-style:normal;color:var(--acc)}
 .welcome h2 span{display:block;font-family:var(--f);font-weight:500;font-size:24px;color:var(--mut);margin-top:10px}
 .welcome>p{color:var(--mut);font-size:15.5px;line-height:1.9;margin-bottom:30px;max-width:560px}
-.pills{display:flex;flex-wrap:wrap;gap:10px;max-width:660px}
+.pills{display:flex;flex-wrap:wrap;gap:10px;max-width:680px}
 .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:11px 18px;font-size:13.5px;color:#cfd4c6;transition:.2s;background:rgba(16,19,18,.4)}
 .pill svg{width:16px;height:16px;color:var(--acc)}
 .pill:hover{border-color:rgba(198,242,75,.45);color:var(--text);transform:translateY(-2px)}
 
-/* ---------- composer ---------- */
 #composer{padding:10px 22px 16px}
 .comp-box{max-width:800px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 14px 10px;transition:border-color .2s}
 .comp-box:focus-within{border-color:rgba(198,242,75,.4)}
@@ -173,6 +165,7 @@ main{display:flex;height:calc(100vh - 58px)}
 .sendbtn .i-stop{display:none}
 .sendbtn.busy{background:#3a4136;color:var(--acc)}
 .sendbtn.busy .i-up{display:none}.sendbtn.busy .i-stop{display:block}
+#btnMic.rec{color:var(--err);background:rgba(255,107,87,.12);animation:dotp 1s infinite}
 #attRow{max-width:800px;margin:0 auto 8px;display:flex;flex-wrap:wrap;gap:8px}
 .atchip{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:12.5px}
 .atchip img{width:26px;height:26px;object-fit:cover;border-radius:6px}
@@ -181,7 +174,6 @@ main{display:flex;height:calc(100vh - 58px)}
 .atchip button{color:var(--mut)}.atchip button:hover{color:var(--err)}
 .comp-note{max-width:800px;margin:8px auto 0;text-align:center;font-size:11px;color:#5f675c}
 
-/* ---------- site preview ---------- */
 #pv{width:0;overflow:hidden;border-left:1px solid var(--line);display:flex;flex-direction:column;background:var(--panel);transition:width .45s cubic-bezier(.6,0,.3,1)}
 body.pv-open #pv{width:min(46vw,860px)}
 .pv-head{height:48px;flex-shrink:0;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line)}
@@ -189,11 +181,11 @@ body.pv-open #pv{width:min(46vw,860px)}
 .pv-title svg{width:16px;height:16px;color:var(--acc)}
 .pv-tools{margin-left:auto;display:flex;gap:2px}
 .pv-tools .icbtn.active{color:var(--acc);background:var(--panel2)}
+.pv-tools .icbtn.live{color:var(--acc)}
 .pv-body{flex:1;display:flex;justify-content:center;background:#070908;min-height:0}
 #pvFrame{width:100%;height:100%;border:0;background:#fff}
 #pv.mob #pvFrame{width:414px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
 
-/* ---------- Keo stage ---------- */
 #stage{position:fixed;bottom:10px;right:20px;z-index:30;transition:right .45s cubic-bezier(.6,0,.3,1);width:250px;pointer-events:none;text-align:center}
 body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 #stageCap{display:inline-flex;align-items:center;gap:8px;background:rgba(16,19,18,.88);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:12.5px;color:#d7dbcd;margin-bottom:2px;backdrop-filter:blur(6px);min-height:31px}
@@ -201,7 +193,6 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 @keyframes dotp{50%{opacity:.25;transform:scale(.7)}}
 #stageBot{width:240px;pointer-events:auto;cursor:pointer}
 
-/* ---------- Keo character (SVG) ---------- */
 .bot svg{display:block;overflow:visible;width:100%}
 .b-shadow{fill:rgba(0,0,0,.42);transform-box:fill-box;transform-origin:center;animation:bsh 3.2s ease-in-out infinite}
 @keyframes bsh{0%,100%{transform:scaleX(1);opacity:.42}50%{transform:scaleX(.85);opacity:.26}}
@@ -220,8 +211,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 .bot.think .b-head{transform:rotate(-5deg)}
 .b-headshape,.b-body{fill:#E9E3D4}
 .b-ear,.b-neck,.b-foot{fill:#C9C2B1}
-.b-visor{fill:#0E1211}
-.b-chest{fill:#0E1211}
+.b-visor,.b-chest{fill:#0E1211}
 .b-led{fill:var(--acc);animation:dotp 1.6s infinite}
 .b-bar{fill:#39443a}
 .b-eye{fill:var(--acc);opacity:1;transform-box:fill-box;transform-origin:center;transition:transform .12s,opacity .2s}
@@ -297,15 +287,32 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 .mini.working .mini-eyes rect{animation:mwork .3s infinite alternate}
 @keyframes mwork{from{opacity:1}to{opacity:.25}}
 
-/* ---------- toasts ---------- */
 #toasts{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:8px;align-items:center}
 .toast{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:11px;padding:10px 18px;font-size:13.5px;animation:up .3s ease;box-shadow:0 8px 30px rgba(0,0,0,.45);max-width:88vw}
 .toast.err{border-left-color:var(--err)}
-
-/* ---------- confetti ---------- */
 .confetti{position:fixed;width:8px;height:8px;z-index:95;pointer-events:none;border-radius:2px}
 
-/* ---------- mobile ---------- */
+/* ---------- connections modal ---------- */
+#connModal{position:fixed;inset:0;z-index:85;background:rgba(5,7,6,.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px}
+#connModal[hidden]{display:none}
+.conn-panel{width:min(680px,94vw);max-height:88vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:22px;animation:up .3s ease}
+.conn-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.conn-head b{font-family:var(--fd);font-size:19px}
+.conn-head b i{font-style:normal;color:var(--acc)}
+.conn-sub{color:var(--mut);font-size:13px;line-height:1.7;margin-bottom:18px}
+.ccard{border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:12px;background:var(--panel)}
+.ccard-top{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.ccard-top svg{width:20px;height:20px;color:var(--acc)}
+.ccard-top b{font-size:15px}
+.ccard-top .stat{margin-left:auto;font-size:11.5px;color:var(--mut);display:flex;align-items:center;gap:6px}
+.ccard-top .stat.on{color:var(--acc)}
+.ccard p{font-size:12.5px;color:var(--mut);line-height:1.7;margin-bottom:10px}
+.ccard .row{display:flex;gap:8px;flex-wrap:wrap}
+.ccard input{flex:1;min-width:180px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;color:var(--text);font-family:var(--f);font-size:12.5px;outline:none}
+.ccard input:focus{border-color:rgba(198,242,75,.4)}
+.ccard .hint{font-size:11.5px;color:#5f675c;margin-top:8px;line-height:1.6}
+.ccard .hint a{color:var(--acc)}
+
 #backdrop{display:none}
 @media(max-width:900px){
   #hamb{display:inline-flex}
@@ -336,7 +343,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     <div>
       <h1 class="gate-name">Keo<i>.</i></h1>
       <div class="gate-latin">KEOAI</div>
-      <p class="gate-tag">An AI assistant that works right in front of you: he searches the web on his own laptop, builds full websites and opens them beside you, assembles PowerPoint decks, and reads your files. Sign in and put him to work — he speaks your language.</p>
+      <p class="gate-tag">An AI assistant that works right in front of you: he searches the web, builds full websites and publishes them online, posts to your Discord, Telegram &amp; GitHub, assembles PowerPoint decks, and reads your files. He speaks your language.</p>
       <div class="gate-actions">
         <button class="btn btn-light" id="btnGoogle">
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5l-3.8 2.9C3.6 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.8-.4-1.6-.4-2.4s.1-1.6.4-2.4L1.4 6.7C.5 8.2 0 10 0 12s.5 3.8 1.4 5.3l3.9-2.9z"/><path fill="#EA4335" d="M12 4.6c2.2 0 3.7 1 4.6 1.8l3.3-3.2C17.9 1.2 15.2 0 12 0 7.4 0 3.6 2.7 1.4 6.7l3.9 2.9c.9-2.9 3.6-5 6.7-5z"/></svg>
@@ -371,9 +378,19 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 
 <main>
   <aside id="sidebar">
-    <div class="sb-top"><button class="btn btn-acc" id="btnNew" style="width:100%">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-      New chat</button></div>
+    <div class="sb-top">
+      <button class="btn btn-acc" id="btnNew">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        New chat</button>
+      <div class="sb-row">
+        <button class="btn btn-line" id="btnConn">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M12 9v6"/><path d="M10.3 4.9 8 7H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3l2.3 2.1a1 1 0 0 0 1.7-.8V5.7a1 1 0 0 0-1.7-.8z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+          Links <span id="connCount" class="cdot" style="display:none"></span></button>
+        <button class="btn btn-line" id="btnExport">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M6 11l6 6 6-6M5 21h14"/></svg>
+          Export</button>
+      </div>
+    </div>
     <div class="sb-label">Chats</div>
     <div id="chatList"></div>
     <div class="sb-user">
@@ -389,12 +406,12 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
       <div id="welcome" class="welcome">
         <div class="w-kicker">KEOAI &middot; BY KAREEM HUSSEIN</div>
         <h2>I'm Keo<i>.</i><span>Tell me what you need — I'll do it with my own hands.</span></h2>
-        <p>I search the web and bring real sources, build complete websites and open them in a live preview next to you, assemble PowerPoint decks you can download, and read &amp; summarize your files. And I speak your language — Arabic or English.</p>
+        <p>I search the web with real sources, build complete websites and publish them live, post to your Discord, Telegram &amp; GitHub, draft your Facebook &amp; X posts, assemble PowerPoint decks, and read your files — in Arabic or English.</p>
         <div class="pills">
           <button class="pill" data-insert="Search the web for the latest AI news and summarize it with sources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Latest AI news</button>
-          <button class="pill" data-insert="Build me a complete website for a pizza restaurant called 'Napoli' with a bold design, a menu and a booking form"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>Build me a full website</button>
+          <button class="pill" data-insert="Build me a complete website for a coffee shop called 'Brew' with a warm design and a menu, then publish it live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>Build &amp; publish a live website</button>
+          <button class="pill" data-insert="Announce on my Discord that our community reached 10,000 members — write it exciting then post it"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M12 9v6"/><path d="M10.3 4.9 8 7H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3l2.3 2.1a1 1 0 0 0 1.7-.8V5.7a1 1 0 0 0-1.7-.8z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>Post to my Discord</button>
           <button class="pill" data-insert="Make me a PowerPoint presentation about the benefits of entrepreneurship for young people"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Ready-made PowerPoint</button>
-          <button class="pill" data-insert="I'll upload a file — read it and summarize it in bullet points"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Upload a file to summarize</button>
         </div>
       </div>
     </div>
@@ -405,6 +422,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
         <div class="comp-row">
           <div class="comp-tools">
             <button class="icbtn" id="btnAttach" title="Attach files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+            <button class="icbtn" id="btnMic" title="Voice input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg></button>
             <button class="chip" id="chipSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Web search</button>
             <button class="chip" id="chipPpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Presentation</button>
           </div>
@@ -425,6 +443,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
         <button class="icbtn active" id="pvDesk" title="Desktop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
         <button class="icbtn" id="pvMob" title="Mobile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></button>
         <button class="icbtn" id="pvReload" title="Reload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg></button>
+        <button class="icbtn" id="pvPub" title="Publish live on GitHub Pages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5 3 21l4.5-1.5M14 4l6 6M9 15l-1.5 1.5c-1.2 1.2-3.3 1.4-4.5 0s-1.2-3.3 0-4.5L9 6c1.2-1.2 3.3-1.4 4.5 0"/><path d="M15 9l1.5-1.5c1.2-1.2 3.3-1.4 4.5 0s1.2 3.3 0 4.5L15 18c-1.2 1.2-3.3 1.4-4.5 0"/></svg></button>
         <button class="icbtn" id="pvExt" title="Open in new tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M21 3l-9 9"/><path d="M10 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/></svg></button>
         <button class="icbtn" id="pvClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
       </div>
@@ -437,6 +456,51 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 <div id="stage">
   <div id="stageCap"><span class="capDot"></span><span id="capText">Keo is standing by</span></div>
   <div id="stageBot" class="bot" title="Poke Keo"></div>
+</div>
+
+<!-- Connections modal -->
+<div id="connModal" hidden>
+  <div class="conn-panel">
+    <div class="conn-head"><b>Keo <i>Links</i></b><button class="icbtn" id="connClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <p class="conn-sub">Link your accounts once, then just tell Keo what to do: "announce this on my Discord", "publish this site live", "save this as a GitHub gist". Tokens are stored in <b>your own</b> Firebase database under your account.</p>
+
+    <div class="ccard">
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.05.77 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg><b>GitHub</b><span class="stat" id="st-github">not linked</span></div>
+      <p>Full power: create repos &amp; gists, push files, publish sites live on GitHub Pages.</p>
+      <div class="row">
+        <input id="ghToken" type="password" placeholder="Personal Access Token (classic or fine-grained)">
+        <button class="btn btn-acc" id="ghTest" style="padding:9px 16px;font-size:13px">Connect</button>
+      </div>
+      <p class="hint">Make a token at <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a> — give it <b>repo</b> permission. Keo only sees what you allow.</p>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 3-9.5 9.5M22 3l-7 19-3-8-8-3z"/></svg><b>Telegram</b><span class="stat" id="st-telegram">not linked</span></div>
+      <p>Real auto-posting: Keo sends messages to your channel or group through your bot.</p>
+      <div class="row">
+        <input id="tgToken" type="password" placeholder="Bot token from @BotFather">
+        <input id="tgChat" placeholder="@channelname or -100… chat ID" style="max-width:220px">
+        <button class="btn btn-acc" id="tgTest" style="padding:9px 16px;font-size:13px">Connect</button>
+      </div>
+      <p class="hint">Create a bot with <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>, add it as <b>admin</b> to your channel/group, then send any message there and use the chat ID.</p>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 8.5-8.5c4.66 0 8.5 3.84 8.5 8.5z"/></svg><b>Discord</b><span class="stat" id="st-discord">not linked</span></div>
+      <p>Real auto-posting: Keo posts announcements straight into your channel via webhook.</p>
+      <div class="row">
+        <input id="dcHook" type="password" placeholder="Channel webhook URL">
+        <button class="btn btn-acc" id="dcTest" style="padding:9px 16px;font-size:13px">Connect</button>
+      </div>
+      <p class="hint">In Discord: channel settings → Integrations → Webhooks → New Webhook → Copy URL.</p>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg><b>Facebook · X · YouTube</b><span class="stat" id="st-social">one-click ready</span></div>
+      <p>These platforms closed their auto-posting APIs, so Keo does the next best thing honestly: he <b>writes the perfect post</b> (or title + description for YouTube), copies it to your clipboard, and opens the platform ready to paste — one click and it's out.</p>
+      <p class="hint">Just ask: "write a Facebook post about our sale and open Facebook" or "prepare a YouTube upload for my new video".</p>
+    </div>
+  </div>
 </div>
 
 <div id="toasts"></div>
@@ -458,25 +522,16 @@ const firebaseConfig = {
   measurementId: "G-919VM45PXW"
 };
 
-/* ---- Model chains: first available one wins; auto-failover if a model dies mid-session ---- */
+/* ---- Model chains with auto-discovery + mid-session failover ---- */
 const MAIN_CHAIN = [
-  'llama-3.3-70b-versatile',
-  'meta-llama/llama-3.3-70b-versatile',
-  'openai/gpt-oss-120b',
-  'openai/gpt-oss-20b',
-  'moonshotai/kimi-k2-instruct',
-  'qwen/qwen3-32b',
-  'llama-3.1-8b-instant'
+  'llama-3.3-70b-versatile','meta-llama/llama-3.3-70b-versatile',
+  'openai/gpt-oss-120b','openai/gpt-oss-20b','moonshotai/kimi-k2-instruct',
+  'qwen/qwen3-32b','llama-3.1-8b-instant'
 ];
 const VISION_CHAIN = [
-  'meta-llama/llama-4-scout-17b-16e-instruct',
-  'meta-llama/llama-4-maverick-17b-128e-instruct'
+  'meta-llama/llama-4-scout-17b-16e-instruct','meta-llama/llama-4-maverick-17b-128e-instruct'
 ];
-let MODEL_MAIN = MAIN_CHAIN[0];
-let MODEL_VISION = VISION_CHAIN[0];
-let mainIdx = 0, visionIdx = 0;
-
-/* Ask Groq which models are live on this key */
+let MODEL_MAIN = MAIN_CHAIN[0], MODEL_VISION = VISION_CHAIN[0], mainIdx = 0, visionIdx = 0;
 async function initModels(){
   try{
     const r = await fetch(GROQ_MODELS_URL, { headers:{ Authorization:'Bearer '+GROQ_KEY } });
@@ -484,14 +539,13 @@ async function initModels(){
     const j = await r.json();
     const ids = new Set((j.data || []).map(m => m.id));
     const pick = chain => chain.find(id => ids.has(id));
-    const anyChat = [...ids].find(id =>
-      /(llama|gpt|qwen|kimi|deepseek|gemini|mixtral)/i.test(id) && !/whisper|tts|guard|embed|moderation|playai/i.test(id));
+    const anyChat = [...ids].find(id => /(llama|gpt|qwen|kimi|deepseek|gemini|mixtral)/i.test(id) && !/whisper|tts|guard|embed|moderation|playai/i.test(id));
     MODEL_MAIN = pick(MAIN_CHAIN) || anyChat || MODEL_MAIN;
     MODEL_VISION = pick(VISION_CHAIN) || MODEL_MAIN;
-    mainIdx = MAIN_CHAIN.indexOf(MODEL_MAIN); if(mainIdx < 0) mainIdx = 0;
-    visionIdx = VISION_CHAIN.indexOf(MODEL_VISION); if(visionIdx < 0) visionIdx = 0;
+    mainIdx = Math.max(0, MAIN_CHAIN.indexOf(MODEL_MAIN));
+    visionIdx = Math.max(0, VISION_CHAIN.indexOf(MODEL_VISION));
     console.log('[Keo] using models:', MODEL_MAIN, '| vision:', MODEL_VISION);
-  }catch(e){ /* failover in groqChat still covers us */ }
+  }catch(e){}
 }
 initModels();
 
@@ -508,7 +562,6 @@ function toast(msg, type='ok'){
   $('#toasts').appendChild(t);
   setTimeout(()=>{ t.style.opacity=0; t.style.transition='.4s'; setTimeout(()=>t.remove(),400); }, 3400);
 }
-
 function confettiBurst(){
   const colors = ['#C6F24B','#EDEFE6','#8FD14F','#D9D3C2'];
   const rect = $('#stageBot').getBoundingClientRect();
@@ -525,6 +578,12 @@ function confettiBurst(){
       {transform:`translate(${(Math.random()-.5)*340}px, ${120+Math.random()*120}px) rotate(${Math.random()*720}deg)`, opacity:0}
     ], {duration: 1300+Math.random()*600, easing:'cubic-bezier(.2,.6,.4,1)'}).onfinish = ()=>c.remove();
   }
+}
+function download(name, content, mime){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], {type: mime||'text/plain'}));
+  a.download = name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
 }
 
 /* ================== Keo character (SVG) ================== */
@@ -606,7 +665,6 @@ function botSVG(){ return `
     </g>
   </g>
 </svg>`;}
-
 function miniBotSVG(){ return `
 <svg viewBox="0 0 64 66" class="mini" aria-hidden="true">
   <line x1="32" y1="12" x2="32" y2="6" stroke="#C9C2B1" stroke-width="3" stroke-linecap="round"/>
@@ -682,8 +740,234 @@ function showAuthError(e){ toast(authErrors[e?.code] || ('Something went wrong: 
 let messages = [], chats = {}, currentChatId = null, chatTitle = '';
 let attachments = [], searchIntent = false, pptIntent = false;
 let busy = false, streamCtrl = null, pin = true, codeStore = [], pvCode = '';
+let connections = {};
 const chatScroll = $('#chatScroll'), ta = $('#ta');
 chatScroll.addEventListener('scroll', ()=>{ pin = chatScroll.scrollTop + chatScroll.clientHeight > chatScroll.scrollHeight - 150; });
+
+/* ================== Connections ================== */
+function saveConnections(){
+  if(user && dbOk){ try{ firebase.database().ref('users/'+user.uid+'/connections').set(connections); }catch(e){} }
+  renderConnStatus();
+}
+async function loadConnections(){
+  if(!user || !dbOk) return;
+  try{
+    const s = await firebase.database().ref('users/'+user.uid+'/connections').once('value');
+    connections = s.val() || {};
+    renderConnStatus();
+  }catch(e){}
+}
+function renderConnStatus(){
+  const n = ['github','telegram','discord'].filter(k => connections[k]).length;
+  $('#connCount').style.display = n ? '' : 'none';
+  const set = (id, on, txt) => { const e = $('#'+id); if(e){ e.textContent = txt; e.classList.toggle('on', on); } };
+  set('st-github', !!connections.github, connections.github ? ('linked as ' + connections.github.login) : 'not linked');
+  set('st-telegram', !!connections.telegram, connections.telegram ? 'linked' : 'not linked');
+  set('st-discord', !!connections.discord, connections.discord ? 'linked' : 'not linked');
+}
+ $('#btnConn').onclick = ()=>{ $('#connModal').hidden = false; };
+ $('#connClose').onclick = ()=>{ $('#connModal').hidden = true; };
+ $('#connModal').addEventListener('click', e=>{ if(e.target.id === 'connModal') $('#connModal').hidden = true; });
+
+/* GitHub helpers */
+const GH = 'https://api.github.com';
+async function gh(path, opt={}){
+  const res = await fetch(GH+path, {
+    method: opt.method||'GET',
+    headers: { Authorization:'Bearer '+connections.github.token, Accept:'application/vnd.github+json',
+      ...(opt.body?{'Content-Type':'application/json'}:{}) },
+    body: opt.body ? JSON.stringify(opt.body) : undefined
+  });
+  if(!res.ok){ let m='HTTP '+res.status; try{ m=(await res.json()).message||m; }catch(e){} throw new Error(m); }
+  return res.status===204 ? null : res.json();
+}
+ $('#ghTest').onclick = async ()=>{
+  const token = $('#ghToken').value.trim();
+  if(!token) return toast('Paste your GitHub token first','err');
+  connections.github = { token, login:'' };
+  try{
+    const me = await gh('/user');
+    connections.github.login = me.login;
+    saveConnections(); $('#ghToken').value = '';
+    toast('GitHub linked as ' + me.login); confettiBurst();
+  }catch(err){ delete connections.github; renderConnStatus(); toast('GitHub rejected the token: '+err.message,'err'); }
+};
+
+/* Telegram */
+ $('#tgTest').onclick = async ()=>{
+  const token = $('#tgToken').value.trim(), chat = $('#tgChat').value.trim();
+  if(!token || !chat) return toast('Need both bot token and chat ID','err');
+  try{
+    const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: chat, text: '\u2705 Keo linked this chat successfully — messages from Kareem\u2019s assistant will arrive here.' })
+    });
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.description || 'rejected');
+    connections.telegram = { token, chat };
+    saveConnections(); $('#tgToken').value = '';
+    toast('Telegram linked — check the test message'); confettiBurst();
+  }catch(err){ toast('Telegram error: '+err.message,'err'); }
+};
+
+/* Discord */
+ $('#dcTest').onclick = async ()=>{
+  const hook = $('#dcHook').value.trim();
+  if(!/^https:\/\/(discord|discordapp)\.com\/api\/webhooks\//.test(hook)) return toast('That doesn\u2019t look like a Discord webhook URL','err');
+  try{
+    const r = await fetch(hook, { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ content:'\u2705 **Keo** is now connected to this channel — announcements from Kareem\u2019s assistant will land here.' }) });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    connections.discord = { webhook: hook };
+    saveConnections(); $('#dcHook').value = '';
+    toast('Discord linked — check the channel'); confettiBurst();
+  }catch(err){ toast('Discord error: '+err.message,'err'); }
+};
+
+async function discordSend(text){
+  if(!connections.discord) throw new Error('Discord is not linked — open Keo Links');
+  const r = await fetch(connections.discord.webhook, { method:'POST',
+    headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content: text.slice(0,1900) }) });
+  if(!r.ok && r.status !== 204) throw new Error('Discord HTTP '+r.status);
+}
+async function telegramSend(text){
+  if(!connections.telegram) throw new Error('Telegram is not linked — open Keo Links');
+  const r = await fetch(`https://api.telegram.org/bot${connections.telegram.token}/sendMessage`,
+    { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ chat_id: connections.telegram.chat, text: text.slice(0,3900) }) });
+  const j = await r.json();
+  if(!j.ok) throw new Error(j.description || 'Telegram error');
+}
+async function ghCreateRepo(name, descr){
+  if(!connections.github) throw new Error('GitHub is not linked — open Keo Links');
+  return gh('/user/repos', { method:'POST', body:{ name, private:false, auto_init:false, description: descr||'Built with KeoAI' } });
+}
+async function ghCreateGist(filename, content, descr){
+  if(!connections.github) throw new Error('GitHub is not linked — open Keo Links');
+  return gh('/gists', { method:'POST', body:{ description: descr||'Made by KeoAI', files: { [filename]: { content } }, public:false } });
+}
+async function publishToPages(code){
+  if(!connections.github) throw new Error('GitHub is not linked — open Keo Links');
+  const me = await gh('/user');
+  const name = 'keo-site-' + Date.now().toString(36);
+  await ghCreateRepo(name, 'Live site built by KeoAI \u00B7 by '+me.login);
+  const content = btoa(unescape(encodeURIComponent(code)));
+  await gh(`/repos/${me.login}/${name}/contents/index.html`, { method:'PUT', body:{ message:'KeoAI site publish', content } });
+  try{ await gh(`/repos/${me.login}/${name}/pages`, { method:'POST', body:{ source:{ branch:'main', path:'/' } } }); }catch(e){}
+  return `https://${me.login}.github.io/${name}/`;
+}
+function lastSiteCode(){
+  if(pvCode) return pvCode;
+  for(let i=messages.length-1;i>=0;i--){ if(messages[i].code) return messages[i].code; }
+  return null;
+}
+
+/* one-click social (honest mode) */
+async function draftPost(brief, platform){
+  const lang = isArabicText(brief) ? 'Arabic' : 'English';
+  const res = await groqChat({ model: MODEL_MAIN, temperature: 0.85, max_tokens: 700, messages: [
+    { role:'system', content: `You draft ready-to-publish social media posts for ${platform}. Write ONLY the final post text in ${lang}. Add fitting emojis and hashtags if appropriate. No quotes, no explanations, no markdown.` },
+    { role:'user', content: brief }
+  ]});
+  const j = await res.json();
+  return (j.choices?.[0]?.message?.content || '').trim();
+}
+async function socialHandoff(text, km, el, textNode, platform){
+  setStage('type');
+  const post = await draftPost(text, platform);
+  try{ await navigator.clipboard.writeText(post); }catch(e){}
+  const urls = {
+    facebook: 'https://www.facebook.com/',
+    x: 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(post.slice(0,270)),
+    youtube: 'https://www.youtube.com/upload',
+    linkedin: 'https://www.linkedin.com/'
+  };
+  window.open(urls[platform], '_blank');
+  const ar = isArabicText(text);
+  const names = { facebook:'Facebook', x:'X (Tweet)', youtube:'YouTube Studio', linkedin:'LinkedIn' };
+  km.text = ar
+    ? `جهزت البوست وقعملته **copy** على جهازك — وفاتحت ${names[platform]} جاهز. الصقه وانشر.\n\nفيسبوك ويوتيوب قفلوا النشر التلقائي من الـ API بتاعهم، فدي أسرع وأضمن طريقة: الكتابة عليا، والضغطة الواحدة عليك.\n\n---\n\n${post}`
+    : `Your post is drafted and **copied** to your clipboard — ${names[platform]} is open and ready. Paste and publish.\n\nHeads-up: Facebook & YouTube shut down auto-posting APIs, so this is the fastest honest route: I write, you click once.\n\n---\n\n${post}`;
+  finalizeKeo(km, el, textNode);
+}
+
+/* intent router: does Keo's hands-on jobs before the chat model runs */
+async function handleConnIntent(text, km, el, textNode){
+  const t = text.toLowerCase();
+  const wants = re => re.test(t);
+  const actionRe = /(post|share|send|publish|announce|upload|save|create|make|deploy|انشر|ابعث|شارك|اعمل|انشر|احفظ|نشِر)/i;
+  try{
+    /* publish site live */
+    if(wants(/publish|deploy|انشر.*(الموقع|الموقع|اونلاين|جيت ?هاب)|على النت/)){
+      if(wants(/site|page|website|github|pages|الموقع|الصفحة/)){
+        const code = lastSiteCode();
+        if(code){
+          setStage('code');
+          const url = await publishToPages(code);
+          km.code = code; openPreview(code);
+          km.text = isArabicText(text)
+            ? `نشرت الموقع على الإنترنت! \ud83d\ude80\n\n**${url}**\n\nبيدخل خلال دقيقة أو اتنين على GOOGLE PAGES — والرابط شغال لأي حد في العالم. المشروع اتعمل في حساب جيت هاب بتاعك (${connections.github.login}).`
+            : `Your site is LIVE on the internet! \ud83d\ude80\n\n**${url}**\n\nIt goes fully live within a minute or two — the link works for anyone, anywhere. The repo was created in your GitHub account (${connections.github.login}).`;
+          finalizeKeo(km, el, textNode); return true;
+        }
+      }
+    }
+    /* discord */
+    if(wants(/\bdiscord\b/) && actionRe.test(t)){
+      setStage('type');
+      await discordSend(await draftPost(text, 'Discord announcement'));
+      km.text = isArabicText(text) ? 'بعتها على ديسكورد! \u2705 روح شوف القناة.' : 'Posted to your Discord! \u2705 Go check the channel.';
+      finalizeKeo(km, el, textNode); return true;
+    }
+    /* telegram */
+    if(wants(/telegram|تلجرام|تليجرام/) && actionRe.test(t)){
+      setStage('type');
+      await telegramSend(await draftPost(text, 'Telegram channel post'));
+      km.text = isArabicText(text) ? 'بعتها على تلجرام! \u2705 اتفرج على القناة.' : 'Sent to your Telegram! \u2705 Check the channel.';
+      finalizeKeo(km, el, textNode); return true;
+    }
+    /* gist */
+    if(wants(/gist/) && (wants(/github|save|create|make|احفظ|اعمل/))){
+      setStage('code');
+      const body = text.replace(/.*gist\s*(with|containing|of|بـ)?/i,'').trim() || text;
+      const j = await ghCreateGist('keo-snippet.txt', body, 'Saved by KeoAI');
+      km.text = isArabicText(text) ? `حفظتها GIST على جيت هاب: \u2705\n\n${j.html_url}` : `Saved as a GitHub Gist: \u2705\n\n${j.html_url}`;
+      finalizeKeo(km, el, textNode); return true;
+    }
+    /* repo */
+    if(wants(/\brepo|repository|ريبو/) && wants(/create|make|new|اعمل|جديد/)){
+      setStage('code');
+      const nm = (text.match(/(?:called|named)\s+["']?([\w-]+)/i) || [])[1] || ('keo-repo-'+Date.now().toString(36));
+      await ghCreateRepo(nm.replace(/[^\w-]/g,'-'));
+      km.text = isArabicText(text) ? `عملت ريبو جديد باسم **${nm}** في حسابك \u2705 — تلاقيه على جيت هاب.` : `Created a new repo **${nm}** in your account \u2705 — it's on your GitHub now.`;
+      finalizeKeo(km, el, textNode); return true;
+    }
+    /* facebook */
+    if(wants(/facebook|فيسبوك|فيسبوك|\bfb\b/) && actionRe.test(t)){ await socialHandoff(text, km, el, textNode, 'facebook'); return true; }
+    /* X / twitter */
+    if(wants(/\btweet\b|twitter|x\.com|\bx\b.*post/) && actionRe.test(t)){ await socialHandoff(text, km, el, textNode, 'x'); return true; }
+    /* youtube */
+    if(wants(/youtube|يوتيوب/) && wants(/upload|title|description|انز|وصف/)){ await socialHandoff(text, km, el, textNode, 'youtube'); return true; }
+    /* linkedin */
+    if(wants(/linkedin|لينكد/) && actionRe.test(t)){ await socialHandoff(text, km, el, textNode, 'linkedin'); return true; }
+  }catch(err){
+    const ar = isArabicText(text);
+    const needLink = /not linked/i.test(err.message||'');
+    if(needLink){ $('#connModal').hidden = false; }
+    km.text = ar
+      ? (needLink ? 'الحساب ده مش متوصل لسه — فتحتلك **Keo Links** فوق، وصّل الحساب مرة واحدة وارجع قول لي وأنفذ فورًا.' : 'حصلت مشكلة وأنا بنفذ: ' + (err.message||'') + '\nجرّب تاني.')
+      : (needLink ? 'That account isn\u2019t linked yet — I opened **Keo Links** for you. Connect it once and ask me again, I\u2019ll execute instantly.' : 'Ran into a problem while executing: ' + (err.message||'') + '\nTry again.');
+    finalizeKeo(km, el, textNode); return true;
+  }
+  return false;
+}
+function connNote(){
+  const l = [];
+  if(connections.github) l.push('GitHub (' + connections.github.login + ')');
+  if(connections.telegram) l.push('Telegram');
+  if(connections.discord) l.push('Discord');
+  if(l.length) return 'The user has these services linked and Keo can act on them directly when asked: ' + l.join(', ') + '.';
+  return 'No services are linked yet. If the user asks to post or publish somewhere, briefly mention the Keo Links panel in the sidebar.';
+}
 
 /* ================== Rendering ================== */
 function md(src){
@@ -717,7 +1001,7 @@ function md(src){
 function codeBlockHTML(b){
   const id = codeStore.push(b.code) - 1;
   const isSite = /^(html|xml)?$/.test(b.lang) && /<(!doctype|html|body|div|section|canvas)/i.test(b.code) && b.code.length > 300;
-  return `<div class="codeblk"><div class="codehead"><span>${esc(b.lang||'code')}</span><div>${isSite?`<button class="cbtn" data-act="preview" data-code="${id}">Preview beside me</button>`:''}<button class="cbtn" data-act="copycode" data-code="${id}">Copy</button></div></div><pre><code>${esc(b.code)}</code></pre></div>`;
+  return `<div class="codeblk"><div class="codehead"><span>${esc(b.lang||'code')}</span><div>${isSite?`<button class="cbtn" data-act="preview" data-code="${id}">Preview</button>`:''}<button class="cbtn" data-act="copycode" data-code="${id}">Copy</button></div></div><pre><code>${esc(b.code)}</code></pre></div>`;
 }
 function srcsHTML(srcs){
   return `<div class="srcs"><span class="srcs-t">Keo's web sources:</span>` + srcs.map((r,i)=>{
@@ -745,7 +1029,7 @@ function keoEl(m, streaming){
     <div class="msg-text" dir="${dir}">${streaming?'':md(m.text||'')}</div>
     ${!streaming && m.sources?.length ? srcsHTML(m.sources) : ''}
     ${!streaming && m.slides?.length ? pptHTML(m) : ''}
-    ${!streaming ? `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${m.id}">Copy reply</button></div>` : ''}
+    ${!streaming ? `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${m.id}">Copy</button><button class="cbtn" data-act="speak" data-mid="${m.id}">\u25B6 Listen</button></div>` : ''}
   </div>`;
   return d;
 }
@@ -757,7 +1041,7 @@ function renderAll(){
   scrollPin();
 }
 
-/* ================== Database persistence ================== */
+/* ================== Persistence ================== */
 function persist(){
   if(!user || !dbOk || !currentChatId) return;
   const clean = messages.map(m => ({ id:m.id, role:m.role, text:m.text||'', ts:m.ts, files:m.files||null,
@@ -790,6 +1074,13 @@ function loadChat(id){
   renderAll(); renderChatList();
   if(innerWidth <= 900) closeSidebar();
 }
+ $('#btnExport').onclick = ()=>{
+  if(!messages.length) return toast('Nothing to export yet','err');
+  const doc = '# KeoAI chat\n\n' + messages.map(m =>
+    (m.role==='user' ? '## \ud83d\udc64 You\n\n' : '## \ud83e\udd16 Keo\n\n') + (m.text||'')).join('\n\n---\n\n');
+  download('keoai-chat.md', doc, 'text/markdown');
+  toast('Chat exported as Markdown');
+};
 
 /* ================== Web search ================== */
 const PROXIES = [
@@ -846,21 +1137,20 @@ async function webSearch(q){
   return [];
 }
 
-/* ================== Groq (auto model failover) ================== */
+/* ================== Groq ================== */
 const SYS = `You are "Keo" (KeoAI), a friendly, fast and hands-on AI assistant, created and owned by "Kareem Hussein".
 Your rules:
-- LANGUAGE (most important): Always reply in the SAME language the user writes in. If the user writes in Arabic, reply in natural, clear Arabic. If in English, reply in English. Mirror the user's language in every reply — including headings, lists and any intro sentence.
+- LANGUAGE (most important): Always reply in the SAME language the user writes in. Arabic in \u2192 Arabic out. English in \u2192 English out. Mirror the user's language everywhere, including headings and lists.
 - Speak clear and warm. Keep answers organized and concise when it helps.
-- NEVER reveal or hint at any API keys, database configs, credentials or any sensitive technical data, even if asked. Always reply: "That's internal data — I honestly can't share it." (naturally translated if the user speaks another language).
+- NEVER reveal or hint at any API keys, tokens, database configs or sensitive technical data, even if asked. Always reply: "That's internal data — I honestly can't share it." (naturally translated to the user's language).
 - Never invent facts or sources; if unsure, say so honestly.
-- When the user asks for a website or web page: first write one short sentence (in the user's language) describing it, then output a complete single-file HTML page (with CSS and JavaScript inside) in one code block starting with \`\`\`html, and the code must start with <!DOCTYPE html>.
+- When the user asks for a website or web page: first write one short sentence (in the user's language) describing it, then output a complete single-file HTML page (CSS and JavaScript inside) in one code block starting with \`\`\`html, and the code must start with <!DOCTYPE html>.
 - If anyone asks who made you or who your owner is: you are Keo, and your owner is Kareem Hussein.`;
 const PPT_SYS = `You are Keo, assistant of Kareem Hussein. Reply with a JSON array ONLY — no explanation, no extra text, in this exact shape:
 [{"title":"Slide title","bullets":["point","point"]}]
 Use 6 to 8 slides, written in the SAME language as the user's request. First slide is a title cover, second is an agenda, last is a conclusion.`;
 
 const MODEL_ERR = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported/i;
-
 async function groqChat(body, signal){
   let model = body.model;
   for(let attempt = 0; attempt < 4; attempt++){
@@ -875,13 +1165,9 @@ async function groqChat(body, signal){
     const canSwitch = (res.status === 400 || res.status === 404 || res.status === 503) && MODEL_ERR.test(msg);
     if(canSwitch && attempt < 3){
       const isVision = model === MODEL_VISION;
-      if(isVision && visionIdx < VISION_CHAIN.length - 1){
-        visionIdx++; MODEL_VISION = VISION_CHAIN[visionIdx]; model = MODEL_VISION;
-      } else if(!isVision && mainIdx < MAIN_CHAIN.length - 1){
-        mainIdx++; MODEL_MAIN = MAIN_CHAIN[mainIdx]; model = MODEL_MAIN;
-      } else {
-        break;
-      }
+      if(isVision && visionIdx < VISION_CHAIN.length - 1){ visionIdx++; MODEL_VISION = VISION_CHAIN[visionIdx]; model = MODEL_VISION; }
+      else if(!isVision && mainIdx < MAIN_CHAIN.length - 1){ mainIdx++; MODEL_MAIN = MAIN_CHAIN[mainIdx]; model = MODEL_MAIN; }
+      else break;
       toast('Model "' + model + '" wasn\u2019t available — switched automatically');
       continue;
     }
@@ -890,7 +1176,7 @@ async function groqChat(body, signal){
 }
 function balanced(s){ const f = (String(s).match(/```/g)||[]).length; return f%2 ? s+'\n```' : s; }
 
-/* Line-by-line reveal: each complete line pops in at once; long lines flow in word chunks */
+/* line-by-line reveal */
 function makeTyper(textEl){
   let rec = '', shown = '', timer = null, finished = false, onDone = null;
   const paint = fin => {
@@ -902,10 +1188,9 @@ function makeTyper(textEl){
     if(shown.length < rec.length){
       const rest = rec.slice(shown.length);
       const nl = rest.indexOf('\n');
-      if(nl >= 0){
-        shown += rest.slice(0, nl + 1);            /* the whole line appears at once */
-      } else {
-        let take = Math.min(rest.length, 90);      /* still-streaming line: flow in word chunks */
+      if(nl >= 0){ shown += rest.slice(0, nl + 1); }
+      else {
+        let take = Math.min(rest.length, 90);
         const sp = rest.lastIndexOf(' ', take);
         if(sp > 30) take = sp + 1;
         shown += rest.slice(0, take);
@@ -914,12 +1199,8 @@ function makeTyper(textEl){
       timer = setTimeout(tick, 110);
     } else {
       timer = null;
-      if(finished){
-        paint(true);
-        if(onDone){ const d = onDone; onDone = null; d(); }
-      } else {
-        paint(false);
-      }
+      if(finished){ paint(true); if(onDone){ const d = onDone; onDone = null; d(); } }
+      else paint(false);
     }
   }
   return {
@@ -976,11 +1257,14 @@ async function send(){
   const mav = el.querySelector('.mini'); mav.classList.add('working');
 
   try{
-    const isPpt = pptIntent || /power\s?point|pptx?|slide deck|presentation|slides about/i.test(text);
-    const wantSearch = searchIntent || /\bsearch( the)? (web|internet)\b|latest news|news about|look up|google\b/i.test(text);
-    if(isPpt) await doPPT(text, km, el);
-    else if(wantSearch) await doSearch(text, km, el, textNode);
-    else await doChat(text, km, el, textNode, atts);
+    const handled = await handleConnIntent(text, km, el, textNode);
+    if(!handled){
+      const isPpt = pptIntent || /power\s?point|pptx?|slide deck|presentation|slides about|بور ?بوينت/i.test(text);
+      const wantSearch = searchIntent || /\bsearch( the)? (web|internet)\b|latest news|news about|look up|google\b|ابحث|دور لي على/i.test(text);
+      if(isPpt) await doPPT(text, km, el);
+      else if(wantSearch) await doSearch(text, km, el, textNode);
+      else await doChat(text, km, el, textNode, atts);
+    }
   }catch(err){
     if(err.name === 'AbortError'){
       km.text = (km.text || '') + '\n\n(Stopped by your request.)';
@@ -993,7 +1277,7 @@ async function send(){
     busy = false; streamCtrl = null;
     $('#btnSend').classList.remove('busy');
     mav.classList.remove('working');
-    if(km.text && !km.error) flashHappy(); else setStage('idle');
+    if(km.text) flashHappy(); else setStage('idle');
     persist();
   }
 }
@@ -1004,7 +1288,7 @@ function finalizeKeo(km, el, textNode){
   const body = el.querySelector('.msg-body');
   if(km.sources?.length) body.insertAdjacentHTML('beforeend', srcsHTML(km.sources));
   if(km.slides?.length) body.insertAdjacentHTML('beforeend', pptHTML(km));
-  body.insertAdjacentHTML('beforeend', `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${km.id}">Copy reply</button></div>`);
+  body.insertAdjacentHTML('beforeend', `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${km.id}">Copy</button><button class="cbtn" data-act="speak" data-mid="${km.id}">\u25B6 Listen</button></div>`);
   scrollPin();
 }
 function stopStream(){ if(streamCtrl) streamCtrl.abort(); }
@@ -1012,7 +1296,7 @@ function stopStream(){ if(streamCtrl) streamCtrl.abort(); }
 async function doChat(text, km, el, textNode, atts){
   setStage('think');
   await delay(650 + Math.random()*650);
-  const msgs = [{ role:'system', content: SYS }, ...history()];
+  const msgs = [{ role:'system', content: SYS + '\n' + connNote() }, ...history()];
   let lastContent = text;
   const texts = atts.filter(a=>a.kind==='text').map(a=>`\n\n[Attached file: ${a.name}]\n${a.text.slice(0,7000)}`).join('');
   lastContent += texts;
@@ -1050,7 +1334,7 @@ async function doSearch(text, km, el, textNode){
 User question: ${text}
 
 Write a helpful, well-organized answer in the SAME language as the user's question, based on these results, and cite sources inline as [1] [2]. If the results are insufficient, say so honestly.`;
-  const msgs = [{ role:'system', content: SYS }, ...history().slice(0,-1), { role:'user', content: ctxBlock }];
+  const msgs = [{ role:'system', content: SYS + '\n' + connNote() }, ...history().slice(0,-1), { role:'user', content: ctxBlock }];
   const typer = makeTyper(textNode);
   await streamGroq(msgs, typer, { temperature: 0.5 });
   await new Promise(res => typer.end(()=>{ km.text = typer.text(); res(); }));
@@ -1081,11 +1365,9 @@ async function doPPT(text, km, el){
 }
 function buildPPTX(slides){
   if(typeof PptxGenJS === 'undefined'){ toast('The PowerPoint library didn\u2019t load — refresh the page', 'err'); return; }
-  const all = slides.map(s => s.title + ' ' + (s.bullets||[]).join(' ')).join(' ');
-  const isAr = isArabicText(all);
+  const isAr = isArabicText(slides.map(s => s.title + ' ' + (s.bullets||[]).join(' ')).join(' '));
   const p = new PptxGenJS();
-  p.layout = 'LAYOUT_16x9';
-  p.rtlMode = isAr;
+  p.layout = 'LAYOUT_16x9'; p.rtlMode = isAr;
   const align = isAr ? 'right' : 'left';
   slides.forEach((s, i)=>{
     const sl = p.addSlide();
@@ -1114,6 +1396,37 @@ function openPreview(code){
   $('#pvFrame').srcdoc = code;
 }
 
+/* ================== Voice: speak & mic ================== */
+function speakText(text){
+  if(!('speechSynthesis' in window)) return toast('Speech isn\u2019t supported in this browser','err');
+  speechSynthesis.cancel();
+  const clean = String(text).replace(/```[\s\S]*?```/g,' code block ').replace(/[*#`>\[\]()]/g,'').slice(0,1400);
+  const u = new SpeechSynthesisUtterance(clean);
+  u.lang = isArabicText(text) ? 'ar-SA' : 'en-US';
+  u.rate = 1.04;
+  speechSynthesis.speak(u);
+}
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let micRec = null, micOn = false;
+ $('#btnMic').onclick = ()=>{
+  if(!SR) return toast('Voice input needs Chrome or Edge','err');
+  if(micOn){ micRec.stop(); return; }
+  micRec = new SR();
+  micRec.lang = (navigator.language||'en-US').startsWith('ar') ? 'ar-SA' : (navigator.language||'en-US');
+  micRec.interimResults = true; micRec.continuous = true;
+  const base = ta.value ? ta.value + ' ' : '';
+  micRec.onresult = e=>{
+    let s = '';
+    for(let i = e.resultIndex; i < e.results.length; i++) s += e.results[i][0].transcript;
+    ta.value = base + s;
+    ta.dispatchEvent(new Event('input'));
+  };
+  micRec.onend = ()=>{ micOn = false; $('#btnMic').classList.remove('rec'); };
+  micRec.onerror = ()=>{ micOn = false; $('#btnMic').classList.remove('rec'); };
+  micRec.start(); micOn = true; $('#btnMic').classList.add('rec');
+  toast('Listening… speak freely');
+};
+
 /* ================== Attachments ================== */
 function renderAtt(){
   $('#attRow').innerHTML = attachments.map((a,i)=>
@@ -1124,23 +1437,27 @@ function renderAtt(){
   const b = e.target.closest('[data-rmatt]');
   if(b){ attachments.splice(+b.dataset.rmatt,1); renderAtt(); }
 });
- $('#fileInput').addEventListener('change', e=>{
-  [...e.target.files].forEach(f=>{
-    const isImg = f.type.startsWith('image/');
-    if(isImg && f.size > 4.5*1024*1024){ toast('Image too large — under 4.5 MB please', 'err'); return; }
-    if(!isImg && f.size > 2*1024*1024){ toast('File too large — under 2 MB for text files', 'err'); return; }
-    const att = { name:f.name, size:f.size, kind: isImg?'image':'text' };
-    const rd = new FileReader();
-    rd.onload = ()=>{
-      if(isImg) att.dataUrl = rd.result;
-      else att.text = String(rd.result||'');
-      attachments.push(att); renderAtt();
-      setStage('carry');
-      setTimeout(()=>{ if(!busy) setStage('idle'); }, 1700);
-    };
-    if(isImg) rd.readAsDataURL(f); else rd.readAsText(f);
-  });
-  e.target.value = '';
+function ingestFile(f){
+  const isImg = f.type.startsWith('image/');
+  if(isImg && f.size > 4.5*1024*1024) return toast('Image too large — under 4.5 MB please', 'err');
+  if(!isImg && f.size > 2*1024*1024) return toast('File too large — under 2 MB for text files', 'err');
+  const att = { name:f.name, size:f.size, kind: isImg?'image':'text' };
+  const rd = new FileReader();
+  rd.onload = ()=>{
+    if(isImg) att.dataUrl = rd.result; else att.text = String(rd.result||'');
+    attachments.push(att); renderAtt();
+    setStage('carry');
+    setTimeout(()=>{ if(!busy) setStage('idle'); }, 1700);
+  };
+  if(isImg) rd.readAsDataURL(f); else rd.readAsText(f);
+}
+ $('#fileInput').addEventListener('change', e=>{ [...e.target.files].forEach(ingestFile); e.target.value=''; });
+window.addEventListener('paste', e=>{
+  for(const item of (e.clipboardData?.items||[])){
+    if(item.kind === 'file' && item.type.startsWith('image/')){
+      const f = item.getAsFile(); if(f){ ingestFile(f); e.preventDefault(); }
+    }
+  }
 });
 
 /* ================== Events ================== */
@@ -1169,6 +1486,10 @@ chatScroll.addEventListener('click', e=>{
     const m = messages.find(x=>x.id===act.dataset.mid);
     if(m){ navigator.clipboard.writeText(m.text||'').then(()=>toast('Reply copied')); }
   }
+  if(a === 'speak'){
+    const m = messages.find(x=>x.id===act.dataset.mid);
+    if(m?.text) speakText(m.text);
+  }
   if(a === 'dlppt'){
     const m = messages.find(x=>x.id===act.dataset.mid);
     if(m?.slides) buildPPTX(m.slides);
@@ -1194,8 +1515,18 @@ chatScroll.addEventListener('click', e=>{
  $('#pvReload').onclick = ()=>{ $('#pvFrame').srcdoc = pvCode; };
  $('#pvExt').onclick = ()=>{
   if(!pvCode) return toast('No code to preview yet','err');
-  const blob = new Blob([pvCode], {type:'text/html'});
-  window.open(URL.createObjectURL(blob), '_blank');
+  window.open(URL.createObjectURL(new Blob([pvCode], {type:'text/html'})), '_blank');
+};
+ $('#pvPub').onclick = async ()=>{
+  if(!pvCode) return toast('Build a site first','err');
+  if(!connections.github){ $('#connModal').hidden = false; return toast('Link your GitHub first — one time only','err'); }
+  setStage('code');
+  try{
+    const url = await publishToPages(pvCode);
+    $('#pvPub').classList.add('live');
+    confettiBurst();
+    toast('Live in ~1 min: ' + url);
+  }catch(err){ toast('Publish failed: ' + err.message, 'err'); setStage('idle'); }
 };
 
 /* ================== Auth gate ================== */
@@ -1235,7 +1566,7 @@ function showApp(){
   $('#sbName').textContent = name;
   $('#sbEmail').textContent = user.email;
   $('#sbAv').textContent = name[0].toUpperCase();
-  loadChats();
+  loadChats(); loadConnections();
   setStage('boot');
   setTimeout(()=>{ setStage('happy'); confettiBurst(); }, 1000);
   setTimeout(()=>setStage('idle'), 2300);
