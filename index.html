@@ -140,9 +140,14 @@ main{display:flex;height:calc(100vh - 58px)}
 .pslide .pt{font-size:13px;font-weight:700;color:var(--acc);margin-bottom:7px;line-height:1.5}
 .pslide .pb{font-size:11.5px;color:var(--mut);line-height:1.7}
 .ppt-dl{margin-top:10px}
-/* generated images */
-.genimg{margin-top:12px;max-width:520px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
-.genimg img{width:100%;display:block}
+/* generated images — with loading shimmer */
+.genimg{margin-top:12px;max-width:520px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);position:relative}
+.genimg img{width:100%;display:block;min-height:220px;background:
+  linear-gradient(100deg,#141816 40%,#1c211d 50%,#141816 60%);
+  background-size:200% 100%;animation:shimmer 1.4s linear infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+.genimg.failed img{min-height:80px;opacity:.15}
+.genimg.failed::after{content:'\26A0  Image engine busy — press \21BB Repaint';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--mut)}
 .gi-acts{display:flex;gap:8px;padding:9px 10px}
 
 .welcome{max-width:800px;margin:8vh auto 0;animation:up .5s ease both}
@@ -425,7 +430,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
         <div class="comp-row">
           <div class="comp-tools">
             <button class="icbtn" id="btnAttach" title="Attach files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
-            <button class="icbtn" id="btnMic" title="Voice input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg></button>
+            <button class="icbtn" id="btnMic" title="Voice input (press to start / stop)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg></button>
             <button class="chip" id="btnMicLang" title="Speech recognition language">AR</button>
             <button class="chip" id="chipSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Web search</button>
             <button class="chip" id="chipPpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Presentation</button>
@@ -525,19 +530,14 @@ const firebaseConfig = {
   measurementId: "G-919VM45PXW"
 };
 
-/* Smartest-first model chain, auto-discovered on load + mid-session failover */
+/* Smartest-first model chain, auto-discovered + mid-session failover */
 const MAIN_CHAIN = [
-  'openai/gpt-oss-120b',
-  'openai/gpt-oss-20b',
-  'llama-3.3-70b-versatile',
-  'meta-llama/llama-3.3-70b-versatile',
-  'moonshotai/kimi-k2-instruct',
-  'qwen/qwen3-32b',
-  'llama-3.1-8b-instant'
+  'openai/gpt-oss-120b','openai/gpt-oss-20b',
+  'llama-3.3-70b-versatile','meta-llama/llama-3.3-70b-versatile',
+  'moonshotai/kimi-k2-instruct','qwen/qwen3-32b','llama-3.1-8b-instant'
 ];
 const VISION_CHAIN = [
-  'meta-llama/llama-4-scout-17b-16e-instruct',
-  'meta-llama/llama-4-maverick-17b-128e-instruct'
+  'meta-llama/llama-4-scout-17b-16e-instruct','meta-llama/llama-4-maverick-17b-128e-instruct'
 ];
 let MODEL_MAIN = MAIN_CHAIN[0], MODEL_VISION = VISION_CHAIN[0], mainIdx = 0, visionIdx = 0;
 const MAXTOK = 16384;
@@ -589,21 +589,38 @@ function confettiBurst(){
   }
 }
 
-/* ================== Open-source image generation (Flux via Pollinations — free, no key) ================== */
-function pollinationsURL(prompt, w=1024, h=768){
-  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&model=flux&seed=${Math.floor(Math.random()*1e6)}`;
+/* ================== Open-source image generation (Flux via Pollinations) ==================
+   Two paths:
+   - Chat images: browser loads the URL directly in <img> (no fetch → never blocked).
+   - PPT images: fetch → base64 with 3 retries and a fast fallback engine.        */
+function imgURL(prompt, w=1024, h=768, model){
+  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&enhance=true&seed=${Math.floor(Math.random()*1e9)}${model?'&model='+model:''}`;
 }
-async function genImage(prompt, w=1024, h=768){
-  try{
-    const url = pollinationsURL(prompt, w, h);
-    const c = new AbortController(); const t = setTimeout(()=>c.abort(), 60000);
-    const r = await fetch(url, {signal:c.signal});
-    clearTimeout(t);
-    if(!r.ok) throw 0;
-    const b = await r.blob();
-    const data = await new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>res(null); fr.readAsDataURL(b); });
-    return data ? {data, url} : null;
-  }catch(e){ return null; }
+function blobToDataURL(b){
+  return new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>res(null); fr.readAsDataURL(b); });
+}
+async function fetchImageBlob(url, timeoutMs=100000){
+  for(let i=0;i<3;i++){
+    try{
+      const c = new AbortController(); const t = setTimeout(()=>c.abort(), timeoutMs);
+      const r = await fetch(url, {signal:c.signal});
+      clearTimeout(t);
+      if(r.ok){
+        const b = await r.blob();
+        if(b.size > 2000) return b;
+      }
+    }catch(e){}
+    await delay(2000);
+  }
+  return null;
+}
+async function genImage(prompt, w=1024, h=640){
+  /* try Flux (best quality) then default turbo engine (faster) */
+  for(const model of ['flux', null]){
+    const b = await fetchImageBlob(imgURL(prompt, w, h, model), 100000);
+    if(b){ const data = await blobToDataURL(b); if(data) return data; }
+  }
+  return null;
 }
 
 /* ================== Keo character (SVG) ================== */
@@ -818,7 +835,7 @@ async function gh(path, opt={}){
   try{
     const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ chat_id: chat, text: '\u2705 Keo linked this chat successfully — announcements from Kareem\u2019s assistant will arrive here.' })
+      body: JSON.stringify({ chat_id: chat, text: '\u2705 Keo linked this chat successfully.' })
     });
     const j = await r.json();
     if(!j.ok) throw new Error(j.description || 'rejected');
@@ -829,7 +846,7 @@ async function gh(path, opt={}){
 };
  $('#dcTest').onclick = async ()=>{
   const hook = $('#dcHook').value.trim();
-  if(!/^https:\/\/(discord|discordapp)\.com\/api\/webhooks\//.test(hook)) return toast('That doesn\u2019t look like a Discord webhook URL','err');
+  if(!/^https:\/\/(discord|discordapp)\.com\/api\/webhooks\//.test(hook)) return toast('That doesn\u2019t look like a webhook URL','err');
   try{
     const r = await fetch(hook, { method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ content:'\u2705 **Keo** is now connected to this channel.' }) });
@@ -910,8 +927,8 @@ async function handleConnIntent(text, km, el, textNode){
         const url = await publishToPages(code);
         km.code = code; openPreview(code);
         km.text = isArabicText(text)
-          ? `نشرت الموقع على الإنترنت! \ud83d\ude80\n\n**${url}**\n\nهيدخل خلال دقيقة أو اتنين — والرابط شغال لأي حد في العالم. الريبو اتعمل في حسابك (${connections.github.login}).`
-          : `Your site is LIVE! \ud83d\ude80\n\n**${url}**\n\nIt goes fully live within a minute or two — works for anyone, anywhere. Repo created in your account (${connections.github.login}).`;
+          ? `نشرت الموقع على الإنترنت! \ud83d\ude80\n\n**${url}**\n\nهيدخل خلال دقيقة أو اتنين — شغال لأي حد في العالم. الريبو في حسابك (${connections.github.login}).`
+          : `Your site is LIVE! \ud83d\ude80\n\n**${url}**\n\nFully live within a minute or two. Repo created in your account (${connections.github.login}).`;
         finalizeKeo(km, el, textNode); return true;
       }
     }
@@ -950,7 +967,7 @@ async function handleConnIntent(text, km, el, textNode){
     const needLink = /not linked/i.test(err.message||'');
     if(needLink) $('#connModal').hidden = false;
     km.text = ar
-      ? (needLink ? 'الحساب ده مش متوصل لسه — فتحتلك **Keo Links**، وصّل الحساب مرة واحدة وارجع قول لي وأنفذ فورًا.' : 'حصلت مشكلة وأنا بنفذ: ' + (err.message||'') + '\nجرّب تاني.')
+      ? (needLink ? 'الحساب ده مش متوصل لسه — فتحتلك **Keo Links**، وصّله مرة واحدة وارجع قول لي وأنفذ فورًا.' : 'حصلت مشكلة وأنا بنفذ: ' + (err.message||'') + '\nجرّب تاني.')
       : (needLink ? 'That account isn\u2019t linked yet — I opened **Keo Links** for you. Connect it once and ask again.' : 'Ran into a problem: ' + (err.message||'') + '\nTry again.');
     finalizeKeo(km, el, textNode); return true;
   }
@@ -1006,7 +1023,9 @@ function srcsHTML(srcs){
   }).join('') + '</div>';
 }
 function imgHTML(img){
-  return `<div class="genimg"><img src="${esc(img.url)}" alt="Keo artwork"><div class="gi-acts">
+  return `<div class="genimg"><img src="${esc(img.url)}" alt="Keo artwork"
+    onload="this.closest('.genimg').classList.remove('failed')"
+    onerror="this.closest('.genimg').classList.add('failed')"><div class="gi-acts">
     <button class="cbtn" data-act="dlimg" data-url="${esc(img.url)}">\u2B07 Download</button>
     <button class="cbtn" data-act="regenimg" data-prompt="${esc(img.prompt)}">\u21BB Repaint</button></div></div>`;
 }
@@ -1087,7 +1106,7 @@ function loadChat(id){
   toast('Chat exported as Markdown');
 };
 
-/* ================== Web search (fixed: Jina reader + proxies + Wikipedia fallback) ================== */
+/* ================== Web search (Jina reader + proxies + Wikipedia fallback) ================== */
 const PROXIES = [
   u => 'https://r.jina.ai/' + u,
   u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
@@ -1181,6 +1200,7 @@ Your rules:
 const PPT_SYS = `You are Keo, assistant of Kareem Hussein. Reply with a JSON array ONLY — no explanation, in this exact shape:
 [{"title":"Slide title","bullets":["point","point"],"img":"short english image prompt"}]
 6 to 8 slides, in the SAME language as the user's request. First slide = cover, second = agenda, last = conclusion. Each "img" is a vivid English prompt for a flat modern vector illustration matching that slide (no text in image). Make bullet content rich and specific — not generic.`;
+const IMG_SYS = `You are an expert prompt engineer for text-to-image models (Flux). Rewrite the user's request (any language) into ONE detailed English image prompt of 60-90 words. Include: the main subject with vivid specifics, setting/environment, art style, lighting, color palette, composition and camera angle. Output ONLY the prompt text — no quotes, no explanation.`;
 
 const MODEL_ERR = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported/i;
 async function groqChat(body, signal){
@@ -1379,28 +1399,34 @@ Write a helpful, well-organized answer in the SAME language as the user's questi
   finalizeKeo(km, el, textNode);
 }
 
-/* ============ Image generation flow ============ */
+/* ============ Image generation flow — never blocks on fetch; <img> loads directly ============ */
 async function doImage(text, km, el, textNode){
   setStage('paint');
+  /* 1) smart prompt expansion so the model "understands" deeply */
   let en = text;
   try{
-    const r = await groqChat({ model: MODEL_MAIN, temperature: 0.6, max_tokens: 150, messages: [
-      { role:'system', content: 'Translate/rewrite the user request into ONE concise vivid English image-generation prompt (max 40 words). Output ONLY the prompt.' },
+    const r = await groqChat({ model: MODEL_MAIN, temperature: 0.6, max_tokens: 300, messages: [
+      { role:'system', content: IMG_SYS },
       { role:'user', content: text }
     ]});
     const j = await r.json();
-    en = (j.choices?.[0]?.message?.content || en).trim().replace(/^["']|["']$/g,'');
+    const c = (j.choices?.[0]?.message?.content || '').trim();
+    if(c) en = c.replace(/^["']|["']$/g,'');
   }catch(e){}
-  const img = await genImage(en, 1024, 768);
-  if(!img) throw new Error('The image service didn\u2019t respond — try again in a moment');
-  km.image = { url: img.url, prompt: en };
+  /* 2) style-aware finishers */
+  const t = text.toLowerCase();
+  if(/\blogo\b|شعار/.test(t)) en += ', minimal flat vector logo, simple iconic shapes, centered composition, plain solid background';
+  else if(/poster|بوستر/.test(t)) en += ', bold poster composition, dramatic lighting, poster art';
+  else en += ', highly detailed digital illustration, rich colors, cinematic lighting, sharp focus, 4k quality';
+  /* 3) the browser itself loads the image URL — no fetch, no CORS, no timeout errors */
+  km.image = { url: imgURL(en, 1024, 768, 'flux'), prompt: en };
   km.text = isArabicText(text)
-    ? 'اتفضل، رسمتهالك بنفسي \ud83c\udfa8\n\nتقدر تنزّلها أو تطلب مني أرسمها تاني بستايل مختلف.'
-    : 'Here — I painted this for you \ud83c\udfa8\n\nDownload it, or ask me to repaint it in a different style.';
+    ? 'برسمها دلوقتي على الكانفاس \ud83c\udfa8 — الصورة بتظهر تحت في ثواني (أول مرة ممكن تاخد لحد دقيقة لو الرسمة معقدة).\n\nلو حصل أي تأخير دوس **\u21BB Repaint** وهيترسم من جديد فورًا، أو قول لي أرسمها بستايل مختلف.'
+    : 'Painting it on my canvas \ud83c\udfa8 — the image appears below in seconds (first render can take up to a minute for complex scenes).\n\nIf it stalls, hit **\u21BB Repaint** — or ask me for a different style.';
   finalizeKeo(km, el, textNode);
 }
 
-/* ============ PowerPoint with AI-painted images ============ */
+/* ============ PowerPoint with AI-painted images (fetch+retries, graceful skip) ============ */
 async function doPPT(text, km, el){
   setStage('slides');
   const res = await groqChat({
@@ -1418,20 +1444,19 @@ async function doPPT(text, km, el){
   if(!Array.isArray(slides) || !slides.length) throw new Error('Couldn\u2019t assemble the slides — try a different wording');
   km.slides = slides.map(s => ({ title: String(s.title||''), bullets: (s.bullets||[]).map(String), imgPrompt: String(s.img||'') }));
 
-  /* paint artwork for cover + up to 3 content slides */
+  toast('Keo is painting slide artwork — this takes up to a minute…');
   const imgs = new Array(slides.length).fill(null);
   const idxs = slides.map((_,i)=>i).slice(0,4);
   await Promise.all(idxs.map(async i=>{
-    const p = (km.slides[i].imgPrompt || km.slides[i].title || '') + ', modern flat vector illustration, dark charcoal background, lime green and warm off-white palette, minimal, clean composition, no text';
-    const g = await genImage(p, i===0 ? 1600 : 1024, i===0 ? 900 : 640);
-    if(g) imgs[i] = g.data;
+    const p = (km.slides[i].imgPrompt || km.slides[i].title || '') + ', modern flat vector illustration, cohesive style, rich colors, clean composition, no text';
+    const g = await genImage(p, i===0 ? 1280 : 800, i===0 ? 720 : 520);
+    if(g) imgs[i] = g;
   }));
-  km.pptImages = imgs;
+  km.pptImages = imgs; km._pptImgs = imgs;
   const got = imgs.filter(Boolean).length;
   km.text = isArabicText(text)
     ? `جهزت لك عرض فخم من **${slides.length} شرائح** — ورسمت **${got} صورة** بالذكاء الاصطناعي للشرائح. نزّله تحت، ولو عايز تعديل في أي شريحة قول لي.`
     : `Your deck is ready: **${slides.length} slides** with **${got} AI-painted images**. Download below — want any slide reworked? Just say the word.`;
-  km._pptImgs = imgs;
   finalizeKeo(km, el, el.querySelector('.msg-text'));
 }
 function buildPPTX(slides, images){
@@ -1446,7 +1471,6 @@ function buildPPTX(slides, images){
     sl.background = { color:'0B0D0C' };
     const img = images ? images[i] : null;
     if(i === 0){
-      /* cover: full-bleed artwork + overlay + big title */
       if(img){
         sl.addImage({ data: img, x:0, y:0, w:W, h:H, sizing:{ type:'cover', w:W, h:H } });
         sl.addShape(p.ShapeType.rect, { x:0, y:0, w:W, h:H, fill:{ color:'0B0D0C', transparency:42 } });
@@ -1454,18 +1478,16 @@ function buildPPTX(slides, images){
       sl.addShape(p.ShapeType.rect, { x: isAr ? 9.7 : 0, y:0, w:0.3, h:H, fill:{color:'C6F24B'} });
       sl.addText(s.title, { x:0.7, y:1.7, w:8.6, h:1.6, align, rtlMode:isAr, fontSize:40, bold:true, color:'C6F24B', fontFace:'Arial' });
       sl.addText((s.bullets||[]).slice(0,2).join('  \u2022  '), { x:0.7, y:3.3, w:8.6, h:0.7, align, rtlMode:isAr, fontSize:15, color:'EDEFE6', fontFace:'Arial' });
-      sl.addText('KEOAI \u00B7 Keo \u2014 built for ' + 'you', { x:0.7, y:4.9, w:4, h:0.4, fontSize:11, color:'9BA398', fontFace:'Arial' });
+      sl.addText('KEOAI \u00B7 Keo', { x:0.7, y:4.9, w:4, h:0.4, fontSize:11, color:'9BA398', fontFace:'Arial' });
     } else {
-      /* content: slim accent bar, side artwork, rich bullets */
       sl.addShape(p.ShapeType.rect, { x:0, y:0, w:W, h:0.14, fill:{color:'C6F24B'} });
       const imgW = 3.0, imgH = 4.1;
       if(img){
         const ix = isAr ? 0.5 : W - imgW - 0.5;
         sl.addImage({ data: img, x:ix, y:0.75, w:imgW, h:imgH, sizing:{ type:'cover', w:imgW, h:imgH } });
-        sl.addShape(p.ShapeType.rect, { x:ix, y:0.75, w:imgW, h:imgH, fill:{ color:'000000', transparency:100 }, line:{ color:'C6F24B', width:1 } });
       }
-      const txW = W - imgW - 1.6;
-      const txX = isAr ? W - txW - 0.6 : 0.6;
+      const txW = img ? (W - imgW - 1.6) : (W - 1.2);
+      const txX = img ? (isAr ? W - txW - 0.6 : 0.6) : 0.6;
       sl.addText(s.title, { x:txX, y:0.55, w:txW, h:1.15, align, rtlMode:isAr, fontSize:26, bold:true, color:'C6F24B', fontFace:'Arial' });
       if(s.bullets?.length){
         sl.addText(s.bullets.map(b => ({ text:b, options:{ bullet:{ code:'2022' }, breakLine:true, rtlMode:isAr } })),
@@ -1490,7 +1512,7 @@ function openPreview(code){
   $('#pvFrame').srcdoc = code;
 }
 
-/* ================== Speech: Listen (fixed) ================== */
+/* ================== Speech: Listen ================== */
 let VOICES = [];
 function refreshVoices(){ try{ VOICES = speechSynthesis.getVoices() || []; }catch(e){} }
 if('speechSynthesis' in window){ refreshVoices(); speechSynthesis.onvoiceschanged = refreshVoices; setInterval(refreshVoices, 2000); }
@@ -1518,46 +1540,67 @@ function speakText(text){
     speechSynthesis.speak(u);
   };
   next();
-  /* Chrome bug: long speech silently pauses — keep nudging it */
   speakGuard = setInterval(()=>{ if(speechSynthesis.speaking && !speechSynthesis.paused) speechSynthesis.resume(); }, 8000);
 }
 
-/* ================== Mic input (Arabic-ready with AR/EN toggle) ================== */
+/* ================== Mic input (robust: real error messages + auto-restart) ================== */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-let micRec = null, micOn = false, micLang = 'ar';
+let micRec = null, micOn = false, micLang = 'ar', micBase = '', micFinal = '';
+function micStopUI(){ micOn = false; $('#btnMic').classList.remove('rec'); }
+function micFatal(e){
+  micStopUI();
+  const map = {
+    'not-allowed': 'Mic permission denied — press the \ud83d\udd12 icon in the address bar and allow the microphone',
+    'service-not-allowed': 'Mic blocked by the browser — check site permissions',
+    'audio-capture': 'No microphone found on this device',
+    'network': 'Speech recognition needs internet — check your connection',
+  };
+  const m = map[e?.error];
+  if(m) toast(m, 'err');
+  else if(e?.error) toast('Mic error: ' + e.error, 'err');
+}
  $('#btnMicLang').onclick = ()=>{
   micLang = micLang === 'ar' ? 'en' : 'ar';
   $('#btnMicLang').textContent = micLang.toUpperCase();
   toast('Mic language: ' + (micLang === 'ar' ? 'Arabic' : 'English'));
 };
  $('#btnMic').onclick = ()=>{
-  if(!SR) return toast('Voice input needs Chrome or Edge','err');
+  if(!SR) return toast('Voice input needs Chrome or Edge (Firefox doesn\u2019t support it)','err');
+  if(location.protocol === 'file:')
+    toast('Mic works best over http/localhost — if it fails, open the file via Live Server or any host','err');
   if(micOn){ micOn = false; try{ micRec.stop(); }catch(e){} return; }
   micRec = new SR();
-  micRec.lang = micLang === 'ar' ? 'ar-SA' : (navigator.language || 'en-US');
+  micRec.lang = micLang === 'ar' ? 'ar-EG' : (navigator.language || 'en-US');
   micRec.interimResults = true;
   micRec.continuous = true;
-  const base = ta.value ? ta.value.replace(/\s+$/,'') + ' ' : '';
-  let finalSoFar = '';
+  micRec.maxAlternatives = 1;
+  micBase = ta.value ? ta.value.replace(/\s+$/,'') + ' ' : '';
+  micFinal = '';
   micRec.onresult = e=>{
     let interim = '';
     for(let i = e.resultIndex; i < e.results.length; i++){
       const r = e.results[i];
-      if(r.isFinal) finalSoFar += r[0].transcript + ' ';
+      if(r.isFinal) micFinal += r[0].transcript + ' ';
       else interim += r[0].transcript;
     }
-    ta.value = base + finalSoFar + interim;
+    ta.value = micBase + micFinal + interim;
     ta.dispatchEvent(new Event('input'));
   };
   micRec.onend = ()=>{
-    if(micOn){ try{ micRec.start(); }catch(e){} }
-    else { $('#btnMic').classList.remove('rec'); }
+    /* auto-restart while active: Chrome stops every ~60s */
+    if(micOn){ setTimeout(()=>{ try{ micRec.start(); }catch(e){} }, 250); }
+    else micStopUI();
   };
-  micRec.onerror = ()=>{ micOn = false; $('#btnMic').classList.remove('rec'); };
+  micRec.onerror = e=>{
+    if(e.error === 'no-speech' || e.error === 'aborted') return; /* benign — onend restarts */
+    micFatal(e);
+  };
   micOn = true;
   $('#btnMic').classList.add('rec');
-  try{ micRec.start(); toast('Listening in ' + (micLang==='ar'?'العربية':'English') + '… speak freely'); }
-  catch(e){ micOn = false; $('#btnMic').classList.remove('rec'); }
+  try{
+    micRec.start();
+    toast('Listening in ' + (micLang==='ar'?'العربية':'English') + '… press the mic again to stop');
+  }catch(e){ micFatal(e); }
 };
 
 /* ================== Attachments ================== */
@@ -1638,7 +1681,10 @@ chatScroll.addEventListener('click', async e=>{
   }
   if(a === 'regenimg'){
     const img = act.closest('.genimg').querySelector('img');
-    img.src = pollinationsURL(act.dataset.prompt, 1024, 768);
+    const box = act.closest('.genimg');
+    box.classList.remove('failed');
+    img.removeAttribute('src');
+    img.src = imgURL(act.dataset.prompt, 1024, 768, 'flux');
     toast('Keo is repainting…');
   }
 });
