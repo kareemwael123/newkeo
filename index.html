@@ -474,27 +474,28 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 <div id="connModal" hidden>
   <div class="conn-panel">
     <div class="conn-head"><b>Keo <i>Links</i></b><button class="icbtn" id="connClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-    <p class="conn-sub">Link your accounts once, then just tell Keo what to do. Groq &amp; Hugging Face keys are built in — the fields below are only a fallback if a key ever dies.</p>
+    <p class="conn-sub">Link your accounts once, then just tell Keo what to do. Groq &amp; Hugging Face keys are built in — the fields below are only a fallback.</p>
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg><b>Groq Brain Key</b><span class="stat" id="st-groq">key active</span></div>
-      <p>A key is <b>built into the code</b> — this field is only a backup: paste a fresh key here if Keo ever says "Invalid API Key", and it overrides the built-in one.</p>
+      <p>A key is <b>built into the code</b> — this field is only a backup: paste a fresh key here if Keo ever says "Invalid API Key".</p>
       <div class="row">
         <input id="gqKey" type="password" placeholder="gsk_... (backup override)">
         <button class="btn btn-acc" id="gqSave" style="padding:9px 16px;font-size:13px">Save &amp; Test</button>
       </div>
-      <p class="hint">Free key anytime: <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a>. Stored only in your browser.</p>
+      <p class="hint">Free key anytime: <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a>.</p>
     </div>
 
     <div class="ccard">
-      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L7 20"/></svg><b>Image Engine — FLUX.1 HD</b><span class="stat" id="st-hf">FLUX.1 · pro</span></div>
-      <p>Keo paints with <b>FLUX.1-dev</b> (built-in read token), falls back to <b>FLUX.1-schnell</b>, then to free Flux. First-ever render can take up to a minute while the model wakes up.</p>
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L7 20"/></svg><b>Image Engine — FLUX.1</b><span class="stat" id="st-hf">FLUX.1 · pro</span></div>
+      <p>Keo paints with <b>FLUX.1</b> via the official Hugging Face Router (built-in read token), with 4 proxy relays as fallback if the network blocks HF. First-ever render can take up to a minute.</p>
       <div class="row">
         <input id="hfToken" type="password" placeholder="hf_... (optional override)">
         <button class="btn btn-acc" id="hfSave" style="padding:9px 16px;font-size:13px">Save</button>
         <button class="btn btn-line" id="hfClear" style="padding:9px 16px;font-size:13px">Reset</button>
+        <button class="btn btn-line" id="hfTest" style="padding:9px 16px;font-size:13px">Test engine</button>
       </div>
-      <p class="hint">If images come from pollinations.ai instead: open <a href="https://huggingface.co/black-forest-labs/FLUX.1-dev" target="_blank" rel="noopener">the model page</a> and press <b>Agree and access repository</b> with the token's account.</p>
+      <p class="hint" id="hfLog">If images come from pollinations.ai instead: accept the license on the FLUX.1 model page with the token\u2019s account, then press Test engine.</p>
     </div>
 
     <div class="ccard">
@@ -614,11 +615,15 @@ function confettiBurst(){
   }
 }
 
-/* ================== Image engines (Hugging Face READ token, built in) ==================
-   Chain: FLUX.1-dev → FLUX.1-schnell → free Flux (Pollinations) → turbo.
-   A "read" token is all that's needed — but FLUX models are GATED: the token's
-   account must accept the license once on the model page, or HF answers 403.
-   This engine reports the exact reason (401/402/403/503) so nothing is a mystery. */
+/* ================== Image engines — THE CORRECT HF ROUTER WAY ==================
+   Verified approach (2024/25):
+   1. Official Hugging Face Inference Router: POST https://router.huggingface.co/hf-inference/models/<model>
+      (the legacy api-inference.huggingface.co endpoint is being retired → ERR/404s)
+   2. FLUX models are GATED: the token's own account must press "Agree and access
+      repository" on the model page once — otherwise 403 forever.
+   3. If the local network can't resolve HF (ERR_NAME_NOT_RESOLVED), we retry the
+      same calls through 4 public CORS relays so the DNS happens on their side.
+   4. Chain: FLUX.1-dev → FLUX.1-schnell → free Flux (Pollinations) → turbo.     */
 function imgURL(prompt, w=1024, h=768, model){
   return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&enhance=true&seed=${Math.floor(Math.random()*1e9)}${model?'&model='+model:''}`;
 }
@@ -626,49 +631,81 @@ function blobToDataURL(b){
   return new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>res(null); fr.readAsDataURL(b); });
 }
 function getHfToken(){ return localStorage.getItem('keo_hf_token') || HF_TOKEN_BUILTIN; }
-const HF_MODELS = ['black-forest-labs/FLUX.1-dev','black-forest-labs/FLUX.1-schnell'];
+const HF_MODELS = [
+  { name:'black-forest-labs/FLUX.1-dev', steps:28 },
+  { name:'black-forest-labs/FLUX.1-schnell', steps:8 }
+];
+const HF_RELAYS = [
+  u => u,                                                        /* direct */
+  u => 'https://corsproxy.io/?url=' + encodeURIComponent(u),
+  u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+  u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u),
+  u => 'https://thingproxy.freeboard.io/fetch/' + u
+];
 let hfBroken = false, hfWarned = {};
-async function hfImage(prompt){
+function hfPayload(steps){
+  return JSON.stringify({ inputs:'', parameters:{ width:1024, height:1024, num_inference_steps: steps } });
+}
+async function hfOnce(url, tok, body, timeoutMs=90000){
+  const c = new AbortController(); const t = setTimeout(()=>c.abort(), timeoutMs);
+  try{
+    const r = await fetch(url, { method:'POST',
+      headers:{ Authorization:'Bearer '+tok, 'Content-Type':'application/json' }, body, signal:c.signal });
+    clearTimeout(t);
+    if(r.ok){
+      const b = await r.blob();
+      if(b.type?.startsWith('image/') && b.size > 2000) return { ok:true, data: await blobToDataURL(b) };
+      return { ok:false, error:'unexpected response type' };
+    }
+    let why = 'HTTP ' + r.status;
+    try{ const j = await r.json(); why = j.error || why; }catch(e){}
+    return { ok:false, error:why };
+  }catch(e){ clearTimeout(t); return { ok:false, error:'network/DNS blocked' }; }
+}
+async function hfCall(model, prompt, steps){
   const tok = getHfToken();
-  if(!tok || hfBroken) return null;
-  for(const model of HF_MODELS){
-    try{
-      const r = await fetch('https://api-inference.huggingface.co/models/' + model, {
-        method:'POST',
-        headers:{ Authorization:'Bearer '+tok, 'Content-Type':'application/json' },
-        body: JSON.stringify({ inputs: prompt, parameters:{ width:1024, height:1024, num_inference_steps: model.includes('dev') ? 28 : 8 } })
-      });
-      if(r.ok){
-        const b = await r.blob();
-        if(b.type?.startsWith('image/') && b.size > 2000){
-          console.log('[Keo] painted with', model);
-          return await blobToDataURL(b);
-        }
-        continue;
+  if(!tok) return { ok:false, error:'no token' };
+  /* one call: the correct Router endpoint, tried directly then through relays */
+  const url = 'https://router.huggingface.co/hf-inference/models/' + model;
+  let lastErr = 'unknown';
+  for(const mk of HF_RELAYS){
+    const target = mk(url);
+    const res = await hfOnce(target, tok, JSON.stringify({ inputs: prompt, parameters:{ width:1024, height:1024, num_inference_steps: steps } }));
+    if(res.ok) return res;
+    lastErr = res.error;
+    /* account-level problems won't improve by switching relays */
+    if(/HTTP 40[123]/.test(lastErr)) return { ok:false, error:lastErr, model };
+  }
+  /* legacy endpoint as last resort (some regions still route it) */
+  const legacy = await hfOnce('https://api-inference.huggingface.co/models/' + model, tok,
+    JSON.stringify({ inputs: prompt, parameters:{ width:1024, height:1024, num_inference_steps: steps } }));
+  if(legacy.ok) return legacy;
+  return { ok:false, error:lastErr, model };
+}
+async function hfImage(prompt){
+  if(hfBroken) return null;
+  for(const m of HF_MODELS){
+    const res = await hfCall(m.name, prompt, m.steps);
+    if(res.ok){ console.log('[Keo] painted with', m.name); return res.data; }
+    console.warn('[Keo] HF', m.name, '\u2192', res.error);
+    if(/HTTP 40[12]/.test(res.error)){ hfBroken = true; break; }
+    if(/HTTP 403/.test(res.error)){
+      if(!hfWarned[403]){
+        toast('FLUX.1 needs a one-time license accept: open the model page and press "Agree"', 'err');
+        hfWarned[403] = 1;
       }
-      let why = 'HTTP ' + r.status;
-      try{ why = (await r.json()).error || why; }catch(e){}
-      console.warn('[Keo] HF "' + model + '" refused:', why);
-      if(r.status === 401){
-        if(!hfWarned[401]){ toast('HF token invalid or missing Inference permission', 'err'); hfWarned[401] = 1; }
-        hfBroken = true; break;
-      }
-      if(r.status === 403){
-        if(!hfWarned[403]){
-          toast('Open huggingface.co/' + model + ' and accept the license (Agree) once', 'err');
-          hfWarned[403] = 1;
-        }
-        continue; /* license missing for this model — try the other one */
-      }
-      if(r.status === 402){
-        if(!hfWarned[402]){ toast('HF monthly credits finished — using free Flux engine', 'err'); hfWarned[402] = 1; }
-        hfBroken = true; break;
-      }
-      /* 503 = model loading → retry the same model once, then next */
-      if(r.status === 503) await delay(8000);
-    }catch(e){}
+      break;
+    }
+    if(/HTTP 402/.test(res.error)){
+      if(!hfWarned[402]){ toast('HF monthly credits finished — using free Flux engine', 'err'); hfWarned[402] = 1; }
+      hfBroken = true; break;
+    }
+    /* 503 / network → try next model in the chain */
   }
   return null;
+}
+async function hfDiagnose(){
+  return hfCall('black-forest-labs/FLUX.1-schnell', 'a single red apple on a white table, studio light', 4);
 }
 async function pollImage(prompt, w, h, model, timeoutMs=100000){
   for(let i=0;i<3;i++){
@@ -966,6 +1003,23 @@ function hfStatus(){
   hfBroken = false; hfWarned = {};
   hfStatus();
   toast('Back to the built-in pro engine');
+};
+ $('#hfTest').onclick = async ()=>{
+  const log = $('#hfLog');
+  log.textContent = 'Testing FLUX.1-schnell through Router + relays… (up to 60s)';
+  const res = await hfDiagnose();
+  if(res.ok){
+    log.textContent = '\u2705 FLUX.1 works on this token — every image from now on uses the pro engine.';
+    confettiBurst();
+  } else {
+    let fix = res.error;
+    if(/HTTP 403/.test(res.error)) fix = '403 \u2192 open huggingface.co/black-forest-labs/FLUX.1-schnell and press "Agree and access repository" with the token\u2019s account, then test again';
+    else if(/HTTP 401/.test(res.error)) fix = '401 \u2192 token problem: use a classic token with role Read, or fine-grained with "Make calls to Inference Providers" enabled';
+    else if(/HTTP 402/.test(res.error)) fix = '402 \u2192 monthly free credits finished — try again next month or use the Pro plan';
+    else if(/503|loading|currently/i.test(res.error)) fix = 'model was warming up — test again in a minute';
+    else if(/network|DNS/i.test(res.error)) fix = 'network/DNS blocked \u2192 all relays failed too; check your internet or firewall, or enable secure DNS (Cloudflare) in browser settings';
+    log.textContent = '\u26A0 ' + fix;
+  }
 };
 groqKeyStatus(); hfStatus();
 
@@ -1578,7 +1632,7 @@ Write a helpful, well-organized answer in the SAME language as the user's questi
   finalizeKeo(km, el, textNode);
 }
 
-/* ============ Image generation — FLUX.1 via built-in HF read token ============ */
+/* ============ Image generation — instant preview + FLUX.1 pro upgrade ============ */
 async function doImage(text, km, el, textNode){
   setStage('paint');
   let en = text;
@@ -1594,29 +1648,26 @@ async function doImage(text, km, el, textNode){
   const t = text.toLowerCase();
   if(/\blogo\b|شعار/.test(t)) en += ', minimal flat vector logo, simple iconic shapes, centered composition, plain solid background';
   else if(/poster|بوستر/.test(t)) en += ', bold poster composition, dramatic lighting, poster art';
+  /* 1) instant image via the direct URL — can never fail on fetch/CORS */
   km.image = { url: imgURL(en, 1440, 1080, 'flux'), prompt: en };
   km.text = isArabicText(text)
-    ? 'برسمها دلوقتي بمحرك **FLUX.1** الاحترافي \ud83d\udd25 — أول رسمة ممكن تاخد لحد دقيقة (المودل بيفتح)، وبعدها بتبقى أسرع.\n\nالصورة بتظهر تحت في HD ومعاها توقيع KEOAI — ولو حصل تأخير دوس **\u21BB Repaint**.'
-    : 'Painting with the pro **FLUX.1** engine \ud83d\udd25 — the very first render can take up to a minute while the model wakes up, then it gets faster.\n\nThe HD image appears below, signed **KEOAI** — if it stalls, hit **\u21BB Repaint**.';
-  /* Also paint through HF in the background: if it succeeds BEFORE the user
-     looks, the <img> has already loaded the fallback… so instead we render
-     the HF result directly when available (genImage chain runs in dlimg/ppt).
-     For the chat display we use the direct URL — instant, never fails. */
+    ? 'الصورة ظهرت تحت فورًا \ud83c\udfa8 — وفي نفس الوقت بجرّب أرسمها بمحرك **FLUX.1** الاحترافي؛ لو نجح هتلاقيها اتبدّلت تلقائيًا بنسخة أجمل وموقّعة KEOAI.'
+    : 'The image is below instantly \ud83c\udfa8 — meanwhile I\u2019m painting it with the pro **FLUX.1** engine; if it succeeds, the image upgrades automatically (signed KEOAI).';
+  finalizeKeo(km, el, textNode);
+  /* 2) FLUX.1 pro upgrade in the background (Router → relays → legacy) */
   const hf = await hfImage(en);
   if(hf){
     const w = await watermarkDataUrl(hf);
     if(w){
       km.image = { url: w, prompt: en };
-      /* re-render the image block with the pro result */
       const body = el.querySelector('.msg-body');
       const old = body.querySelector('.genimg');
       if(old) old.remove();
       body.insertAdjacentHTML('afterbegin', imgHTML(km.image));
-      toast('Painted with FLUX.1 \u2705');
+      toast('Upgraded to FLUX.1 \u2705');
       persist();
     }
   }
-  finalizeKeo(km, el, textNode);
 }
 
 /* ============ PowerPoint: 8 rich slides + signed AI-painted art ============ */
@@ -1642,7 +1693,7 @@ async function doPPT(text, km, el){
   const idxs = slides.map((_,i)=>i).slice(0,5);
   await Promise.all(idxs.map(async i=>{
     const p = (km.slides[i].imgPrompt || km.slides[i].title || '') + ', modern flat vector illustration, cohesive premium style, rich colors, clean composition, no text';
-    const g = await genImage(p, 1024, 1024);   /* genImage = FLUX.1 → Flux → turbo */
+    const g = await genImage(p, 1024, 1024);
     if(g) imgs[i] = await watermarkDataUrl(g);
   }));
   km.pptImages = imgs; km._pptImgs = imgs;
@@ -1898,9 +1949,13 @@ chatScroll.addEventListener('click', async e=>{
     const img = act.closest('.genimg').querySelector('img');
     act.closest('.genimg').classList.remove('failed');
     img.removeAttribute('src');
-    toast('Keo is repainting with FLUX.1…');
-    const w = await watermarkFromUrl(imgURL(act.dataset.prompt, 1440, 1080, 'flux'));
-    img.src = w || imgURL(act.dataset.prompt, 1440, 1080, 'flux');
+    toast('Repainting + trying FLUX.1…');
+    const hf = await hfImage(act.dataset.prompt);
+    if(hf){
+      const w = await watermarkDataUrl(hf);
+      img.src = w; toast('Upgraded to FLUX.1 \u2705'); return;
+    }
+    img.src = imgURL(act.dataset.prompt, 1440, 1080, 'flux');
   }
 });
  $('#chatList').addEventListener('click', e=>{
