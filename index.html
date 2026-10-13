@@ -140,14 +140,18 @@ main{display:flex;height:calc(100vh - 58px)}
 .pslide .pt{font-size:13px;font-weight:700;color:var(--acc);margin-bottom:7px;line-height:1.5}
 .pslide .pb{font-size:11.5px;color:var(--mut);line-height:1.7}
 .ppt-dl{margin-top:10px}
-/* generated images — with loading shimmer */
+/* generated images with KEOAI brand */
 .genimg{margin-top:12px;max-width:520px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);position:relative}
-.genimg img{width:100%;display:block;min-height:220px;background:
-  linear-gradient(100deg,#141816 40%,#1c211d 50%,#141816 60%);
+.genimg img{width:100%;display:block;min-height:240px;
+  background:linear-gradient(100deg,#141816 40%,#1c211d 50%,#141816 60%);
   background-size:200% 100%;animation:shimmer 1.4s linear infinite}
 @keyframes shimmer{to{background-position:-200% 0}}
-.genimg.failed img{min-height:80px;opacity:.15}
+.genimg.failed img{min-height:80px;opacity:.15;animation:none}
 .genimg.failed::after{content:'\26A0  Image engine busy — press \21BB Repaint';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--mut)}
+.gi-brand{position:absolute;left:0;right:0;bottom:0;padding:26px 16px 10px;display:flex;align-items:center;gap:9px;
+  font-family:var(--fd);font-weight:700;font-size:14px;letter-spacing:3px;color:#EDEFE6;pointer-events:none;
+  background:linear-gradient(0deg,rgba(11,13,12,.88) 30%,rgba(11,13,12,0))}
+.gi-brand::before{content:'';width:10px;height:10px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px rgba(198,242,75,.8)}
 .gi-acts{display:flex;gap:8px;padding:9px 10px}
 
 .welcome{max-width:800px;margin:8vh auto 0;animation:up .5s ease both}
@@ -351,7 +355,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     <div>
       <h1 class="gate-name">Keo<i>.</i></h1>
       <div class="gate-latin">KEOAI</div>
-      <p class="gate-tag">A hands-on AI: he searches the web, builds &amp; publishes websites, paints images with open-source AI, makes beautiful illustrated PowerPoints, posts to your Discord, Telegram &amp; GitHub, and speaks your language — Arabic or English.</p>
+      <p class="gate-tag">A hands-on AI: he searches the web, builds &amp; publishes websites, paints HD images signed "KEOAI", makes illustrated PowerPoints, posts to your Discord, Telegram &amp; GitHub — and speaks your language, Arabic or English.</p>
       <div class="gate-actions">
         <button class="btn btn-light" id="btnGoogle">
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5l-3.8 2.9C3.6 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.8-.4-1.6-.4-2.4s.1-1.6.4-2.4L1.4 6.7C.5 8.2 0 10 0 12s.5 3.8 1.4 5.3l3.9-2.9z"/><path fill="#EA4335" d="M12 4.6c2.2 0 3.7 1 4.6 1.8l3.3-3.2C17.9 1.2 15.2 0 12 0 7.4 0 3.6 2.7 1.4 6.7l3.9 2.9c.9-2.9 3.6-5 6.7-5z"/></svg>
@@ -414,7 +418,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
       <div id="welcome" class="welcome">
         <div class="w-kicker">KEOAI &middot; BY KAREEM HUSSEIN</div>
         <h2>I'm Keo<i>.</i><span>Tell me what you need — I'll do it with my own hands.</span></h2>
-        <p>Web search with real sources, full websites built &amp; published live, open-source AI image painting, beautiful illustrated PowerPoints, posts to Discord, Telegram &amp; GitHub — in Arabic or English.</p>
+        <p>Web search with real sources, full websites built &amp; published live, HD AI images signed KEOAI, illustrated PowerPoints, posts to Discord, Telegram &amp; GitHub — in Arabic or English.</p>
         <div class="pills">
           <button class="pill" data-insert="Search the web for the latest AI news and summarize it with sources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Latest AI news</button>
           <button class="pill" data-insert="Draw me a futuristic neon city at night with lime green lights"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>Paint me an image</button>
@@ -471,7 +475,28 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 <div id="connModal" hidden>
   <div class="conn-panel">
     <div class="conn-head"><b>Keo <i>Links</i></b><button class="icbtn" id="connClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-    <p class="conn-sub">Link your accounts once, then just tell Keo what to do. Tokens are stored in <b>your own</b> Firebase database under your account.</p>
+    <p class="conn-sub">Link your accounts once, then just tell Keo what to do. Everything is stored under <b>your own</b> account / browser.</p>
+
+    <div class="ccard">
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg><b>Groq Brain Key</b><span class="stat" id="st-groq">missing</span></div>
+      <p>Keo's AI engine key. If he ever says "Invalid API Key", paste a fresh one here — no code editing needed.</p>
+      <div class="row">
+        <input id="gqKey" type="password" placeholder="gsk_...">
+        <button class="btn btn-acc" id="gqSave" style="padding:9px 16px;font-size:13px">Save &amp; Test</button>
+      </div>
+      <p class="hint">Free key: <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a> → Create API Key → Copy → Paste → Save.</p>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L7 20"/></svg><b>Image Engine — HD mode</b><span class="stat" id="st-hf">free flux · HD</span></div>
+      <p>Keo paints with the open-source <b>Flux</b> engine in high resolution for free. For the absolute best quality, add a free Hugging Face token and he'll upgrade to <b>FLUX.1-dev</b> automatically.</p>
+      <div class="row">
+        <input id="hfToken" type="password" placeholder="hf_... (optional)">
+        <button class="btn btn-acc" id="hfSave" style="padding:9px 16px;font-size:13px">Save</button>
+        <button class="btn btn-line" id="hfClear" style="padding:9px 16px;font-size:13px">Remove</button>
+      </div>
+      <p class="hint">Free token: <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener">huggingface.co/settings/tokens</a> → New token (Read) → paste.</p>
+    </div>
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.05.77 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg><b>GitHub</b><span class="stat" id="st-github">not linked</span></div>
@@ -516,9 +541,9 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 
 <script>
 /* ================== Config ================== */
-const GROQ_KEY = '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';
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODELS_URL = 'https://api.groq.com/openai/v1/models';
+let GROQ_KEY = localStorage.getItem('keo_groq_key') || '';
 const firebaseConfig = {
   apiKey: "AIzaSyC0lwVRTBPA3yxnZ3wuqvyfQJbJP-AVNJo",
   authDomain: "kareem-8ed77.firebaseapp.com",
@@ -530,7 +555,6 @@ const firebaseConfig = {
   measurementId: "G-919VM45PXW"
 };
 
-/* Smartest-first model chain, auto-discovered + mid-session failover */
 const MAIN_CHAIN = [
   'openai/gpt-oss-120b','openai/gpt-oss-20b',
   'llama-3.3-70b-versatile','meta-llama/llama-3.3-70b-versatile',
@@ -542,6 +566,7 @@ const VISION_CHAIN = [
 let MODEL_MAIN = MAIN_CHAIN[0], MODEL_VISION = VISION_CHAIN[0], mainIdx = 0, visionIdx = 0;
 const MAXTOK = 16384;
 async function initModels(){
+  if(!GROQ_KEY) return;
   try{
     const r = await fetch(GROQ_MODELS_URL, { headers:{ Authorization:'Bearer '+GROQ_KEY } });
     if(!r.ok) return;
@@ -556,7 +581,6 @@ async function initModels(){
     console.log('[Keo] models:', MODEL_MAIN, '| vision:', MODEL_VISION);
   }catch(e){}
 }
-initModels();
 
 /* ================== Utilities ================== */
 const $ = s => document.querySelector(s);
@@ -589,38 +613,98 @@ function confettiBurst(){
   }
 }
 
-/* ================== Open-source image generation (Flux via Pollinations) ==================
-   Two paths:
-   - Chat images: browser loads the URL directly in <img> (no fetch → never blocked).
-   - PPT images: fetch → base64 with 3 retries and a fast fallback engine.        */
+/* ================== Image engines: FLUX.1-dev (optional HF token) → Flux free → turbo ================== */
 function imgURL(prompt, w=1024, h=768, model){
   return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&enhance=true&seed=${Math.floor(Math.random()*1e9)}${model?'&model='+model:''}`;
 }
 function blobToDataURL(b){
   return new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>res(null); fr.readAsDataURL(b); });
 }
-async function fetchImageBlob(url, timeoutMs=100000){
+async function hfImage(prompt){
+  const tok = localStorage.getItem('keo_hf_token');
+  if(!tok) return null;
+  try{
+    const r = await fetch('https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev', {
+      method:'POST',
+      headers:{ Authorization:'Bearer '+tok, 'Content-Type':'application/json' },
+      body: JSON.stringify({ inputs: prompt })
+    });
+    if(!r.ok) return null;
+    const b = await r.blob();
+    if(!b.type || !b.type.startsWith('image/') || b.size < 2000) return null;
+    return await blobToDataURL(b);
+  }catch(e){ return null; }
+}
+async function pollImage(prompt, w, h, model, timeoutMs=100000){
   for(let i=0;i<3;i++){
     try{
       const c = new AbortController(); const t = setTimeout(()=>c.abort(), timeoutMs);
-      const r = await fetch(url, {signal:c.signal});
+      const r = await fetch(imgURL(prompt, w, h, model), {signal:c.signal});
       clearTimeout(t);
       if(r.ok){
         const b = await r.blob();
-        if(b.size > 2000) return b;
+        if(b.size > 2000) return await blobToDataURL(b);
       }
     }catch(e){}
     await delay(2000);
   }
   return null;
 }
-async function genImage(prompt, w=1024, h=640){
-  /* try Flux (best quality) then default turbo engine (faster) */
-  for(const model of ['flux', null]){
-    const b = await fetchImageBlob(imgURL(prompt, w, h, model), 100000);
-    if(b){ const data = await blobToDataURL(b); if(data) return data; }
-  }
-  return null;
+/* ultimate chain: FLUX.1-dev (if HF token) → Flux free → turbo */
+async function genImage(prompt, w=1024, h=768){
+  const hd = await hfImage(prompt);
+  if(hd) return hd;
+  const flux = await pollImage(prompt, w, h, 'flux');
+  if(flux) return flux;
+  return await pollImage(prompt, w, h, null, 60000);
+}
+
+/* ===== KEOAI watermark: burned into every image (chat downloads, PPT slides) ===== */
+function drawWatermarkOnCanvas(img){
+  const c = document.createElement('canvas');
+  c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height;
+  const x = c.getContext('2d');
+  x.drawImage(img, 0, 0);
+  const fs = Math.max(18, Math.round(c.width * 0.028));
+  const pad = Math.round(c.width * 0.02);
+  const bh = fs + pad * 1.8;
+  const g = x.createLinearGradient(0, c.height - bh*1.6, 0, c.height);
+  g.addColorStop(0, 'rgba(11,13,12,0)');
+  g.addColorStop(1, 'rgba(11,13,12,.9)');
+  x.fillStyle = g;
+  x.fillRect(0, c.height - bh*1.6, c.width, bh*1.6);
+  x.font = `700 ${fs}px 'Unbounded','Space Grotesk',Arial,sans-serif`;
+  x.textBaseline = 'middle';
+  x.fillStyle = '#C6F24B';
+  x.beginPath();
+  x.arc(pad + fs*0.3, c.height - bh*0.55, fs*0.3, 0, 7);
+  x.fill();
+  x.fillStyle = '#EDEFE6';
+  x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = fs*0.25;
+  x.fillText('KEOAI', pad + fs*0.85, c.height - bh*0.55 + 1);
+  x.shadowBlur = 0;
+  x.fillStyle = 'rgba(237,239,230,.55)';
+  x.font = `500 ${Math.round(fs*0.52)}px 'Space Grotesk',Arial,sans-serif`;
+  x.fillText('AI', pad + fs*0.85 + x.measureText('KEOAI').width*1.35, c.height - bh*0.5);
+  return c.toDataURL('image/png');
+}
+function watermarkDataUrl(dataUrl){
+  return new Promise(res=>{
+    const im = new Image();
+    im.crossOrigin = 'anonymous';
+    im.onload = ()=>{ try{ res(drawWatermarkOnCanvas(im)); }catch(e){ res(dataUrl); } };
+    im.onerror = ()=>res(dataUrl);
+    im.src = dataUrl;
+  });
+}
+function watermarkFromUrl(url){
+  return new Promise(res=>{
+    const im = new Image();
+    im.crossOrigin = 'anonymous';
+    im.onload = ()=>{ try{ res(drawWatermarkOnCanvas(im)); }catch(e){ res(null); } };
+    im.onerror = ()=>res(null);
+    im.src = url;
+  });
 }
 
 /* ================== Keo character (SVG) ================== */
@@ -803,9 +887,48 @@ function renderConnStatus(){
   set('st-telegram', !!connections.telegram, connections.telegram ? 'linked' : 'not linked');
   set('st-discord', !!connections.discord, connections.discord ? 'linked' : 'not linked');
 }
+function groqKeyStatus(){
+  const el = $('#st-groq'); if(!el) return;
+  const ok = GROQ_KEY && GROQ_KEY.startsWith('gsk_') && GROQ_KEY.length > 30;
+  el.textContent = ok ? 'key set' : 'missing';
+  el.classList.toggle('on', ok);
+}
+function hfStatus(){
+  const el = $('#st-hf'); if(!el) return;
+  const on = !!localStorage.getItem('keo_hf_token');
+  el.textContent = on ? 'FLUX.1-dev \u00B7 pro' : 'free flux \u00B7 HD';
+  el.classList.toggle('on', on);
+}
  $('#btnConn').onclick = ()=>{ $('#connModal').hidden = false; };
  $('#connClose').onclick = ()=>{ $('#connModal').hidden = true; };
  $('#connModal').addEventListener('click', e=>{ if(e.target.id === 'connModal') $('#connModal').hidden = true; });
+
+ $('#gqSave').onclick = async ()=>{
+  const v = $('#gqKey').value.trim();
+  if(!v.startsWith('gsk_')) return toast('Groq keys start with gsk_','err');
+  GROQ_KEY = v;
+  localStorage.setItem('keo_groq_key', v);
+  $('#gqKey').value = '';
+  toast('Key saved — testing it now…');
+  mainIdx = 0; MODEL_MAIN = MAIN_CHAIN[0];
+  initModels();
+  try{
+    const r = await fetch(GROQ_URL, { method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
+      body: JSON.stringify({ model: MODEL_MAIN, messages:[{role:'user',content:'ping'}], max_tokens:5 }) });
+    if(r.ok){ groqKeyStatus(); confettiBurst(); toast('Works! Keo\u2019s brain is online \u2705'); }
+    else { const j = await r.json().catch(()=>({})); toast('Groq said: ' + (j.error?.message || ('HTTP '+r.status)), 'err'); }
+  }catch(e){ toast('Network error while testing','err'); }
+};
+ $('#hfSave').onclick = ()=>{
+  const v = $('#hfToken').value.trim();
+  if(v && !v.startsWith('hf_')) return toast('Hugging Face tokens start with hf_','err');
+  if(v){ localStorage.setItem('keo_hf_token', v); toast('HD engine enabled: FLUX.1-dev \ud83d\udd25'); }
+  $('#hfToken').value = '';
+  hfStatus();
+};
+ $('#hfClear').onclick = ()=>{ localStorage.removeItem('keo_hf_token'); hfStatus(); toast('Back to free Flux HD'); };
+groqKeyStatus(); hfStatus();
 
 const GH = 'https://api.github.com';
 async function gh(path, opt={}){
@@ -1025,15 +1148,17 @@ function srcsHTML(srcs){
 function imgHTML(img){
   return `<div class="genimg"><img src="${esc(img.url)}" alt="Keo artwork"
     onload="this.closest('.genimg').classList.remove('failed')"
-    onerror="this.closest('.genimg').classList.add('failed')"><div class="gi-acts">
+    onerror="this.closest('.genimg').classList.add('failed')">
+    <div class="gi-brand">KEOAI</div>
+    <div class="gi-acts">
     <button class="cbtn" data-act="dlimg" data-url="${esc(img.url)}">\u2B07 Download</button>
     <button class="cbtn" data-act="regenimg" data-prompt="${esc(img.prompt)}">\u21BB Repaint</button></div></div>`;
 }
 function pptHTML(m){
   return `<div class="pptstrip">` + m.slides.map((s,i)=>
     `<div class="pslide"><span class="pn">${i+1}</span><div class="pt">${esc(s.title)}</div><div class="pb">${esc((s.bullets||[]).slice(0,3).join(' \u2022 '))}</div></div>`
-  ).join('') + `</div><div class="ppt-dl"><button class="btn btn-acc" data-act="dlppt" data-mid="${m.id}" style="padding:9px 18px;font-size:13.5px">
-    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M6 11l6 6 6-6M5 21h14"/></svg>
+  ).join('') + `</div><div class="ppt-dl"><button class="btn btn-acc" data-act="dlppt" data-mid="${m.id}" style="padding:10px 20px;font-size:14px">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M6 11l6 6 6-6M5 21h14"/></svg>
     Download .pptx</button></div>`;
 }
 function userEl(m){
@@ -1106,7 +1231,7 @@ function loadChat(id){
   toast('Chat exported as Markdown');
 };
 
-/* ================== Web search (Jina reader + proxies + Wikipedia fallback) ================== */
+/* ================== Web search ================== */
 const PROXIES = [
   u => 'https://r.jina.ai/' + u,
   u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
@@ -1188,7 +1313,7 @@ async function webSearch(q){
   return wikiSearch(q, isArabicText(q) ? 'ar' : 'en');
 }
 
-/* ================== Groq (smart model + high tokens + adaptive failover) ================== */
+/* ================== Groq (key guard + adaptive failover) ================== */
 const SYS = `You are "Keo" (KeoAI), a brilliant, friendly, hands-on AI assistant, created and owned by "Kareem Hussein".
 Your rules:
 - LANGUAGE (most important): Always reply in the SAME language the user writes in. Arabic in \u2192 Arabic out. English in \u2192 English out. Mirror the user's language everywhere, including headings and lists.
@@ -1199,11 +1324,15 @@ Your rules:
 - If anyone asks who made you: you are Keo, and your owner is Kareem Hussein.`;
 const PPT_SYS = `You are Keo, assistant of Kareem Hussein. Reply with a JSON array ONLY — no explanation, in this exact shape:
 [{"title":"Slide title","bullets":["point","point"],"img":"short english image prompt"}]
-6 to 8 slides, in the SAME language as the user's request. First slide = cover, second = agenda, last = conclusion. Each "img" is a vivid English prompt for a flat modern vector illustration matching that slide (no text in image). Make bullet content rich and specific — not generic.`;
-const IMG_SYS = `You are an expert prompt engineer for text-to-image models (Flux). Rewrite the user's request (any language) into ONE detailed English image prompt of 60-90 words. Include: the main subject with vivid specifics, setting/environment, art style, lighting, color palette, composition and camera angle. Output ONLY the prompt text — no quotes, no explanation.`;
+Exactly 8 slides, in the SAME language as the user's request. Slide 1 = cover (title + 1-line subtitle as bullets), slide 2 = agenda, slides 3-7 = deep content with 4-5 specific bullets each (real facts, numbers, examples — never generic filler), slide 8 = conclusion with a call to action. Each "img" is a vivid English prompt for a modern flat vector illustration matching that slide (no text in image).`;
 
 const MODEL_ERR = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported/i;
 async function groqChat(body, signal){
+  if(!GROQ_KEY){
+    $('#connModal').hidden = false;
+    const err = new Error('No API key — I opened Keo Links: paste a free Groq key from console.groq.com/keys');
+    err.nokey = true; throw err;
+  }
   let model = body.model, mt = body.max_tokens || 4096;
   for(let attempt = 0; attempt < 6; attempt++){
     const res = await fetch(GROQ_URL, {
@@ -1214,6 +1343,11 @@ async function groqChat(body, signal){
     if(res.ok) return res;
     let msg = 'HTTP ' + res.status;
     try{ const j = await res.json(); msg = j.error?.message || msg; }catch(e){}
+    if(res.status === 401){
+      $('#connModal').hidden = false;
+      const err = new Error('Invalid API key — I opened Keo Links: paste a fresh Groq key from console.groq.com/keys');
+      err.status = 401; throw err;
+    }
     if(/max.?tokens|context window|too large/i.test(msg) && mt > 4096){ mt = mt > 8192 ? 8192 : 4096; continue; }
     const canSwitch = [400,404,503].includes(res.status) && MODEL_ERR.test(msg);
     if(canSwitch && attempt < 5){
@@ -1229,7 +1363,6 @@ async function groqChat(body, signal){
 }
 function balanced(s){ const f = (String(s).match(/```/g)||[]).length; return f%2 ? s+'\n```' : s; }
 
-/* line-by-line reveal */
 function makeTyper(textEl){
   let rec = '', shown = '', timer = null, finished = false, onDone = null;
   const strip = s => s.replace(/<think>[\s\S]*?<\/think>/g, '').replace(/<think>[\s\S]*$/, '');
@@ -1301,7 +1434,9 @@ async function send(){
   messages.push(um);
   chatScroll.appendChild(userEl(um)); $('#welcome').style.display = 'none'; scrollPin();
 
+  /* FIX: Keo's reply object must live in `messages` — otherwise Download/Copy/persist can't find it */
   const km = { id:'m'+(Date.now()+1), role:'keo', text:'', ts:Date.now() };
+  messages.push(km);
   const atts = attachments.slice();
   attachments = []; renderAtt();
 
@@ -1324,6 +1459,11 @@ async function send(){
   }catch(err){
     if(err.name === 'AbortError'){
       km.text = (km.text || '') + '\n\n(Stopped by your request.)';
+    } else if(err.nokey || err.status === 401){
+      km.text = isArabicText(text)
+        ? 'محتاج مفتاح AI عشان أفكر \ud83e\udde0 — فتحتلك **Keo Links**:\n\n1. هات مفتاح مجاني من console.groq.com/keys\n2. الصقه في كارت **Groq Brain Key**\n3. دوس **Save & Test**\n\nوأرجعلك شغال فورًا.'
+        : 'I need an AI key to think \ud83e\udde0 — I opened **Keo Links** for you:\n\n1. Grab a free key at console.groq.com/keys\n2. Paste it into the **Groq Brain Key** card\n3. Hit **Save & Test**\n\nThen I\u2019m back online instantly.';
+      toast('Paste a Groq key in Keo Links', 'err');
     } else {
       km.text = 'Ran into a problem while working: ' + (err.message || 'connection') + '\nTry again or send another message.';
       toast('Keo paused — try again', 'err');
@@ -1399,10 +1539,10 @@ Write a helpful, well-organized answer in the SAME language as the user's questi
   finalizeKeo(km, el, textNode);
 }
 
-/* ============ Image generation flow — never blocks on fetch; <img> loads directly ============ */
+/* ============ Image generation — HD, smart prompt, browser loads it directly ============ */
+const IMG_SYS = `You are an expert prompt engineer for text-to-image models (Flux). Rewrite the user's request (any language) into ONE detailed English image prompt of 60-90 words. Include: the main subject with vivid specifics, setting/environment, art style, lighting, color palette, composition and camera angle. Output ONLY the prompt text — no quotes, no explanation.`;
 async function doImage(text, km, el, textNode){
   setStage('paint');
-  /* 1) smart prompt expansion so the model "understands" deeply */
   let en = text;
   try{
     const r = await groqChat({ model: MODEL_MAIN, temperature: 0.6, max_tokens: 300, messages: [
@@ -1412,21 +1552,22 @@ async function doImage(text, km, el, textNode){
     const j = await r.json();
     const c = (j.choices?.[0]?.message?.content || '').trim();
     if(c) en = c.replace(/^["']|["']$/g,'');
-  }catch(e){}
-  /* 2) style-aware finishers */
+  }catch(e){ en = text + ', highly detailed digital illustration, rich colors, cinematic lighting'; }
   const t = text.toLowerCase();
   if(/\blogo\b|شعار/.test(t)) en += ', minimal flat vector logo, simple iconic shapes, centered composition, plain solid background';
   else if(/poster|بوستر/.test(t)) en += ', bold poster composition, dramatic lighting, poster art';
-  else en += ', highly detailed digital illustration, rich colors, cinematic lighting, sharp focus, 4k quality';
-  /* 3) the browser itself loads the image URL — no fetch, no CORS, no timeout errors */
-  km.image = { url: imgURL(en, 1024, 768, 'flux'), prompt: en };
-  km.text = isArabicText(text)
-    ? 'برسمها دلوقتي على الكانفاس \ud83c\udfa8 — الصورة بتظهر تحت في ثواني (أول مرة ممكن تاخد لحد دقيقة لو الرسمة معقدة).\n\nلو حصل أي تأخير دوس **\u21BB Repaint** وهيترسم من جديد فورًا، أو قول لي أرسمها بستايل مختلف.'
-    : 'Painting it on my canvas \ud83c\udfa8 — the image appears below in seconds (first render can take up to a minute for complex scenes).\n\nIf it stalls, hit **\u21BB Repaint** — or ask me for a different style.';
+  km.image = { url: imgURL(en, 1440, 1080, 'flux'), prompt: en };
+  km.text = localStorage.getItem('keo_hf_token')
+    ? (isArabicText(text)
+        ? 'برسمها بمحرك **FLUX.1-dev** الاحترافي \ud83d\udd25 — الصورة بتظهر تحت في HD ومعاها توقيع KEOAI.\n\nلو حصل تأخير دوس **\u21BB Repaint**.'
+        : 'Painting with the pro **FLUX.1-dev** engine \ud83d\udd25 — HD image with the KEOAI signature appears below.\n\nIf it stalls, hit **\u21BB Repaint**.')
+    : (isArabicText(text)
+        ? 'برسمها دلوقتي بجودة HD على الكانفاس \ud83c\udfa8 — الصورة بتظهر تحت ومعاها توقيع KEOAI.\n\nلو حصل تأخير دوس **\u21BB Repaint**، وعايز جودة أجمد؟ ضيف مفتاح Hugging Face مجاني من **Keo Links** وهفصل على محرك FLUX.1-dev.'
+        : 'Painting it in HD \ud83c\udfa8 — the image appears below, signed **KEOAI**.\n\nIf it stalls, hit **\u21BB Repaint**. Want max quality? Add a free Hugging Face token in **Keo Links** and I\u2019ll upgrade to FLUX.1-dev.');
   finalizeKeo(km, el, textNode);
 }
 
-/* ============ PowerPoint with AI-painted images (fetch+retries, graceful skip) ============ */
+/* ============ PowerPoint: 8 rich slides + AI-painted art + KEOAI signature ============ */
 async function doPPT(text, km, el){
   setStage('slides');
   const res = await groqChat({
@@ -1444,19 +1585,19 @@ async function doPPT(text, km, el){
   if(!Array.isArray(slides) || !slides.length) throw new Error('Couldn\u2019t assemble the slides — try a different wording');
   km.slides = slides.map(s => ({ title: String(s.title||''), bullets: (s.bullets||[]).map(String), imgPrompt: String(s.img||'') }));
 
-  toast('Keo is painting slide artwork — this takes up to a minute…');
+  toast('Keo is painting slide artwork — up to a minute…');
   const imgs = new Array(slides.length).fill(null);
-  const idxs = slides.map((_,i)=>i).slice(0,4);
+  const idxs = slides.map((_,i)=>i).slice(0,5);
   await Promise.all(idxs.map(async i=>{
-    const p = (km.slides[i].imgPrompt || km.slides[i].title || '') + ', modern flat vector illustration, cohesive style, rich colors, clean composition, no text';
+    const p = (km.slides[i].imgPrompt || km.slides[i].title || '') + ', modern flat vector illustration, cohesive premium style, rich colors, clean composition, no text';
     const g = await genImage(p, i===0 ? 1280 : 800, i===0 ? 720 : 520);
-    if(g) imgs[i] = g;
+    if(g) imgs[i] = await watermarkDataUrl(g);   /* sign every slide image KEOAI */
   }));
   km.pptImages = imgs; km._pptImgs = imgs;
   const got = imgs.filter(Boolean).length;
   km.text = isArabicText(text)
-    ? `جهزت لك عرض فخم من **${slides.length} شرائح** — ورسمت **${got} صورة** بالذكاء الاصطناعي للشرائح. نزّله تحت، ولو عايز تعديل في أي شريحة قول لي.`
-    : `Your deck is ready: **${slides.length} slides** with **${got} AI-painted images**. Download below — want any slide reworked? Just say the word.`;
+    ? `عرضك جاهز: **${slides.length} شرائح** برمحتوى غني + **${got} صورة** مرسومة بالذكاء الاصطناعي وموقّعة KEOAI. دوس **Download .pptx** تحت — ولو عايز تعديل في أي شريحة قول لي.`
+    : `Your deck is ready: **${slides.length} rich slides** + **${got} AI-painted images**, all signed KEOAI. Hit **Download .pptx** below — want any slide reworked? Just say the word.`;
   finalizeKeo(km, el, el.querySelector('.msg-text'));
 }
 function buildPPTX(slides, images){
@@ -1471,33 +1612,42 @@ function buildPPTX(slides, images){
     sl.background = { color:'0B0D0C' };
     const img = images ? images[i] : null;
     if(i === 0){
+      /* ---- COVER: full-bleed art + overlay + huge title ---- */
       if(img){
         sl.addImage({ data: img, x:0, y:0, w:W, h:H, sizing:{ type:'cover', w:W, h:H } });
-        sl.addShape(p.ShapeType.rect, { x:0, y:0, w:W, h:H, fill:{ color:'0B0D0C', transparency:42 } });
+        sl.addShape(p.ShapeType.rect, { x:0, y:0, w:W, h:H, fill:{ color:'0B0D0C', transparency:38 } });
       }
-      sl.addShape(p.ShapeType.rect, { x: isAr ? 9.7 : 0, y:0, w:0.3, h:H, fill:{color:'C6F24B'} });
-      sl.addText(s.title, { x:0.7, y:1.7, w:8.6, h:1.6, align, rtlMode:isAr, fontSize:40, bold:true, color:'C6F24B', fontFace:'Arial' });
-      sl.addText((s.bullets||[]).slice(0,2).join('  \u2022  '), { x:0.7, y:3.3, w:8.6, h:0.7, align, rtlMode:isAr, fontSize:15, color:'EDEFE6', fontFace:'Arial' });
-      sl.addText('KEOAI \u00B7 Keo', { x:0.7, y:4.9, w:4, h:0.4, fontSize:11, color:'9BA398', fontFace:'Arial' });
+      sl.addShape(p.ShapeType.rect, { x: isAr ? 9.55 : 0, y:0, w:0.45, h:H, fill:{color:'C6F24B'} });
+      sl.addText(s.title, { x:0.8, y:1.55, w:8.4, h:1.7, align, rtlMode:isAr, fontSize:41, bold:true, color:'C6F24B', fontFace:'Arial' });
+      sl.addShape(p.ShapeType.rect, { x: isAr ? 8.2 : 0.8, y:3.35, w:1.6, h:0.06, fill:{color:'EDEFE6'} });
+      sl.addText((s.bullets||[]).slice(0,2).join('  \u2022  '), { x:0.8, y:3.6, w:8.4, h:0.8, align, rtlMode:isAr, fontSize:16, color:'EDEFE6', fontFace:'Arial' });
+      sl.addText('KEOAI  \u00B7  by Kareem Hussein', { x:0.8, y:5.0, w:5, h:0.4, fontSize:11, color:'9BA398', fontFace:'Arial', charSpacing:2 });
     } else {
-      sl.addShape(p.ShapeType.rect, { x:0, y:0, w:W, h:0.14, fill:{color:'C6F24B'} });
-      const imgW = 3.0, imgH = 4.1;
+      /* ---- CONTENT: accent frame + side art + rich bullets ---- */
+      sl.addShape(p.ShapeType.rect, { x:0, y:0, w:W, h:0.12, fill:{color:'C6F24B'} });
+      const imgW = 3.1, imgH = 4.15;
+      let txX = 0.65, txW = W - 1.3;
       if(img){
-        const ix = isAr ? 0.5 : W - imgW - 0.5;
-        sl.addImage({ data: img, x:ix, y:0.75, w:imgW, h:imgH, sizing:{ type:'cover', w:imgW, h:imgH } });
+        const ix = isAr ? 0.55 : W - imgW - 0.55;
+        sl.addImage({ data: img, x:ix, y:0.72, w:imgW, h:imgH, sizing:{ type:'cover', w:imgW, h:imgH } });
+        sl.addShape(p.ShapeType.rect, { x:ix, y:0.72, w:imgW, h:imgH, fill:{ color:'000000', transparency:100 }, line:{ color:'C6F24B', width:1.25 } });
+        txW = W - imgW - 1.85;
+        txX = isAr ? W - txW - 0.65 : 0.65;
       }
-      const txW = img ? (W - imgW - 1.6) : (W - 1.2);
-      const txX = img ? (isAr ? W - txW - 0.6 : 0.6) : 0.6;
-      sl.addText(s.title, { x:txX, y:0.55, w:txW, h:1.15, align, rtlMode:isAr, fontSize:26, bold:true, color:'C6F24B', fontFace:'Arial' });
+      sl.addText(s.title, { x:txX, y:0.5, w:txW, h:1.1, align, rtlMode:isAr, fontSize:27, bold:true, color:'C6F24B', fontFace:'Arial' });
+      sl.addShape(p.ShapeType.rect, { x: isAr ? (txX+txW-1.1) : txX, y:1.62, w:1.1, h:0.05, fill:{color:'C6F24B'} });
       if(s.bullets?.length){
-        sl.addText(s.bullets.map(b => ({ text:b, options:{ bullet:{ code:'2022' }, breakLine:true, rtlMode:isAr } })),
-          { x:txX, y:1.85, w:txW, h:3.2, align, fontSize:15, color:'EDEFE6', lineSpacingMultiple:1.45, fontFace:'Arial' });
+        sl.addText(s.bullets.map(b => ({ text:b, options:{ bullet:{ code:'2022', indent:14 }, breakLine:true, rtlMode:isAr } })),
+          { x:txX, y:1.95, w:txW, h:3.15, align, fontSize:15, color:'EDEFE6', lineSpacingMultiple:1.4, paraSpaceAfter:6, fontFace:'Arial' });
       }
-      sl.addText(String(i+1), { x:W-1.1, y:H-0.5, w:0.6, h:0.3, align:'right', fontSize:11, color:'9BA398', fontFace:'Arial' });
-      sl.addText('KEOAI', { x:0.35, y:H-0.5, w:1.4, h:0.3, fontSize:9, color:'6B7266', fontFace:'Arial' });
+      sl.addShape(p.ShapeType.rect, { x:0, y:H-0.06, w:W, h:0.06, fill:{color:'1C211F'} });
+      sl.addText('KEOAI', { x:0.35, y:H-0.48, w:1.6, h:0.3, fontSize:10, color:'6B7266', fontFace:'Arial', charSpacing:2 });
+      sl.addText(String(i+1) + ' / ' + slides.length, { x:W-1.6, y:H-0.48, w:1.25, h:0.3, align:'right', fontSize:10, color:'9BA398', fontFace:'Arial' });
     }
   });
-  p.writeFile({ fileName: 'KeoAI-Presentation.pptx' }).then(()=>toast('Deck downloaded — fresh from Keo\u2019s desk'));
+  p.writeFile({ fileName: 'KeoAI-Presentation.pptx' })
+    .then(()=>{ toast('Deck downloaded — signed KEOAI \u2705'); confettiBurst(); })
+    .catch(err=>toast('Download failed: ' + err.message, 'err'));
 }
 
 function detectAndOpenSite(km){
@@ -1543,9 +1693,13 @@ function speakText(text){
   speakGuard = setInterval(()=>{ if(speechSynthesis.speaking && !speechSynthesis.paused) speechSynthesis.resume(); }, 8000);
 }
 
-/* ================== Mic input (robust: real error messages + auto-restart) ================== */
+/* ================== Mic input — anti-duplicate engine ==================
+   Chrome re-delivers results after auto-restarts, which caused the same
+   word to repeat endlessly. Fix: per-session cursor + consecutive-duplicate
+   guard with a 2s window + restart cap. */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-let micRec = null, micOn = false, micLang = 'ar', micBase = '', micFinal = '';
+let micRec = null, micOn = false, micLang = 'ar';
+let micBase = '', micFinal = '', micCursor = 0, micRestarts = 0, micLastTxt = '', micLastTime = 0;
 function micStopUI(){ micOn = false; $('#btnMic').classList.remove('rec'); }
 function micFatal(e){
   micStopUI();
@@ -1566,33 +1720,43 @@ function micFatal(e){
 };
  $('#btnMic').onclick = ()=>{
   if(!SR) return toast('Voice input needs Chrome or Edge (Firefox doesn\u2019t support it)','err');
-  if(location.protocol === 'file:')
-    toast('Mic works best over http/localhost — if it fails, open the file via Live Server or any host','err');
-  if(micOn){ micOn = false; try{ micRec.stop(); }catch(e){} return; }
+  if(micOn){ micOn = false; try{ micRec.stop(); }catch(e){} micStopUI(); return; }
   micRec = new SR();
   micRec.lang = micLang === 'ar' ? 'ar-EG' : (navigator.language || 'en-US');
   micRec.interimResults = true;
   micRec.continuous = true;
   micRec.maxAlternatives = 1;
   micBase = ta.value ? ta.value.replace(/\s+$/,'') + ' ' : '';
-  micFinal = '';
+  micFinal = ''; micCursor = 0; micRestarts = 0; micLastTxt = ''; micLastTime = 0;
+  micRec.onstart = ()=>{ micCursor = 0; };  /* fresh session → reset the cursor */
   micRec.onresult = e=>{
     let interim = '';
-    for(let i = e.resultIndex; i < e.results.length; i++){
+    for(let i = micCursor; i < e.results.length; i++){
       const r = e.results[i];
-      if(r.isFinal) micFinal += r[0].transcript + ' ';
-      else interim += r[0].transcript;
+      if(r.isFinal){
+        const txt = r[0].transcript.trim();
+        const now = Date.now();
+        /* drop replays of the same final within 2 seconds */
+        if(txt && (txt !== micLastTxt || now - micLastTime > 2000)){
+          micFinal += txt + ' ';
+          micLastTxt = txt;
+        }
+        micLastTime = now;
+        micCursor++;
+      } else {
+        interim += r[0].transcript;
+      }
     }
     ta.value = micBase + micFinal + interim;
     ta.dispatchEvent(new Event('input'));
   };
   micRec.onend = ()=>{
-    /* auto-restart while active: Chrome stops every ~60s */
-    if(micOn){ setTimeout(()=>{ try{ micRec.start(); }catch(e){} }, 250); }
-    else micStopUI();
+    if(!micOn) return micStopUI();
+    if(++micRestarts > 80) return micStopUI();   /* hard stop for pathological loops */
+    setTimeout(()=>{ try{ micRec.start(); }catch(e){} }, 300);
   };
   micRec.onerror = e=>{
-    if(e.error === 'no-speech' || e.error === 'aborted') return; /* benign — onend restarts */
+    if(e.error === 'no-speech' || e.error === 'aborted') return;
     micFatal(e);
   };
   micOn = true;
@@ -1668,23 +1832,27 @@ chatScroll.addEventListener('click', async e=>{
   }
   if(a === 'dlppt'){
     const m = messages.find(x=>x.id===act.dataset.mid);
-    if(m?.slides) buildPPTX(m.slides, m._pptImgs || new Array(m.slides.length).fill(null));
+    if(m?.slides) buildPPTX(m.slides, m._pptImgs || m.pptImages || new Array(m.slides.length).fill(null));
+    else toast('Slides data not found in this session — ask Keo to regenerate', 'err');
   }
   if(a === 'dlimg'){
     try{
-      const r = await fetch(act.dataset.url);
-      const b = await r.blob();
+      let du = await watermarkFromUrl(act.dataset.url);   /* signed KEOAI */
+      if(!du){
+        const r = await fetch(act.dataset.url);
+        const b = await r.blob();
+        du = await watermarkDataUrl(await blobToDataURL(b));
+      }
       const el = document.createElement('a');
-      el.href = URL.createObjectURL(b); el.download = 'keo-image.png'; el.click();
-      toast('Image downloaded');
+      el.href = du; el.download = 'KEOAI-image.png'; el.click();
+      toast('Downloaded — signed KEOAI');
     }catch(err){ window.open(act.dataset.url, '_blank'); }
   }
   if(a === 'regenimg'){
     const img = act.closest('.genimg').querySelector('img');
-    const box = act.closest('.genimg');
-    box.classList.remove('failed');
+    act.closest('.genimg').classList.remove('failed');
     img.removeAttribute('src');
-    img.src = imgURL(act.dataset.prompt, 1024, 768, 'flux');
+    img.src = imgURL(act.dataset.prompt, 1440, 1080, 'flux');
     toast('Keo is repainting…');
   }
 });
@@ -1763,6 +1931,7 @@ function showApp(){
   setStage('boot');
   setTimeout(()=>{ setStage('happy'); confettiBurst(); }, 1000);
   setTimeout(()=>setStage('idle'), 2300);
+  if(!GROQ_KEY) setTimeout(()=>{ $('#connModal').hidden = false; toast('Add your free Groq key to wake Keo\u2019s brain', 'err'); }, 2500);
   ta.focus();
 }
 function showGate(){
@@ -1781,6 +1950,8 @@ if(auth){
     } else showGate();
   });
 } else showGate();
+
+initModels();
 </script>
 </body>
 </html>
