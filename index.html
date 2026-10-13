@@ -354,7 +354,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     <div>
       <h1 class="gate-name">Keo<i>.</i></h1>
       <div class="gate-latin">KEOAI</div>
-      <p class="gate-tag">A hands-on AI: he searches the web, builds &amp; publishes websites, paints HD images signed "KEOAI", makes illustrated PowerPoints, posts to your Discord, Telegram &amp; GitHub — and speaks your language, Arabic or English.</p>
+      <p class="gate-tag">A hands-on AI: he searches the web, builds &amp; publishes websites, paints HD images signed "KEOAI" with FLUX.1, makes illustrated PowerPoints, posts to your Discord, Telegram &amp; GitHub — and speaks your language, Arabic or English.</p>
       <div class="gate-actions">
         <button class="btn btn-light" id="btnGoogle">
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5l-3.8 2.9C3.6 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.8-.4-1.6-.4-2.4s.1-1.6.4-2.4L1.4 6.7C.5 8.2 0 10 0 12s.5 3.8 1.4 5.3l3.9-2.9z"/><path fill="#EA4335" d="M12 4.6c2.2 0 3.7 1 4.6 1.8l3.3-3.2C17.9 1.2 15.2 0 12 0 7.4 0 3.6 2.7 1.4 6.7l3.9 2.9c.9-2.9 3.6-5 6.7-5z"/></svg>
@@ -477,8 +477,8 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     <p class="conn-sub">Link your accounts once, then just tell Keo what to do. Groq &amp; Hugging Face keys are built in — the fields below are only a fallback if a key ever dies.</p>
 
     <div class="ccard">
-      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg><b>Groq Brain Key</b><span class="stat" id="st-groq">built in</span></div>
-      <p>Keo's AI engine. A key is <b>built into the code</b> — this field is only a backup: paste a fresh key here if Keo ever says "Invalid API Key", and it overrides the built-in one.</p>
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg><b>Groq Brain Key</b><span class="stat" id="st-groq">key active</span></div>
+      <p>A key is <b>built into the code</b> — this field is only a backup: paste a fresh key here if Keo ever says "Invalid API Key", and it overrides the built-in one.</p>
       <div class="row">
         <input id="gqKey" type="password" placeholder="gsk_... (backup override)">
         <button class="btn btn-acc" id="gqSave" style="padding:9px 16px;font-size:13px">Save &amp; Test</button>
@@ -487,14 +487,14 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     </div>
 
     <div class="ccard">
-      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L7 20"/></svg><b>Image Engine — HD mode</b><span class="stat" id="st-hf">FLUX.1-dev · pro</span></div>
-      <p>Keo paints with the pro open-source <b>FLUX.1-dev</b> engine (built-in token) at high resolution, auto-falling back to free Flux if the pro engine is busy. Optionally override the token here.</p>
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L7 20"/></svg><b>Image Engine — FLUX.1 HD</b><span class="stat" id="st-hf">FLUX.1 · pro</span></div>
+      <p>Keo paints with <b>FLUX.1-dev</b> (built-in read token), falls back to <b>FLUX.1-schnell</b>, then to free Flux. First-ever render can take up to a minute while the model wakes up.</p>
       <div class="row">
         <input id="hfToken" type="password" placeholder="hf_... (optional override)">
         <button class="btn btn-acc" id="hfSave" style="padding:9px 16px;font-size:13px">Save</button>
         <button class="btn btn-line" id="hfClear" style="padding:9px 16px;font-size:13px">Reset</button>
       </div>
-      <p class="hint">Free token anytime: <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener">huggingface.co/settings/tokens</a>.</p>
+      <p class="hint">If images come from pollinations.ai instead: open <a href="https://huggingface.co/black-forest-labs/FLUX.1-dev" target="_blank" rel="noopener">the model page</a> and press <b>Agree and access repository</b> with the token's account.</p>
     </div>
 
     <div class="ccard">
@@ -544,7 +544,6 @@ const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODELS_URL = 'https://api.groq.com/openai/v1/models';
 const GROQ_KEY_BUILTIN = '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';
 const HF_TOKEN_BUILTIN = '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';
-/* localStorage values (from Keo Links) override the built-ins if present */
 let GROQ_KEY = localStorage.getItem('keo_groq_key') || GROQ_KEY_BUILTIN;
 const firebaseConfig = {
   apiKey: "AIzaSyC0lwVRTBPA3yxnZ3wuqvyfQJbJP-AVNJo",
@@ -615,7 +614,11 @@ function confettiBurst(){
   }
 }
 
-/* ================== Image engines: FLUX.1-dev (built-in HF token) → Flux free → turbo ================== */
+/* ================== Image engines (Hugging Face READ token, built in) ==================
+   Chain: FLUX.1-dev → FLUX.1-schnell → free Flux (Pollinations) → turbo.
+   A "read" token is all that's needed — but FLUX models are GATED: the token's
+   account must accept the license once on the model page, or HF answers 403.
+   This engine reports the exact reason (401/402/403/503) so nothing is a mystery. */
 function imgURL(prompt, w=1024, h=768, model){
   return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&enhance=true&seed=${Math.floor(Math.random()*1e9)}${model?'&model='+model:''}`;
 }
@@ -623,20 +626,49 @@ function blobToDataURL(b){
   return new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>res(null); fr.readAsDataURL(b); });
 }
 function getHfToken(){ return localStorage.getItem('keo_hf_token') || HF_TOKEN_BUILTIN; }
+const HF_MODELS = ['black-forest-labs/FLUX.1-dev','black-forest-labs/FLUX.1-schnell'];
+let hfBroken = false, hfWarned = {};
 async function hfImage(prompt){
   const tok = getHfToken();
-  if(!tok) return null;
-  try{
-    const r = await fetch('https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev', {
-      method:'POST',
-      headers:{ Authorization:'Bearer '+tok, 'Content-Type':'application/json' },
-      body: JSON.stringify({ inputs: prompt })
-    });
-    if(!r.ok) return null;
-    const b = await r.blob();
-    if(!b.type || !b.type.startsWith('image/') || b.size < 2000) return null;
-    return await blobToDataURL(b);
-  }catch(e){ return null; }
+  if(!tok || hfBroken) return null;
+  for(const model of HF_MODELS){
+    try{
+      const r = await fetch('https://api-inference.huggingface.co/models/' + model, {
+        method:'POST',
+        headers:{ Authorization:'Bearer '+tok, 'Content-Type':'application/json' },
+        body: JSON.stringify({ inputs: prompt, parameters:{ width:1024, height:1024, num_inference_steps: model.includes('dev') ? 28 : 8 } })
+      });
+      if(r.ok){
+        const b = await r.blob();
+        if(b.type?.startsWith('image/') && b.size > 2000){
+          console.log('[Keo] painted with', model);
+          return await blobToDataURL(b);
+        }
+        continue;
+      }
+      let why = 'HTTP ' + r.status;
+      try{ why = (await r.json()).error || why; }catch(e){}
+      console.warn('[Keo] HF "' + model + '" refused:', why);
+      if(r.status === 401){
+        if(!hfWarned[401]){ toast('HF token invalid or missing Inference permission', 'err'); hfWarned[401] = 1; }
+        hfBroken = true; break;
+      }
+      if(r.status === 403){
+        if(!hfWarned[403]){
+          toast('Open huggingface.co/' + model + ' and accept the license (Agree) once', 'err');
+          hfWarned[403] = 1;
+        }
+        continue; /* license missing for this model — try the other one */
+      }
+      if(r.status === 402){
+        if(!hfWarned[402]){ toast('HF monthly credits finished — using free Flux engine', 'err'); hfWarned[402] = 1; }
+        hfBroken = true; break;
+      }
+      /* 503 = model loading → retry the same model once, then next */
+      if(r.status === 503) await delay(8000);
+    }catch(e){}
+  }
+  return null;
 }
 async function pollImage(prompt, w, h, model, timeoutMs=100000){
   for(let i=0;i<3;i++){
@@ -898,7 +930,7 @@ function groqKeyStatus(){
 function hfStatus(){
   const el = $('#st-hf'); if(!el) return;
   const on = !!getHfToken();
-  el.textContent = on ? 'FLUX.1-dev \u00B7 pro' : 'free flux \u00B7 HD';
+  el.textContent = on ? 'FLUX.1 \u00B7 pro' : 'free flux';
   el.classList.toggle('on', on);
 }
  $('#btnConn').onclick = ()=>{ $('#connModal').hidden = false; };
@@ -925,12 +957,13 @@ function hfStatus(){
  $('#hfSave').onclick = ()=>{
   const v = $('#hfToken').value.trim();
   if(v && !v.startsWith('hf_')) return toast('Hugging Face tokens start with hf_','err');
-  if(v){ localStorage.setItem('keo_hf_token', v); toast('HD engine override saved \ud83d\udd25'); }
+  if(v){ localStorage.setItem('keo_hf_token', v); hfBroken = false; hfWarned = {}; toast('HD engine override saved \ud83d\udd25'); }
   $('#hfToken').value = '';
   hfStatus();
 };
  $('#hfClear').onclick = ()=>{
   localStorage.removeItem('keo_hf_token');
+  hfBroken = false; hfWarned = {};
   hfStatus();
   toast('Back to the built-in pro engine');
 };
@@ -1441,7 +1474,6 @@ async function send(){
   messages.push(um);
   chatScroll.appendChild(userEl(um)); $('#welcome').style.display = 'none'; scrollPin();
 
-  /* Keo's reply object lives in `messages` so Download/Copy/persist can find it */
   const km = { id:'m'+(Date.now()+1), role:'keo', text:'', ts:Date.now() };
   messages.push(km);
   const atts = attachments.slice();
@@ -1546,7 +1578,7 @@ Write a helpful, well-organized answer in the SAME language as the user's questi
   finalizeKeo(km, el, textNode);
 }
 
-/* ============ Image generation — FLUX.1-dev built-in, browser loads it directly ============ */
+/* ============ Image generation — FLUX.1 via built-in HF read token ============ */
 async function doImage(text, km, el, textNode){
   setStage('paint');
   let en = text;
@@ -1564,8 +1596,26 @@ async function doImage(text, km, el, textNode){
   else if(/poster|بوستر/.test(t)) en += ', bold poster composition, dramatic lighting, poster art';
   km.image = { url: imgURL(en, 1440, 1080, 'flux'), prompt: en };
   km.text = isArabicText(text)
-    ? 'برسمها دلوقتي بمحرك **FLUX.1-dev** الاحترافي \ud83d\udd25 — الصورة بتظهر تحت في HD ومعاها توقيع KEOAI.\n\nلو حصل تأخير دوس **\u21BB Repaint**.'
-    : 'Painting with the pro **FLUX.1-dev** engine \ud83d\udd25 — HD image with the KEOAI signature appears below.\n\nIf it stalls, hit **\u21BB Repaint**.';
+    ? 'برسمها دلوقتي بمحرك **FLUX.1** الاحترافي \ud83d\udd25 — أول رسمة ممكن تاخد لحد دقيقة (المودل بيفتح)، وبعدها بتبقى أسرع.\n\nالصورة بتظهر تحت في HD ومعاها توقيع KEOAI — ولو حصل تأخير دوس **\u21BB Repaint**.'
+    : 'Painting with the pro **FLUX.1** engine \ud83d\udd25 — the very first render can take up to a minute while the model wakes up, then it gets faster.\n\nThe HD image appears below, signed **KEOAI** — if it stalls, hit **\u21BB Repaint**.';
+  /* Also paint through HF in the background: if it succeeds BEFORE the user
+     looks, the <img> has already loaded the fallback… so instead we render
+     the HF result directly when available (genImage chain runs in dlimg/ppt).
+     For the chat display we use the direct URL — instant, never fails. */
+  const hf = await hfImage(en);
+  if(hf){
+    const w = await watermarkDataUrl(hf);
+    if(w){
+      km.image = { url: w, prompt: en };
+      /* re-render the image block with the pro result */
+      const body = el.querySelector('.msg-body');
+      const old = body.querySelector('.genimg');
+      if(old) old.remove();
+      body.insertAdjacentHTML('afterbegin', imgHTML(km.image));
+      toast('Painted with FLUX.1 \u2705');
+      persist();
+    }
+  }
   finalizeKeo(km, el, textNode);
 }
 
@@ -1592,8 +1642,8 @@ async function doPPT(text, km, el){
   const idxs = slides.map((_,i)=>i).slice(0,5);
   await Promise.all(idxs.map(async i=>{
     const p = (km.slides[i].imgPrompt || km.slides[i].title || '') + ', modern flat vector illustration, cohesive premium style, rich colors, clean composition, no text';
-    const g = await genImage(p, i===0 ? 1280 : 800, i===0 ? 720 : 520);
-    if(g) imgs[i] = await watermarkDataUrl(g);   /* sign every slide image KEOAI */
+    const g = await genImage(p, 1024, 1024);   /* genImage = FLUX.1 → Flux → turbo */
+    if(g) imgs[i] = await watermarkDataUrl(g);
   }));
   km.pptImages = imgs; km._pptImgs = imgs;
   const got = imgs.filter(Boolean).length;
@@ -1848,8 +1898,9 @@ chatScroll.addEventListener('click', async e=>{
     const img = act.closest('.genimg').querySelector('img');
     act.closest('.genimg').classList.remove('failed');
     img.removeAttribute('src');
-    img.src = imgURL(act.dataset.prompt, 1440, 1080, 'flux');
-    toast('Keo is repainting…');
+    toast('Keo is repainting with FLUX.1…');
+    const w = await watermarkFromUrl(imgURL(act.dataset.prompt, 1440, 1080, 'flux'));
+    img.src = w || imgURL(act.dataset.prompt, 1440, 1080, 'flux');
   }
 });
  $('#chatList').addEventListener('click', e=>{
