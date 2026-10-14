@@ -140,18 +140,6 @@ main{display:flex;height:calc(100vh - 58px)}
 .pslide .pt{font-size:13px;font-weight:700;color:var(--acc);margin-bottom:7px;line-height:1.5}
 .pslide .pb{font-size:11.5px;color:var(--mut);line-height:1.7}
 .ppt-dl{margin-top:10px}
-.genimg{margin-top:12px;max-width:520px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);position:relative}
-.genimg img{width:100%;display:block;min-height:240px;
-  background:linear-gradient(100deg,#141816 40%,#1c211d 50%,#141816 60%);
-  background-size:200% 100%;animation:shimmer 1.4s linear infinite}
-@keyframes shimmer{to{background-position:-200% 0}}
-.genimg.failed img{min-height:80px;opacity:.15;animation:none}
-.genimg.failed::after{content:'\26A0  Image engine busy — press \21BB Repaint';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--mut)}
-.gi-brand{position:absolute;left:0;right:0;bottom:0;padding:26px 16px 10px;display:flex;align-items:center;gap:9px;
-  font-family:var(--fd);font-weight:700;font-size:14px;letter-spacing:3px;color:#EDEFE6;pointer-events:none;
-  background:linear-gradient(0deg,rgba(11,13,12,.88) 30%,rgba(11,13,12,0))}
-.gi-brand::before{content:'';width:10px;height:10px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px rgba(198,242,75,.8)}
-.gi-acts{display:flex;gap:8px;padding:9px 10px}
 
 .welcome{max-width:800px;margin:8vh auto 0;animation:up .5s ease both}
 .w-kicker{font-size:11px;letter-spacing:4px;color:var(--acc);margin-bottom:14px;font-weight:600}
@@ -233,7 +221,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 .bot.happy .b-eye-happy{opacity:1}
 .b-eyes{transition:transform .4s;transform-box:view-box}
 .bot.think .b-eyes{transform:translateY(-5px)}
-.bot.type .b-eyes,.bot.code .b-eyes,.bot.search .b-eyes,.bot.paint .b-eyes{transform:translateY(4px)}
+.bot.type .b-eyes,.bot.code .b-eyes,.bot.search .b-eyes{transform:translateY(4px)}
 .b-think{opacity:0}
 .b-think circle{fill:#E9E3D4;transform-box:fill-box;transform-origin:center}
 .bot.think .b-think{opacity:1}
@@ -246,8 +234,8 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 .b-arm circle{fill:#EFEAD9}
 .b-armL{transform-origin:115px 160px;transform:rotate(12deg)}
 .b-armR{transform-origin:205px 160px;transform:rotate(-12deg)}
-.bot.type .b-armL,.bot.code .b-armL,.bot.paint .b-armL{transform:rotate(-45deg);animation:tapL .18s ease-in-out infinite alternate}
-.bot.type .b-armR,.bot.code .b-armR,.bot.paint .b-armR{transform:rotate(45deg);animation:tapR .18s ease-in-out infinite alternate;animation-delay:.09s}
+.bot.type .b-armL,.bot.code .b-armL{transform:rotate(-45deg);animation:tapL .18s ease-in-out infinite alternate}
+.bot.type .b-armR,.bot.code .b-armR{transform:rotate(45deg);animation:tapR .18s ease-in-out infinite alternate;animation-delay:.09s}
 @keyframes tapL{from{transform:rotate(-48deg)}to{transform:rotate(-40deg)}}
 @keyframes tapR{from{transform:rotate(48deg)}to{transform:rotate(40deg)}}
 .bot.happy .b-armL{transform:rotate(-150deg)}
@@ -274,8 +262,8 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 .b-blip2{fill:#E9E3D4;animation-delay:.4s}
 .b-tl{fill:#4D574A;transform-box:fill-box;transform-origin:left center}
 .b-tl2{fill:#D9D3C2}
-.bot.type .b-tl,.bot.code .b-tl,.bot.paint .b-tl{animation:tline 1.6s infinite}
-.bot.type .b-tl2,.bot.code .b-tl2,.bot.paint .b-tl2{animation-delay:.25s}
+.bot.type .b-tl,.bot.code .b-tl{animation:tline 1.6s infinite}
+.bot.type .b-tl2,.bot.code .b-tl2{animation-delay:.25s}
 .bot.type .b-tl3{animation-delay:.5s}.bot.type .b-tl4{animation-delay:.75s}
 @keyframes tline{0%{transform:scaleX(.12);opacity:.25}55%,100%{transform:scaleX(1);opacity:1}}
 .b-cursor{fill:var(--acc);animation:ck .7s steps(2) infinite}
@@ -285,9 +273,9 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 .b-slideline{fill:#9a9484}
 .b-fc{font:700 12px var(--f);fill:var(--acc);opacity:0;transform-box:fill-box}
 .b-fc2{fill:#EDEFE6}
-.bot.type .b-fc,.bot.code .b-fc,.bot.paint .b-fc{animation:fly 1.3s ease-out infinite}
-.bot.type .b-fc2,.bot.code .b-fc2,.bot.paint .b-fc2{animation-delay:.45s}
-.bot.type .b-fc3,.bot.code .b-fc3,.bot.paint .b-fc3{animation-delay:.9s}
+.bot.type .b-fc,.bot.code .b-fc{animation:fly 1.3s ease-out infinite}
+.bot.type .b-fc2,.bot.code .b-fc2{animation-delay:.45s}
+.bot.type .b-fc3,.bot.code .b-fc3{animation-delay:.9s}
 @keyframes fly{0%{opacity:0;transform:translateY(4px)}22%{opacity:1}100%{opacity:0;transform:translateY(-46px)}}
 .b-file{opacity:0;transition:.3s}
 .b-file rect{fill:#EDEFE6;stroke:#B9B4A6}
@@ -354,7 +342,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     <div>
       <h1 class="gate-name">Keo<i>.</i></h1>
       <div class="gate-latin">KEOAI</div>
-      <p class="gate-tag">A hands-on AI: he searches the web, builds &amp; publishes websites, paints HD images signed "KEOAI" with FLUX.1, makes illustrated PowerPoints, posts to your Discord, Telegram &amp; GitHub — and speaks your language, Arabic or English.</p>
+      <p class="gate-tag">A hands-on AI: he searches the web, builds full websites and hands you a live link anyone can open, makes illustrated PowerPoints signed KEOAI, posts to your Discord, Telegram &amp; GitHub — and speaks your language, Arabic or English.</p>
       <div class="gate-actions">
         <button class="btn btn-light" id="btnGoogle">
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5l-3.8 2.9C3.6 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.8-.4-1.6-.4-2.4s.1-1.6.4-2.4L1.4 6.7C.5 8.2 0 10 0 12s.5 3.8 1.4 5.3l3.9-2.9z"/><path fill="#EA4335" d="M12 4.6c2.2 0 3.7 1 4.6 1.8l3.3-3.2C17.9 1.2 15.2 0 12 0 7.4 0 3.6 2.7 1.4 6.7l3.9 2.9c.9-2.9 3.6-5 6.7-5z"/></svg>
@@ -417,12 +405,12 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
       <div id="welcome" class="welcome">
         <div class="w-kicker">KEOAI &middot; BY KAREEM HUSSEIN</div>
         <h2>I'm Keo<i>.</i><span>Tell me what you need — I'll do it with my own hands.</span></h2>
-        <p>Web search with real sources, full websites built &amp; published live, HD AI images signed KEOAI, illustrated PowerPoints, posts to Discord, Telegram &amp; GitHub — in Arabic or English.</p>
+        <p>Web search with real sources, full websites built with a live shareable link, illustrated PowerPoints signed KEOAI, posts to Discord, Telegram &amp; GitHub — in Arabic or English.</p>
         <div class="pills">
           <button class="pill" data-insert="Search the web for the latest AI news and summarize it with sources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Latest AI news</button>
-          <button class="pill" data-insert="Draw me a futuristic neon city at night with lime green lights"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>Paint me an image</button>
-          <button class="pill" data-insert="Build me a complete website for a coffee shop called 'Brew' with a warm design and a menu, then publish it live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>Build &amp; publish a website</button>
+          <button class="pill" data-insert="Build me a complete website for a coffee shop called 'Brew' with a warm design and a menu, then give me a live link to share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>Build a shareable website</button>
           <button class="pill" data-insert="Make me a beautiful PowerPoint about space exploration with images"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Illustrated PowerPoint</button>
+          <button class="pill" data-insert="Announce on my Discord that our community reached 10,000 members — write it exciting then post it"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M12 9v6"/><path d="M10.3 4.9 8 7H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3l2.3 2.1a1 1 0 0 0 1.7-.8V5.7a1 1 0 0 0-1.7-.8z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>Post to my Discord</button>
         </div>
       </div>
     </div>
@@ -455,6 +443,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
         <button class="icbtn active" id="pvDesk" title="Desktop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
         <button class="icbtn" id="pvMob" title="Mobile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></button>
         <button class="icbtn" id="pvReload" title="Reload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg></button>
+        <button class="icbtn" id="pvCopy" title="Copy the live share link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         <button class="icbtn" id="pvPub" title="Publish live on GitHub Pages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5 3 21l4.5-1.5M14 4l6 6M9 15l-1.5 1.5c-1.2 1.2-3.3 1.4-4.5 0s-1.2-3.3 0-4.5L9 6c1.2-1.2 3.3-1.4 4.5 0"/><path d="M15 9l1.5-1.5c1.2-1.2 3.3-1.4 4.5 0s1.2 3.3 0 4.5L15 18c-1.2 1.2-3.3 1.4-4.5 0"/></svg></button>
         <button class="icbtn" id="pvExt" title="Open in new tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M21 3l-9 9"/><path d="M10 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/></svg></button>
         <button class="icbtn" id="pvClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
@@ -474,7 +463,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 <div id="connModal" hidden>
   <div class="conn-panel">
     <div class="conn-head"><b>Keo <i>Links</i></b><button class="icbtn" id="connClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-    <p class="conn-sub">Link your accounts once, then just tell Keo what to do. Groq &amp; Hugging Face keys are built in — the fields below are only a fallback.</p>
+    <p class="conn-sub">Link your accounts once, then just tell Keo what to do. AI keys are built in — the Groq field below is only a fallback if a key ever dies.</p>
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg><b>Groq Brain Key</b><span class="stat" id="st-groq">key active</span></div>
@@ -487,20 +476,8 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     </div>
 
     <div class="ccard">
-      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L7 20"/></svg><b>Image Engine — FLUX.1</b><span class="stat" id="st-hf">FLUX.1 · pro</span></div>
-      <p>Keo paints with <b>FLUX.1</b> via the official Hugging Face Router (built-in read token), with 4 proxy relays as fallback if the network blocks HF. First-ever render can take up to a minute.</p>
-      <div class="row">
-        <input id="hfToken" type="password" placeholder="hf_... (optional override)">
-        <button class="btn btn-acc" id="hfSave" style="padding:9px 16px;font-size:13px">Save</button>
-        <button class="btn btn-line" id="hfClear" style="padding:9px 16px;font-size:13px">Reset</button>
-        <button class="btn btn-line" id="hfTest" style="padding:9px 16px;font-size:13px">Test engine</button>
-      </div>
-      <p class="hint" id="hfLog">If images come from pollinations.ai instead: accept the license on the FLUX.1 model page with the token\u2019s account, then press Test engine.</p>
-    </div>
-
-    <div class="ccard">
-      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.05.77 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg><b>GitHub</b><span class="stat" id="st-github">not linked</span></div>
-      <p>Repos, gists, file pushes, and publishing sites live on GitHub Pages.</p>
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.05.77 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg><b>GitHub — Shareable links</b><span class="stat" id="st-github">not linked</span></div>
+      <p>Link it once and every website Keo builds gets an <b>automatic live URL</b> you can send to anyone. Also: repos, gists and file pushes.</p>
       <div class="row">
         <input id="ghToken" type="password" placeholder="Personal Access Token">
         <button class="btn btn-acc" id="ghTest" style="padding:9px 16px;font-size:13px">Connect</button>
@@ -615,15 +592,9 @@ function confettiBurst(){
   }
 }
 
-/* ================== Image engines — THE CORRECT HF ROUTER WAY ==================
-   Verified approach (2024/25):
-   1. Official Hugging Face Inference Router: POST https://router.huggingface.co/hf-inference/models/<model>
-      (the legacy api-inference.huggingface.co endpoint is being retired → ERR/404s)
-   2. FLUX models are GATED: the token's own account must press "Agree and access
-      repository" on the model page once — otherwise 403 forever.
-   3. If the local network can't resolve HF (ERR_NAME_NOT_RESOLVED), we retry the
-      same calls through 4 public CORS relays so the DNS happens on their side.
-   4. Chain: FLUX.1-dev → FLUX.1-schnell → free Flux (Pollinations) → turbo.     */
+/* ================== Image engines — silent workers (PowerPoint artwork only) ==================
+   No image chat, no buttons, no captions. These functions run quietly whenever
+   the PowerPoint builder needs slide artwork, and every image gets signed KEOAI. */
 function imgURL(prompt, w=1024, h=768, model){
   return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&enhance=true&seed=${Math.floor(Math.random()*1e9)}${model?'&model='+model:''}`;
 }
@@ -636,16 +607,13 @@ const HF_MODELS = [
   { name:'black-forest-labs/FLUX.1-schnell', steps:8 }
 ];
 const HF_RELAYS = [
-  u => u,                                                        /* direct */
+  u => u,
   u => 'https://corsproxy.io/?url=' + encodeURIComponent(u),
   u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
   u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u),
   u => 'https://thingproxy.freeboard.io/fetch/' + u
 ];
-let hfBroken = false, hfWarned = {};
-function hfPayload(steps){
-  return JSON.stringify({ inputs:'', parameters:{ width:1024, height:1024, num_inference_steps: steps } });
-}
+let hfBroken = false;
 async function hfOnce(url, tok, body, timeoutMs=90000){
   const c = new AbortController(); const t = setTimeout(()=>c.abort(), timeoutMs);
   try{
@@ -660,25 +628,21 @@ async function hfOnce(url, tok, body, timeoutMs=90000){
     let why = 'HTTP ' + r.status;
     try{ const j = await r.json(); why = j.error || why; }catch(e){}
     return { ok:false, error:why };
-  }catch(e){ clearTimeout(t); return { ok:false, error:'network/DNS blocked' }; }
+  }catch(e){ clearTimeout(t); return { ok:false, error:'network blocked' }; }
 }
 async function hfCall(model, prompt, steps){
   const tok = getHfToken();
   if(!tok) return { ok:false, error:'no token' };
-  /* one call: the correct Router endpoint, tried directly then through relays */
+  const body = JSON.stringify({ inputs: prompt, parameters:{ width:1024, height:1024, num_inference_steps: steps } });
   const url = 'https://router.huggingface.co/hf-inference/models/' + model;
   let lastErr = 'unknown';
   for(const mk of HF_RELAYS){
-    const target = mk(url);
-    const res = await hfOnce(target, tok, JSON.stringify({ inputs: prompt, parameters:{ width:1024, height:1024, num_inference_steps: steps } }));
+    const res = await hfOnce(mk(url), tok, body);
     if(res.ok) return res;
     lastErr = res.error;
-    /* account-level problems won't improve by switching relays */
     if(/HTTP 40[123]/.test(lastErr)) return { ok:false, error:lastErr, model };
   }
-  /* legacy endpoint as last resort (some regions still route it) */
-  const legacy = await hfOnce('https://api-inference.huggingface.co/models/' + model, tok,
-    JSON.stringify({ inputs: prompt, parameters:{ width:1024, height:1024, num_inference_steps: steps } }));
+  const legacy = await hfOnce('https://api-inference.huggingface.co/models/' + model, tok, body);
   if(legacy.ok) return legacy;
   return { ok:false, error:lastErr, model };
 }
@@ -686,26 +650,11 @@ async function hfImage(prompt){
   if(hfBroken) return null;
   for(const m of HF_MODELS){
     const res = await hfCall(m.name, prompt, m.steps);
-    if(res.ok){ console.log('[Keo] painted with', m.name); return res.data; }
+    if(res.ok){ console.log('[Keo] slide art via', m.name); return res.data; }
     console.warn('[Keo] HF', m.name, '\u2192', res.error);
-    if(/HTTP 40[12]/.test(res.error)){ hfBroken = true; break; }
-    if(/HTTP 403/.test(res.error)){
-      if(!hfWarned[403]){
-        toast('FLUX.1 needs a one-time license accept: open the model page and press "Agree"', 'err');
-        hfWarned[403] = 1;
-      }
-      break;
-    }
-    if(/HTTP 402/.test(res.error)){
-      if(!hfWarned[402]){ toast('HF monthly credits finished — using free Flux engine', 'err'); hfWarned[402] = 1; }
-      hfBroken = true; break;
-    }
-    /* 503 / network → try next model in the chain */
+    if(/HTTP 40[123]/.test(res.error)) hfBroken = true;
   }
   return null;
-}
-async function hfDiagnose(){
-  return hfCall('black-forest-labs/FLUX.1-schnell', 'a single red apple on a white table, studio light', 4);
 }
 async function pollImage(prompt, w, h, model, timeoutMs=100000){
   for(let i=0;i<3;i++){
@@ -766,15 +715,6 @@ function watermarkDataUrl(dataUrl){
     im.onload = ()=>{ try{ res(drawWatermarkOnCanvas(im)); }catch(e){ res(dataUrl); } };
     im.onerror = ()=>res(dataUrl);
     im.src = dataUrl;
-  });
-}
-function watermarkFromUrl(url){
-  return new Promise(res=>{
-    const im = new Image();
-    im.crossOrigin = 'anonymous';
-    im.onload = ()=>{ try{ res(drawWatermarkOnCanvas(im)); }catch(e){ res(null); } };
-    im.onerror = ()=>res(null);
-    im.src = url;
   });
 }
 
@@ -869,8 +809,8 @@ function miniBotSVG(){ return `
   </g>
 </svg>`;}
 
-const BSTATES = ['idle','think','search','type','code','slides','carry','happy','boot','paint'];
-const LAPTOP = ['type','code','search','slides','paint'];
+const BSTATES = ['idle','think','search','type','code','slides','carry','happy','boot'];
+const LAPTOP = ['type','code','search','slides'];
 class Bot{
   constructor(el){ this.el = el; el.innerHTML = botSVG(); this.timer = setInterval(()=>this.blink(), 2800 + Math.random()*2600); }
   blink(){ this.el.classList.add('blink'); setTimeout(()=>this.el.classList.remove('blink'), 130); }
@@ -889,7 +829,6 @@ const CAPTIONS = {
   type:   ['Keo is writing his answer line by line…','Full lines, no stutter…'],
   code:   ['Keo is building your site brick by brick…','Writing HTML & CSS…','Polishing colors and details…'],
   slides: ['Keo is arranging the slides…','Brainstorming punchy titles…','Painting artwork for each slide…'],
-  paint:  ['Keo is painting your image…','Mixing colors on his canvas…','Adding the final touches…'],
   carry:  ['Keo is holding your file and reading it…'],
   happy:  ['Done! Keo is happy','All clean — nice work']
 };
@@ -964,12 +903,6 @@ function groqKeyStatus(){
   el.textContent = ok ? 'key active' : 'missing';
   el.classList.toggle('on', ok);
 }
-function hfStatus(){
-  const el = $('#st-hf'); if(!el) return;
-  const on = !!getHfToken();
-  el.textContent = on ? 'FLUX.1 \u00B7 pro' : 'free flux';
-  el.classList.toggle('on', on);
-}
  $('#btnConn').onclick = ()=>{ $('#connModal').hidden = false; };
  $('#connClose').onclick = ()=>{ $('#connModal').hidden = true; };
  $('#connModal').addEventListener('click', e=>{ if(e.target.id === 'connModal') $('#connModal').hidden = true; });
@@ -991,37 +924,7 @@ function hfStatus(){
     else { const j = await r.json().catch(()=>({})); toast('Groq said: ' + (j.error?.message || ('HTTP '+r.status)), 'err'); }
   }catch(e){ toast('Network error while testing','err'); }
 };
- $('#hfSave').onclick = ()=>{
-  const v = $('#hfToken').value.trim();
-  if(v && !v.startsWith('hf_')) return toast('Hugging Face tokens start with hf_','err');
-  if(v){ localStorage.setItem('keo_hf_token', v); hfBroken = false; hfWarned = {}; toast('HD engine override saved \ud83d\udd25'); }
-  $('#hfToken').value = '';
-  hfStatus();
-};
- $('#hfClear').onclick = ()=>{
-  localStorage.removeItem('keo_hf_token');
-  hfBroken = false; hfWarned = {};
-  hfStatus();
-  toast('Back to the built-in pro engine');
-};
- $('#hfTest').onclick = async ()=>{
-  const log = $('#hfLog');
-  log.textContent = 'Testing FLUX.1-schnell through Router + relays… (up to 60s)';
-  const res = await hfDiagnose();
-  if(res.ok){
-    log.textContent = '\u2705 FLUX.1 works on this token — every image from now on uses the pro engine.';
-    confettiBurst();
-  } else {
-    let fix = res.error;
-    if(/HTTP 403/.test(res.error)) fix = '403 \u2192 open huggingface.co/black-forest-labs/FLUX.1-schnell and press "Agree and access repository" with the token\u2019s account, then test again';
-    else if(/HTTP 401/.test(res.error)) fix = '401 \u2192 token problem: use a classic token with role Read, or fine-grained with "Make calls to Inference Providers" enabled';
-    else if(/HTTP 402/.test(res.error)) fix = '402 \u2192 monthly free credits finished — try again next month or use the Pro plan';
-    else if(/503|loading|currently/i.test(res.error)) fix = 'model was warming up — test again in a minute';
-    else if(/network|DNS/i.test(res.error)) fix = 'network/DNS blocked \u2192 all relays failed too; check your internet or firewall, or enable secure DNS (Cloudflare) in browser settings';
-    log.textContent = '\u26A0 ' + fix;
-  }
-};
-groqKeyStatus(); hfStatus();
+groqKeyStatus();
 
 const GH = 'https://api.github.com';
 async function gh(path, opt={}){
@@ -1042,7 +945,7 @@ async function gh(path, opt={}){
     const me = await gh('/user');
     connections.github.login = me.login;
     saveConnections(); $('#ghToken').value = '';
-    toast('GitHub linked as ' + me.login); confettiBurst();
+    toast('GitHub linked as ' + me.login + ' \u2014 every site now gets a live link'); confettiBurst();
   }catch(err){ delete connections.github; renderConnStatus(); toast('GitHub rejected the token: '+err.message,'err'); }
 };
  $('#tgTest').onclick = async ()=>{
@@ -1136,18 +1039,6 @@ async function handleConnIntent(text, km, el, textNode){
   const wants = re => re.test(t);
   const actionRe = /(post|share|send|publish|announce|upload|save|create|make|deploy|انشر|ابعث|شارك|احفظ)/i;
   try{
-    if(wants(/publish|deploy|على النت|انشر.*(الموقع|جيت ?هاب)/) && wants(/site|page|website|github|pages|الموقع|الصفحة/)){
-      const code = lastSiteCode();
-      if(code){
-        setStage('code');
-        const url = await publishToPages(code);
-        km.code = code; openPreview(code);
-        km.text = isArabicText(text)
-          ? `نشرت الموقع على الإنترنت! \ud83d\ude80\n\n**${url}**\n\nهيدخل خلال دقيقة أو اتنين — شغال لأي حد في العالم. الريبو في حسابك (${connections.github.login}).`
-          : `Your site is LIVE! \ud83d\ude80\n\n**${url}**\n\nFully live within a minute or two. Repo created in your account (${connections.github.login}).`;
-        finalizeKeo(km, el, textNode); return true;
-      }
-    }
     if(wants(/\bdiscord\b/) && actionRe.test(t)){
       setStage('type');
       await discordSend(await draftPost(text, 'Discord announcement'));
@@ -1191,7 +1082,7 @@ async function handleConnIntent(text, km, el, textNode){
 }
 function connNote(){
   const l = [];
-  if(connections.github) l.push('GitHub (' + connections.github.login + ')');
+  if(connections.github) l.push('GitHub (' + connections.github.login + ') — websites the user asks for get auto-published to a public shareable URL');
   if(connections.telegram) l.push('Telegram');
   if(connections.discord) l.push('Discord');
   if(l.length) return 'The user has these services linked and Keo can act on them directly when asked: ' + l.join(', ') + '.';
@@ -1238,15 +1129,6 @@ function srcsHTML(srcs){
     return `<a class="src" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="n">${i+1}</span><span class="h">${esc(r.title||host)}</span></a>`;
   }).join('') + '</div>';
 }
-function imgHTML(img){
-  return `<div class="genimg"><img src="${esc(img.url)}" alt="Keo artwork"
-    onload="this.closest('.genimg').classList.remove('failed')"
-    onerror="this.closest('.genimg').classList.add('failed')">
-    <div class="gi-brand">KEOAI</div>
-    <div class="gi-acts">
-    <button class="cbtn" data-act="dlimg" data-url="${esc(img.url)}">\u2B07 Download</button>
-    <button class="cbtn" data-act="regenimg" data-prompt="${esc(img.prompt)}">\u21BB Repaint</button></div></div>`;
-}
 function pptHTML(m){
   return `<div class="pptstrip">` + m.slides.map((s,i)=>
     `<div class="pslide"><span class="pn">${i+1}</span><div class="pt">${esc(s.title)}</div><div class="pb">${esc((s.bullets||[]).slice(0,3).join(' \u2022 '))}</div></div>`
@@ -1265,7 +1147,6 @@ function keoEl(m, streaming){
   const dir = isArabicText(m.text||'') ? 'rtl' : 'ltr';
   d.innerHTML = `<div class="mav">${miniBotSVG()}</div><div class="msg-body">
     <div class="msg-text" dir="${dir}">${streaming?'':md(m.text||'')}</div>
-    ${!streaming && m.image ? imgHTML(m.image) : ''}
     ${!streaming && m.sources?.length ? srcsHTML(m.sources) : ''}
     ${!streaming && m.slides?.length ? pptHTML(m) : ''}
     ${!streaming ? `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${m.id}">Copy</button><button class="cbtn" data-act="speak" data-mid="${m.id}">\u25B6 Listen</button></div>` : ''}
@@ -1284,8 +1165,7 @@ function renderAll(){
 function persist(){
   if(!user || !dbOk || !currentChatId) return;
   const clean = messages.map(m => ({ id:m.id, role:m.role, text:m.text||'', ts:m.ts, files:m.files||null,
-    sources:m.sources||null, slides:m.slides||null,
-    image: m.image ? { url:m.image.url, prompt:m.image.prompt } : null }));
+    sources:m.sources||null, slides:m.slides||null, liveUrl:m.liveUrl||null }));
   try{
     firebase.database().ref('users/'+user.uid+'/chats/'+currentChatId).set({ title:chatTitle, updated:Date.now(), messages:clean });
     chats[currentChatId] = { title:chatTitle, updated:Date.now() };
@@ -1418,7 +1298,6 @@ Your rules:
 const PPT_SYS = `You are Keo, assistant of Kareem Hussein. Reply with a JSON array ONLY — no explanation, in this exact shape:
 [{"title":"Slide title","bullets":["point","point"],"img":"short english image prompt"}]
 Exactly 8 slides, in the SAME language as the user's request. Slide 1 = cover (title + 1-line subtitle as bullets), slide 2 = agenda, slides 3-7 = deep content with 4-5 specific bullets each (real facts, numbers, examples — never generic filler), slide 8 = conclusion with a call to action. Each "img" is a vivid English prompt for a modern flat vector illustration matching that slide (no text in image).`;
-const IMG_SYS = `You are an expert prompt engineer for text-to-image models (Flux). Rewrite the user's request (any language) into ONE detailed English image prompt of 60-90 words. Include: the main subject with vivid specifics, setting/environment, art style, lighting, color palette, composition and camera angle. Output ONLY the prompt text — no quotes, no explanation.`;
 
 const MODEL_ERR = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported/i;
 async function groqChat(body, signal){
@@ -1542,10 +1421,8 @@ async function send(){
     const handled = await handleConnIntent(text, km, el, textNode);
     if(!handled){
       const isPpt = pptIntent || /power\s?point|pptx?|slide deck|presentation|slides about|بور ?بوينت|عرض تقديمي/i.test(text);
-      const isImgGen = !isPpt && /(ارسم|إرسم|اعمل صورة|صورة لي|صوره لي|رسمة|لوحة|بوستر|شعار|\blogo\b|\bposter\b|draw (me )?|paint (me )?|generate .*(image|picture|art|logo)|make .*(image|picture|logo|poster))/i.test(text);
-      const wantSearch = !isImgGen && (searchIntent || /\bsearch( the)? (web|internet)\b|latest news|news about|look up|\bgoogle\b|ابحث|دور لي على|هات لي من النت|آخر أخبار|اخر اخبار/i.test(text));
+      const wantSearch = searchIntent || /\bsearch( the)? (web|internet)\b|latest news|news about|look up|\bgoogle\b|ابحث|دور لي على|هات لي من النت|آخر أخبار|اخر اخبار/i.test(text);
       if(isPpt) await doPPT(text, km, el);
-      else if(isImgGen) await doImage(text, km, el, textNode);
       else if(wantSearch) await doSearch(text, km, el, textNode);
       else await doChat(text, km, el, textNode, atts);
     }
@@ -1575,7 +1452,6 @@ function finalizeKeo(km, el, textNode){
   textNode.dir = isArabicText(km.text) ? 'rtl' : 'ltr';
   textNode.innerHTML = md(km.text);
   const body = el.querySelector('.msg-body');
-  if(km.image) body.insertAdjacentHTML('beforeend', imgHTML(km.image));
   if(km.sources?.length) body.insertAdjacentHTML('beforeend', srcsHTML(km.sources));
   if(km.slides?.length) body.insertAdjacentHTML('beforeend', pptHTML(km));
   body.insertAdjacentHTML('beforeend', `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${km.id}">Copy</button><button class="cbtn" data-act="speak" data-mid="${km.id}">\u25B6 Listen</button></div>`);
@@ -1602,7 +1478,7 @@ async function doChat(text, km, el, textNode, atts){
   const typer = makeTyper(textNode);
   await streamGroq(msgs, typer, { model, max_tokens: imgs.length ? 4096 : MAXTOK });
   await new Promise(res => typer.end(()=>{ km.text = typer.text(); res(); }));
-  detectAndOpenSite(km);
+  await detectAndOpenSite(km);
   finalizeKeo(km, el, textNode);
 }
 
@@ -1628,49 +1504,37 @@ Write a helpful, well-organized answer in the SAME language as the user's questi
   const typer = makeTyper(textNode);
   await streamGroq(msgs, typer, { temperature: 0.5, max_tokens: 8192 });
   await new Promise(res => typer.end(()=>{ km.text = typer.text(); res(); }));
-  detectAndOpenSite(km);
+  await detectAndOpenSite(km);
   finalizeKeo(km, el, textNode);
 }
 
-/* ============ Image generation — instant preview + FLUX.1 pro upgrade ============ */
-async function doImage(text, km, el, textNode){
-  setStage('paint');
-  let en = text;
+/* ============ Website detection + AUTO-PUBLISH with a shareable live URL ============
+   Every time Keo produces a full HTML page, the preview opens beside the chat
+   AND — if GitHub is linked — the site is published silently and a public
+   shareable link is appended into Keo's reply, ready to send to anyone.      */
+async function detectAndOpenSite(km){
+  const re = /```(?:html|xml)?\s*\n([\s\S]*?)```/g;
+  let m, best = null;
+  while((m = re.exec(km.text))){ const c = m[1]; if(/<(!doctype|html|body)/i.test(c) && c.length > 300) best = c; }
+  if(!best) return;
+  km.code = best;
+  openPreview(best);
   try{
-    const r = await groqChat({ model: MODEL_MAIN, temperature: 0.6, max_tokens: 300, messages: [
-      { role:'system', content: IMG_SYS },
-      { role:'user', content: text }
-    ]});
-    const j = await r.json();
-    const c = (j.choices?.[0]?.message?.content || '').trim();
-    if(c) en = c.replace(/^["']|["']$/g,'');
-  }catch(e){ en = text + ', highly detailed digital illustration, rich colors, cinematic lighting'; }
-  const t = text.toLowerCase();
-  if(/\blogo\b|شعار/.test(t)) en += ', minimal flat vector logo, simple iconic shapes, centered composition, plain solid background';
-  else if(/poster|بوستر/.test(t)) en += ', bold poster composition, dramatic lighting, poster art';
-  /* 1) instant image via the direct URL — can never fail on fetch/CORS */
-  km.image = { url: imgURL(en, 1440, 1080, 'flux'), prompt: en };
-  km.text = isArabicText(text)
-    ? 'الصورة ظهرت تحت فورًا \ud83c\udfa8 — وفي نفس الوقت بجرّب أرسمها بمحرك **FLUX.1** الاحترافي؛ لو نجح هتلاقيها اتبدّلت تلقائيًا بنسخة أجمل وموقّعة KEOAI.'
-    : 'The image is below instantly \ud83c\udfa8 — meanwhile I\u2019m painting it with the pro **FLUX.1** engine; if it succeeds, the image upgrades automatically (signed KEOAI).';
-  finalizeKeo(km, el, textNode);
-  /* 2) FLUX.1 pro upgrade in the background (Router → relays → legacy) */
-  const hf = await hfImage(en);
-  if(hf){
-    const w = await watermarkDataUrl(hf);
-    if(w){
-      km.image = { url: w, prompt: en };
-      const body = el.querySelector('.msg-body');
-      const old = body.querySelector('.genimg');
-      if(old) old.remove();
-      body.insertAdjacentHTML('afterbegin', imgHTML(km.image));
-      toast('Upgraded to FLUX.1 \u2705');
-      persist();
+    if(connections.github){
+      const url = await publishToPages(best);
+      km.liveUrl = url;
+      km.text += (isArabicText(km.text)
+        ? '\n\n---\n\n\ud83c\udf10 **الموقع لايف على النت — انسخ اللينك وابعته لأي حد:**\n' + url
+        : '\n\n---\n\n\ud83c\udf10 **Your site is LIVE — copy this link and share it with anyone:**\n' + url);
+    } else {
+      km.text += (isArabicText(km.text)
+        ? '\n\n---\n\n\ud83d\udd17 عايز **لينك يفتح لأي حد في العالم**؟ وصّل GitHub مرة واحدة من **Links** في السايدبار — وبعدها أي موقع أبنيه هيبقى ليه لينك لايتلقائي.'
+        : '\n\n---\n\n\ud83d\udd17 Want a **public link anyone can open**? Connect GitHub once in **Links** (sidebar) — then every site I build gets an automatic live URL.');
     }
-  }
+  }catch(e){ /* publish failed silently — preview still works */ }
 }
 
-/* ============ PowerPoint: 8 rich slides + signed AI-painted art ============ */
+/* ============ PowerPoint: 8 rich slides + signed AI-painted art (silent) ============ */
 async function doPPT(text, km, el){
   setStage('slides');
   const res = await groqChat({
@@ -1749,13 +1613,6 @@ function buildPPTX(slides, images){
   p.writeFile({ fileName: 'KeoAI-Presentation.pptx' })
     .then(()=>{ toast('Deck downloaded — signed KEOAI \u2705'); confettiBurst(); })
     .catch(err=>toast('Download failed: ' + err.message, 'err'));
-}
-
-function detectAndOpenSite(km){
-  const re = /```(?:html|xml)?\s*\n([\s\S]*?)```/g;
-  let m, best = null;
-  while((m = re.exec(km.text))){ const c = m[1]; if(/<(!doctype|html|body)/i.test(c) && c.length > 300) best = c; }
-  if(best){ km.code = best; openPreview(best); }
 }
 function openPreview(code){
   pvCode = code;
@@ -1932,31 +1789,6 @@ chatScroll.addEventListener('click', async e=>{
     if(m?.slides) buildPPTX(m.slides, m._pptImgs || m.pptImages || new Array(m.slides.length).fill(null));
     else toast('Slides data not found — ask Keo to regenerate', 'err');
   }
-  if(a === 'dlimg'){
-    try{
-      let du = await watermarkFromUrl(act.dataset.url);
-      if(!du){
-        const r = await fetch(act.dataset.url);
-        const b = await r.blob();
-        du = await watermarkDataUrl(await blobToDataURL(b));
-      }
-      const el = document.createElement('a');
-      el.href = du; el.download = 'KEOAI-image.png'; el.click();
-      toast('Downloaded — signed KEOAI');
-    }catch(err){ window.open(act.dataset.url, '_blank'); }
-  }
-  if(a === 'regenimg'){
-    const img = act.closest('.genimg').querySelector('img');
-    act.closest('.genimg').classList.remove('failed');
-    img.removeAttribute('src');
-    toast('Repainting + trying FLUX.1…');
-    const hf = await hfImage(act.dataset.prompt);
-    if(hf){
-      const w = await watermarkDataUrl(hf);
-      img.src = w; toast('Upgraded to FLUX.1 \u2705'); return;
-    }
-    img.src = imgURL(act.dataset.prompt, 1440, 1080, 'flux');
-  }
 });
  $('#chatList').addEventListener('click', e=>{
   const del = e.target.closest('[data-del]');
@@ -1979,6 +1811,26 @@ chatScroll.addEventListener('click', async e=>{
  $('#pvExt').onclick = ()=>{
   if(!pvCode) return toast('No code to preview yet','err');
   window.open(URL.createObjectURL(new Blob([pvCode], {type:'text/html'})), '_blank');
+};
+ $('#pvCopy').onclick = async ()=>{
+  if(!pvCode) return toast('Build a site first','err');
+  if(!connections.github){ $('#connModal').hidden = false; return toast('Link GitHub first — then every site gets a live URL','err'); }
+  let url = null;
+  for(let i = messages.length-1; i >= 0; i--){
+    if(messages[i].code === pvCode && messages[i].liveUrl){ url = messages[i].liveUrl; break; }
+  }
+  if(!url){
+    setStage('code');
+    try{
+      url = await publishToPages(pvCode);
+      for(let i = messages.length-1; i >= 0; i--){
+        if(messages[i].code === pvCode){ messages[i].liveUrl = url; break; }
+      }
+      persist();
+    }catch(err){ setStage('idle'); return toast('Publish failed: ' + err.message,'err'); }
+  }
+  try{ await navigator.clipboard.writeText(url); toast('Share link copied \ud83c\udf10'); }
+  catch(e){ toast(url); }
 };
  $('#pvPub').onclick = async ()=>{
   if(!pvCode) return toast('Build a site first','err');
