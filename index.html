@@ -73,7 +73,7 @@ main{display:flex;height:calc(100vh - 58px)}
 .sb-top{padding:14px;display:flex;flex-direction:column;gap:8px}
 #btnNew{width:100%;justify-content:center}
 .sb-row{display:flex;gap:8px}
-.sb-row .btn{flex:1;justify-content:center;padding:10px 8px;font-size:13px}
+.sb-row .btn{flex:1;justify-content:center;padding:10px 6px;font-size:12.5px}
 .sb-label{padding:6px 18px;font-size:11.5px;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase}
 #chatList{flex:1;overflow-y:auto;padding:4px 10px}
 .chatitem{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:13.5px;color:#cfd4c6;cursor:pointer;transition:.15s;position:relative}
@@ -92,6 +92,8 @@ main{display:flex;height:calc(100vh - 58px)}
 .sb-user .em{font-size:11.5px;color:var(--mut);max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sb-user .grow{flex:1;min-width:0}
 .cdot{width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(198,242,75,.7)}
+#btnAdmin{display:none}
+#btnAdmin.show{display:inline-flex}
 
 #chat{flex:1;display:flex;flex-direction:column;min-width:0}
 #chatScroll{flex:1;overflow-y:auto;padding:26px 22px 10px}
@@ -181,7 +183,6 @@ body.pv-open #pv{width:min(46vw,860px)}
 .pv-title svg{width:16px;height:16px;color:var(--acc)}
 .pv-tools{margin-left:auto;display:flex;gap:2px}
 .pv-tools .icbtn.active{color:var(--acc);background:var(--panel2)}
-.pv-tools .icbtn.live{color:var(--acc)}
 .pv-body{flex:1;display:flex;justify-content:center;background:#070908;min-height:0}
 #pvFrame{width:100%;height:100%;border:0;background:#fff}
 #pv.mob #pvFrame{width:414px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
@@ -292,8 +293,8 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 .toast.err{border-left-color:var(--err)}
 .confetti{position:fixed;width:8px;height:8px;z-index:95;pointer-events:none;border-radius:2px}
 
-#connModal{position:fixed;inset:0;z-index:85;background:rgba(5,7,6,.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px}
-#connModal[hidden]{display:none}
+#connModal,#admModal{position:fixed;inset:0;z-index:85;background:rgba(5,7,6,.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px}
+#connModal[hidden],#admModal[hidden]{display:none}
 .conn-panel{width:min(680px,94vw);max-height:88vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:22px;animation:up .3s ease}
 .conn-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
 .conn-head b{font-family:var(--fd);font-size:19px}
@@ -311,6 +312,31 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 .ccard input:focus{border-color:rgba(198,242,75,.4)}
 .ccard .hint{font-size:11.5px;color:#5f675c;margin-top:8px;line-height:1.6}
 .ccard .hint a{color:var(--acc)}
+
+/* ---------- Owner Panel ---------- */
+.adm-panel{width:min(860px,96vw);max-height:90vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:22px;animation:up .3s ease}
+.adm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px}
+.stat-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat-card .sv{font-family:var(--fd);font-size:24px;font-weight:700;color:var(--acc)}
+.stat-card .sl{font-size:11px;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+.adm-sec{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.adm-sec h4{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--mut);margin-bottom:12px}
+.vchart{display:flex;align-items:flex-end;gap:8px;height:140px}
+.vcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.vbar{width:70%;max-width:44px;background:linear-gradient(180deg,var(--acc),#7fa32e);border-radius:6px 6px 3px 3px;min-height:3px;transition:height .4s}
+.vlab{font-size:10px;color:var(--mut);white-space:nowrap}
+.vval{font-size:10px;color:var(--text);font-weight:600}
+.hrow{display:flex;align-items:center;gap:10px;margin:8px 0}
+.hname{width:130px;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#cfd4c6}
+.htrack{flex:1;height:14px;background:var(--panel2);border-radius:7px;overflow:hidden}
+.hfill{height:100%;background:linear-gradient(90deg,#7fa32e,var(--acc));border-radius:7px;transition:width .4s}
+.hval{width:86px;text-align:right;font-size:11.5px;color:var(--mut)}
+.adm-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.adm-table th{text-align:left;color:var(--mut);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;padding:7px 8px;border-bottom:1px solid var(--line)}
+.adm-table td{padding:9px 8px;border-bottom:1px solid rgba(235,240,225,.05);color:#d7dcc9}
+.adm-table tr:hover td{background:rgba(198,242,75,.04)}
+.adm-table .tt{color:var(--acc);font-weight:700}
+.adm-empty{color:var(--mut);font-size:12.5px;text-align:center;padding:20px}
 
 #backdrop{display:none}
 @media(max-width:900px){
@@ -342,7 +368,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     <div>
       <h1 class="gate-name">Keo<i>.</i></h1>
       <div class="gate-latin">KEOAI</div>
-      <p class="gate-tag">A hands-on AI: he searches the web, builds full websites and hands you a live link anyone can open — no setup required, GitHub optional. Illustrated PowerPoints signed KEOAI, posts to your Discord, Telegram &amp; more — in Arabic or English.</p>
+      <p class="gate-tag">A hands-on AI: he searches the web, builds full websites with live shareable links — no setup needed, GitHub optional. Illustrated PowerPoints signed KEOAI, posts to Discord, Telegram &amp; more — in Arabic or English.</p>
       <div class="gate-actions">
         <button class="btn btn-light" id="btnGoogle">
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5l-3.8 2.9C3.6 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.8-.4-1.6-.4-2.4s.1-1.6.4-2.4L1.4 6.7C.5 8.2 0 10 0 12s.5 3.8 1.4 5.3l3.9-2.9z"/><path fill="#EA4335" d="M12 4.6c2.2 0 3.7 1 4.6 1.8l3.3-3.2C17.9 1.2 15.2 0 12 0 7.4 0 3.6 2.7 1.4 6.7l3.9 2.9c.9-2.9 3.6-5 6.7-5z"/></svg>
@@ -383,11 +409,14 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
         New chat</button>
       <div class="sb-row">
         <button class="btn btn-line" id="btnConn">
-          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M12 9v6"/><path d="M10.3 4.9 8 7H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3l2.3 2.1a1 1 0 0 0 1.7-.8V5.7a1 1 0 0 0-1.7-.8z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>
-          Links <span id="connCount" class="cdot" style="display:none"></span></button>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M12 9v6"/><path d="M10.3 4.9 8 7H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3l2.3 2.1a1 1 0 0 0 1.7-.8V5.7a1 1 0 0 0-1.7-.8z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>
+          Links</button>
         <button class="btn btn-line" id="btnExport">
-          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M6 11l6 6 6-6M5 21h14"/></svg>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M6 11l6 6 6-6M5 21h14"/></svg>
           Export</button>
+        <button class="btn btn-line" id="btnAdmin">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg>
+          Owner</button>
       </div>
     </div>
     <div class="sb-label">Chats</div>
@@ -405,12 +434,11 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
       <div id="welcome" class="welcome">
         <div class="w-kicker">KEOAI &middot; BY KAREEM HUSSEIN</div>
         <h2>I'm Keo<i>.</i><span>Tell me what you need — I'll do it with my own hands.</span></h2>
-        <p>Web search with real sources, full websites with an instant shareable link (no accounts needed), illustrated PowerPoints signed KEOAI, posts to Discord, Telegram &amp; GitHub — in Arabic or English.</p>
+        <p>Web search with real sources, full websites with an instant shareable link, illustrated PowerPoints signed KEOAI, posts to Discord, Telegram &amp; GitHub — in Arabic or English.</p>
         <div class="pills">
           <button class="pill" data-insert="Search the web for the latest AI news and summarize it with sources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Latest AI news</button>
           <button class="pill" data-insert="Build me a complete website for a coffee shop called 'Brew' with a warm design and a menu, then give me a live link to share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>Build a shareable website</button>
           <button class="pill" data-insert="Make me a beautiful PowerPoint about space exploration with images"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Illustrated PowerPoint</button>
-          <button class="pill" data-insert="Announce on my Discord that our community reached 10,000 members — write it exciting then post it"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M12 9v6"/><path d="M10.3 4.9 8 7H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3l2.3 2.1a1 1 0 0 0 1.7-.8V5.7a1 1 0 0 0-1.7-.8z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>Post to my Discord</button>
         </div>
       </div>
     </div>
@@ -421,7 +449,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
         <div class="comp-row">
           <div class="comp-tools">
             <button class="icbtn" id="btnAttach" title="Attach files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
-            <button class="icbtn" id="btnMic" title="Voice input (press to start / stop)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg></button>
+            <button class="icbtn" id="btnMic" title="Voice input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg></button>
             <button class="chip" id="btnMicLang" title="Speech recognition language">AR</button>
             <button class="chip" id="chipSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Web search</button>
             <button class="chip" id="chipPpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Presentation</button>
@@ -443,7 +471,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
         <button class="icbtn active" id="pvDesk" title="Desktop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
         <button class="icbtn" id="pvMob" title="Mobile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></button>
         <button class="icbtn" id="pvReload" title="Reload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg></button>
-        <button class="icbtn" id="pvCopy" title="Get a live share link anyone can open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        <button class="icbtn" id="pvCopy" title="Get a live share link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         <button class="icbtn" id="pvExt" title="Open in new tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M21 3l-9 9"/><path d="M10 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/></svg></button>
         <button class="icbtn" id="pvClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
       </div>
@@ -462,11 +490,11 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 <div id="connModal" hidden>
   <div class="conn-panel">
     <div class="conn-head"><b>Keo <i>Links</i></b><button class="icbtn" id="connClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-    <p class="conn-sub"><b>No account is required</b> for shareable site links — Keo publishes anonymously via CodeSandbox/CodePen. Linking accounts below just upgrades the experience.</p>
+    <p class="conn-sub"><b>No account is required</b> for shareable site links. Linking accounts below upgrades the experience.</p>
 
     <div class="ccard">
-      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.05.77 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg><b>GitHub — optional upgrade</b><span class="stat" id="st-github">optional</span></div>
-      <p><b>Not required.</b> Sites already get a live link without it. Linking GitHub gives you a cleaner dedicated URL (`username.github.io/...`), plus repos, gists and file pushes.</p>
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.05.77 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg><b>GitHub — optional</b><span class="stat" id="st-github">optional</span></div>
+      <p>Not required for links. Adds cleaner site URLs, repos, gists and file pushes.</p>
       <div class="row">
         <input id="ghToken" type="password" placeholder="Personal Access Token (optional)">
         <button class="btn btn-acc" id="ghTest" style="padding:9px 16px;font-size:13px">Connect</button>
@@ -476,39 +504,51 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg><b>Groq Brain Key</b><span class="stat" id="st-groq">key active</span></div>
-      <p>A key is <b>built into the code</b> — this field is only a backup: paste a fresh key here if Keo ever says "Invalid API Key".</p>
+      <p>A key is <b>built into the code</b> — backup override only.</p>
       <div class="row">
         <input id="gqKey" type="password" placeholder="gsk_... (backup override)">
         <button class="btn btn-acc" id="gqSave" style="padding:9px 16px;font-size:13px">Save &amp; Test</button>
       </div>
-      <p class="hint">Free key anytime: <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a>.</p>
+      <p class="hint">Free key: <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a>.</p>
     </div>
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 3-9.5 9.5M22 3l-7 19-3-8-8-3z"/></svg><b>Telegram</b><span class="stat" id="st-telegram">not linked</span></div>
-      <p>Real auto-posting to your channel or group through your bot.</p>
+      <p>Real auto-posting to your channel or group.</p>
       <div class="row">
         <input id="tgToken" type="password" placeholder="Bot token from @BotFather">
         <input id="tgChat" placeholder="@channel or -100… chat ID" style="max-width:220px">
         <button class="btn btn-acc" id="tgTest" style="padding:9px 16px;font-size:13px">Connect</button>
       </div>
-      <p class="hint">Bot from <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a> → add as admin → send any message there → use the chat ID.</p>
+      <p class="hint">Bot from <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a> → add as admin → send a message → use the chat ID.</p>
     </div>
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 8.5-8.5c4.66 0 8.5 3.84 8.5 8.5z"/></svg><b>Discord</b><span class="stat" id="st-discord">not linked</span></div>
-      <p>Real auto-posting into your channel via webhook.</p>
+      <p>Real auto-posting via webhook.</p>
       <div class="row">
         <input id="dcHook" type="password" placeholder="Channel webhook URL">
         <button class="btn btn-acc" id="dcTest" style="padding:9px 16px;font-size:13px">Connect</button>
       </div>
-      <p class="hint">Channel settings → Integrations → Webhooks → New Webhook → Copy URL.</p>
+      <p class="hint">Channel settings → Integrations → Webhooks → Copy URL.</p>
     </div>
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg><b>Facebook · X · YouTube</b><span class="stat on">one-click ready</span></div>
-      <p>These platforms closed auto-posting APIs, so Keo writes the perfect post, copies it to your clipboard, and opens the platform ready to paste.</p>
+      <p>Keo writes the post, copies it, and opens the platform ready to paste.</p>
     </div>
+  </div>
+</div>
+
+<!-- Owner panel -->
+<div id="admModal" hidden>
+  <div class="adm-panel">
+    <div class="conn-head"><b>Owner <i>Panel</i></b><button class="icbtn" id="admClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <p class="conn-sub">Live numbers for KeoAI — users, activity and token consumption. Auto-refreshes every time you open it.</p>
+    <div class="adm-grid" id="admCards"></div>
+    <div class="adm-sec"><h4>Tokens per day — last 7 days</h4><div class="vchart" id="admChart"></div></div>
+    <div class="adm-sec"><h4>Users comparison — tokens</h4><div id="admCompare"></div></div>
+    <div class="adm-sec"><h4>All users</h4><div style="overflow-x:auto" id="admTable"></div></div>
   </div>
 </div>
 
@@ -516,12 +556,15 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 <input type="file" id="fileInput" hidden multiple accept=".txt,.md,.json,.csv,.js,.ts,.html,.css,.py,.xml,.yml,.yaml,image/*">
 
 <script>
-/* ================== Config — keys are BUILT IN (personal use) ================== */
+/* ================== Config ================== */
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODELS_URL = 'https://api.groq.com/openai/v1/models';
 const GROQ_KEY_BUILTIN = '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';
 const HF_TOKEN_BUILTIN = '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';
 let GROQ_KEY = localStorage.getItem('keo_groq_key') || GROQ_KEY_BUILTIN;
+/* Owner account — the panel unlocks only when this email is signed in.
+   (No password is stored anywhere; Firebase Auth handles the password.) */
+const ADMIN_EMAIL = 'kareemwael0213@gmail.com';
 const firebaseConfig = {
   apiKey: "AIzaSyC0lwVRTBPA3yxnZ3wuqvyfQJbJP-AVNJo",
   authDomain: "kareem-8ed77.firebaseapp.com",
@@ -565,6 +608,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const delay = ms => new Promise(r => setTimeout(r, ms));
 const isArabicText = s => /[\u0600-\u06FF]/.test(String(s||''));
+const fmtN = n => (n||0).toLocaleString('en-US');
 
 function toast(msg, type='ok'){
   const t = document.createElement('div');
@@ -591,7 +635,31 @@ function confettiBurst(){
   }
 }
 
-/* ================== Image engines — silent workers (PowerPoint artwork only) ================== */
+/* ================== Usage tracking (tokens / messages / logins) ==================
+   Token counts are estimated (chars/4) for streams and exact when Groq returns
+   usage. They land in: stats/totalTokens, stats/daily/<date>, users/<uid>/tokens */
+function creditTokens(n){
+  n = Math.max(0, Math.round(n||0));
+  if(!n || !user || !dbOk) return;
+  try{
+    const day = new Date().toISOString().slice(0,10);
+    const st = firebase.database().ref('stats');
+    st.child('totalTokens').runTransaction(v => (v||0) + n);
+    st.child('daily/' + day).runTransaction(v => (v||0) + n);
+    firebase.database().ref('users/' + user.uid + '/tokens').runTransaction(v => (v||0) + n);
+  }catch(e){}
+}
+function estTok(chars){ return Math.max(1, Math.round((chars||0)/4)); }
+function trackMsg(){
+  if(!user || !dbOk) return;
+  try{
+    const day = new Date().toISOString().slice(0,10);
+    firebase.database().ref('stats/totalMsgs').runTransaction(v => (v||0) + 1);
+    firebase.database().ref('stats/dailyMsgs/' + day).runTransaction(v => (v||0) + 1);
+  }catch(e){}
+}
+
+/* ================== Image engines — silent workers (PowerPoint artwork) ================== */
 function imgURL(prompt, w=1024, h=768, model){
   return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&enhance=true&seed=${Math.floor(Math.random()*1e9)}${model?'&model='+model:''}`;
 }
@@ -607,8 +675,7 @@ const HF_RELAYS = [
   u => u,
   u => 'https://corsproxy.io/?url=' + encodeURIComponent(u),
   u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
-  u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u),
-  u => 'https://thingproxy.freeboard.io/fetch/' + u
+  u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)
 ];
 let hfBroken = false;
 async function hfOnce(url, tok, body, timeoutMs=90000){
@@ -676,7 +743,7 @@ async function genImage(prompt, w=1024, h=768){
   return await pollImage(prompt, w, h, null, 60000);
 }
 
-/* ===== KEOAI watermark burned into every image ===== */
+/* ===== KEOAI watermark ===== */
 function drawWatermarkOnCanvas(img){
   const c = document.createElement('canvas');
   c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height;
@@ -822,10 +889,10 @@ const CAPTIONS = {
   boot:   ['Keo is booting up…','Loading his brain… done'],
   idle:   ['Keo is standing by',"Hey! I'm Keo",'Ready for your next task'],
   think:  ['Keo is thinking…','Gathering his thoughts…','Focusing for a second…'],
-  search: ['Keo grabbed his laptop and opened it…','Typing into the search bar…','Skimming the results…','Comparing sources at full speed…'],
+  search: ['Keo grabbed his laptop and opened it…','Typing into the search bar…','Skimming the results…'],
   type:   ['Keo is writing his answer line by line…','Full lines, no stutter…'],
   code:   ['Keo is building your site brick by brick…','Writing HTML & CSS…','Polishing colors and details…'],
-  slides: ['Keo is arranging the slides…','Brainstorming punchy titles…','Painting artwork for each slide…'],
+  slides: ['Keo is arranging the slides…','Painting artwork for each slide…'],
   carry:  ['Keo is holding your file and reading it…'],
   happy:  ['Done! Keo is happy','All clean — nice work']
 };
@@ -850,6 +917,7 @@ let auth = null, dbOk = true;
 try{ firebase.initializeApp(firebaseConfig); auth = firebase.auth(); }
 catch(e){ dbOk = false; }
 let user = null;
+const isAdmin = () => user && (user.email||'').toLowerCase() === ADMIN_EMAIL;
 const authErrors = {
   'auth/invalid-email':'That email address doesn\u2019t look right',
   'auth/weak-password':'Password is too weak — at least 6 characters',
@@ -888,7 +956,7 @@ async function loadConnections(){
 }
 function renderConnStatus(){
   const n = ['github','telegram','discord'].filter(k => connections[k]).length;
-  $('#connCount').style.display = n ? '' : 'none';
+  $('#connCount') && ($('#connCount').style.display = n ? '' : 'none');
   const set = (id, on, txt) => { const e = $('#'+id); if(e){ e.textContent = txt; e.classList.toggle('on', on); } };
   set('st-github', !!connections.github, connections.github ? ('linked as ' + connections.github.login) : 'optional');
   set('st-telegram', !!connections.telegram, connections.telegram ? 'linked' : 'not linked');
@@ -942,7 +1010,7 @@ async function gh(path, opt={}){
     const me = await gh('/user');
     connections.github.login = me.login;
     saveConnections(); $('#ghToken').value = '';
-    toast('GitHub linked as ' + me.login + ' \u2014 cleaner site URLs unlocked'); confettiBurst();
+    toast('GitHub linked as ' + me.login); confettiBurst();
   }catch(err){ delete connections.github; renderConnStatus(); toast('GitHub rejected the token: '+err.message,'err'); }
 };
  $('#tgTest').onclick = async ()=>{
@@ -994,7 +1062,7 @@ async function ghCreateGist(filename, content, descr){
   return gh('/gists', { method:'POST', body:{ description: descr||'Made by KeoAI', files: { [filename]: { content } }, public:false } });
 }
 async function publishToPages(code){
-  if(!connections.github) throw new Error('GitHub is not linked — open Keo Links');
+  if(!connections.github) throw new Error('GitHub is not linked');
   const me = await gh('/user');
   const name = 'keo-site-' + Date.now().toString(36);
   await ghCreateRepo(name, 'Live site built by KeoAI');
@@ -1004,25 +1072,17 @@ async function publishToPages(code){
   return `https://${me.login}.github.io/${name}/`;
 }
 
-/* ============ Anonymous publishing — NO ACCOUNT NEEDED ============
-   Chain (first success wins):
-   1. GitHub Pages        — only if linked; cleanest URL
-   2. CodeSandbox Define  — anonymous; site renders live
-   3. CodePen Prefill     — anonymous; renders in pen view
-   4. JSFiddle Post API   — anonymous; renders in result pane            */
-const POST_RELAYS = [
-  u => u,
-  u => 'https://corsproxy.io/?url=' + encodeURIComponent(u)
-];
+/* Anonymous publishing chain — no account needed */
+const POST_RELAYS = [ u => u, u => 'https://corsproxy.io/?url=' + encodeURIComponent(u) ];
 async function publishToCodeSandbox(code){
   const payload = { files: {
     'index.html': { content: code },
     'sandbox.config.json': { content: JSON.stringify({ template:'static' }) }
   }};
-  const url = 'https://codesandbox.io/api/v1/sandboxes/define?json=1';
   for(const mk of POST_RELAYS){
     try{
-      const r = await fetch(mk(url), { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      const r = await fetch(mk('https://codesandbox.io/api/v1/sandboxes/define?json=1'),
+        { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
       if(!r.ok) continue;
       const j = await r.json();
       const id = j.sandbox_id || j.sandboxId;
@@ -1035,8 +1095,7 @@ async function publishToCodePen(code){
   for(const mk of POST_RELAYS){
     try{
       const r = await fetch(mk('https://codepen.io/pen/define'), {
-        method:'POST',
-        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
         body: 'data=' + encodeURIComponent(JSON.stringify({ html: code }))
       });
       if(r.ok && r.url && /codepen\.io/.test(r.url) && !/\/define/.test(r.url))
@@ -1049,8 +1108,7 @@ async function publishToJSFiddle(code){
   for(const mk of POST_RELAYS){
     try{
       const r = await fetch(mk('https://jsfiddle.net/api/post/library/pure/'), {
-        method:'POST',
-        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
         body: new URLSearchParams({ html: code }).toString()
       });
       if(r.ok && r.url && /jsfiddle\.net/.test(r.url) && !/\/api\//.test(r.url))
@@ -1071,11 +1129,6 @@ async function publishAnywhere(code){
   if(jf) return jf;
   return null;
 }
-function lastSiteCode(){
-  if(pvCode) return pvCode;
-  for(let i=messages.length-1;i>=0;i--){ if(messages[i].code) return messages[i].code; }
-  return null;
-}
 async function draftPost(brief, platform){
   const lang = isArabicText(brief) ? 'Arabic' : 'English';
   const res = await groqChat({ model: MODEL_MAIN, temperature: 0.85, max_tokens: 700, messages: [
@@ -1083,6 +1136,7 @@ async function draftPost(brief, platform){
     { role:'user', content: brief }
   ]});
   const j = await res.json();
+  creditTokens(j.usage?.total_tokens || estTok((brief||'').length + (j.choices?.[0]?.message?.content||'').length));
   return (j.choices?.[0]?.message?.content || '').trim();
 }
 async function socialHandoff(text, km, el, textNode, platform){
@@ -1150,7 +1204,7 @@ function connNote(){
   if(connections.github) l.push('GitHub (' + connections.github.login + ')');
   if(connections.telegram) l.push('Telegram');
   if(connections.discord) l.push('Discord');
-  if(l.length) return 'The user has these services linked and Keo can act on them directly when asked: ' + l.join(', ') + '. Websites the user asks for are always published online with a shareable URL (via the linked GitHub, or anonymously).';
+  if(l.length) return 'The user has these services linked and Keo can act on them directly when asked: ' + l.join(', ') + '. Websites the user asks for are always published online with a shareable URL.';
   return 'No services are linked yet. Websites the user asks for still get published online anonymously with a shareable URL — no action needed.';
 }
 
@@ -1351,7 +1405,7 @@ async function webSearch(q){
   return wikiSearch(q, isArabicText(q) ? 'ar' : 'en');
 }
 
-/* ================== Groq (key guard + adaptive failover) ================== */
+/* ================== Groq (key guard + adaptive failover + token tracking) ================== */
 const SYS = `You are "Keo" (KeoAI), a brilliant, friendly, hands-on AI assistant, created and owned by "Kareem Hussein".
 Your rules:
 - LANGUAGE (most important): Always reply in the SAME language the user writes in. Arabic in \u2192 Arabic out. English in \u2192 English out. Mirror the user's language everywhere, including headings and lists.
@@ -1456,6 +1510,9 @@ function history(){
   return messages.filter(m => m.text)
     .slice(-12).map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }));
 }
+function charsOf(msgs){
+  return msgs.reduce((a,m)=> a + (typeof m.content === 'string' ? m.content.length : JSON.stringify(m.content).length), 0);
+}
 
 /* ================== Send flow ================== */
 async function send(){
@@ -1471,6 +1528,7 @@ async function send(){
     files: attachments.map(a=>a.name) };
   messages.push(um);
   chatScroll.appendChild(userEl(um)); $('#welcome').style.display = 'none'; scrollPin();
+  trackMsg();
 
   const km = { id:'m'+(Date.now()+1), role:'keo', text:'', ts:Date.now() };
   messages.push(km);
@@ -1542,6 +1600,7 @@ async function doChat(text, km, el, textNode, atts){
   setStage(atts.length ? 'carry' : 'type');
   const typer = makeTyper(textNode);
   await streamGroq(msgs, typer, { model, max_tokens: imgs.length ? 4096 : MAXTOK });
+  creditTokens(charsOf(msgs) + typer.text().length);
   await new Promise(res => typer.end(()=>{ km.text = typer.text(); res(); }));
   await detectAndOpenSite(km);
   finalizeKeo(km, el, textNode);
@@ -1568,15 +1627,13 @@ Write a helpful, well-organized answer in the SAME language as the user's questi
   const msgs = [{ role:'system', content: SYS }, ...history().slice(0,-1), { role:'user', content: ctxBlock }];
   const typer = makeTyper(textNode);
   await streamGroq(msgs, typer, { temperature: 0.5, max_tokens: 8192 });
+  creditTokens(charsOf(msgs) + typer.text().length);
   await new Promise(res => typer.end(()=>{ km.text = typer.text(); res(); }));
   await detectAndOpenSite(km);
   finalizeKeo(km, el, textNode);
 }
 
-/* ============ Website detection + AUTO-PUBLISH (GitHub optional) ============
-   Every time Keo produces a full HTML page: preview opens, the site is
-   published via the anonymous chain (CodeSandbox \u2192 CodePen \u2192 JSFiddle),
-   or GitHub Pages if linked, and the shareable URL lands inside the reply. */
+/* Website detection + auto-publish (GitHub optional) */
 async function detectAndOpenSite(km){
   const re = /```(?:html|xml)?\s*\n([\s\S]*?)```/g;
   let m, best = null;
@@ -1589,29 +1646,15 @@ async function detectAndOpenSite(km){
     const res = await publishAnywhere(best);
     if(res){
       km.liveUrl = res.url;
-      if(res.kind === 'github'){
-        km.text += (isArabicText(km.text)
-          ? '\n\n---\n\n\ud83c\udf10 **الموقع لايف على النت — انسخ اللينك وابعته لأي حد:**\n' + res.url
-          : '\n\n---\n\n\ud83c\udf10 **Your site is LIVE — copy this link and share it with anyone:**\n' + res.url);
-      } else if(res.kind === 'sandbox'){
-        km.text += (isArabicText(km.text)
-          ? '\n\n---\n\n\ud83c\udf10 **الموقع أونلاين — اللينك بيفتح عند أي حد:**\n' + res.url + (res.alt ? '\n(لو اللينك ده محتاج ثانية، افتح: ' + res.alt + ')' : '')
-          : '\n\n---\n\n\ud83c\udf10 **Your site is online — this link opens for anyone:**\n' + res.url + (res.alt ? '\n(If it needs a second to wake, open: ' + res.alt + ')' : ''));
-      } else {
-        km.text += (isArabicText(km.text)
-          ? '\n\n---\n\n\ud83c\udf10 **الموقع أونلاين — اللينك بيفتح عند أي حد:**\n' + res.url
-          : '\n\n---\n\n\ud83c\udf10 **Your site is online — this link opens for anyone:**\n' + res.url);
-      }
-      toast('Live share link ready \ud83c\udf10');
-    } else {
       km.text += (isArabicText(km.text)
-        ? '\n\n---\n\n\u26A0 مقدرتش أنشر الموقع دلوقتي (الخدمات مش متاحة) — بس المعاينة شغالة جنبك، جرّب تاني بعد شوية.'
-        : '\n\n---\n\n\u26A0 Couldn\u2019t publish right now (services unreachable) — the preview beside you still works, try again shortly.');
+        ? '\n\n---\n\n\ud83c\udf10 **الموقع أونلاين — اللينك بيفتح عند أي حد:**\n' + res.url + (res.alt ? '\n(لو محتاج ثانية، افتح: ' + res.alt + ')' : '')
+        : '\n\n---\n\n\ud83c\udf10 **Your site is online — this link opens for anyone:**\n' + res.url + (res.alt ? '\n(If it needs a second to wake: ' + res.alt + ')' : ''));
+      toast('Live share link ready \ud83c\udf10');
     }
   }catch(e){}
 }
 
-/* ============ PowerPoint: 8 rich slides + signed AI-painted art (silent) ============ */
+/* PowerPoint: 8 slides + signed AI art (silent) */
 async function doPPT(text, km, el){
   setStage('slides');
   const res = await groqChat({
@@ -1622,6 +1665,7 @@ async function doPPT(text, km, el){
     ]
   });
   const j = await res.json();
+  creditTokens(j.usage?.total_tokens || estTok(charsOf([{content:PPT_SYS},{content:text}]) + (j.choices?.[0]?.message?.content||'').length));
   let raw = j.choices?.[0]?.message?.content || '';
   const m = raw.match(/\[[\s\S]*\]/);
   let slides = [];
@@ -1640,8 +1684,8 @@ async function doPPT(text, km, el){
   km.pptImages = imgs; km._pptImgs = imgs;
   const got = imgs.filter(Boolean).length;
   km.text = isArabicText(text)
-    ? `عرضك جاهز: **${slides.length} شرائح** بمحتوى غني + **${got} صورة** مرسومة بالذكاء الاصطناعي وموقّعة KEOAI. دوس **Download .pptx** تحت — ولو عايز تعديل في أي شريحة قول لي.`
-    : `Your deck is ready: **${slides.length} rich slides** + **${got} AI-painted images**, all signed KEOAI. Hit **Download .pptx** below — want any slide reworked? Just say the word.`;
+    ? `عرضك جاهز: **${slides.length} شرائح** بمحتوى غني + **${got} صورة** مرسومة بالذكاء الاصطناعي وموقّعة KEOAI. دوس **Download .pptx** تحت.`
+    : `Your deck is ready: **${slides.length} rich slides** + **${got} AI-painted images**, all signed KEOAI. Hit **Download .pptx** below.`;
   finalizeKeo(km, el, el.querySelector('.msg-text'));
 }
 function buildPPTX(slides, images){
@@ -1697,6 +1741,95 @@ function openPreview(code){
   $('#pvFrame').srcdoc = code;
 }
 
+/* ================== Owner Panel ================== */
+ $('#btnAdmin').onclick = async ()=>{
+  if(!isAdmin()) return;
+  $('#admModal').hidden = false;
+  const cards = $('#admCards'), chart = $('#admChart'), compare = $('#admCompare'), table = $('#admTable');
+  cards.innerHTML = '<div class="adm-empty">Loading live stats…</div>';
+  chart.innerHTML = ''; compare.innerHTML = ''; table.innerHTML = '';
+  if(!dbOk){ cards.innerHTML = '<div class="adm-empty">Database unreachable</div>'; return; }
+  try{
+    const [uSnap, sSnap] = await Promise.all([
+      firebase.database().ref('users').once('value'),
+      firebase.database().ref('stats').once('value')
+    ]);
+    const usersRaw = uSnap.val() || {};
+    const stats = sSnap.val() || {};
+    const now = Date.now();
+    const rows = Object.entries(usersRaw).map(([uid,u])=>{
+      const chatsMap = u.chats || {};
+      const chatsArr = Object.values(chatsMap);
+      const msgCount = chatsArr.reduce((a,c)=> a + ((c.messages && (Array.isArray(c.messages)?c.messages.length:Object.values(c.messages).length))||0), 0);
+      return {
+        uid,
+        name: (u.profile && u.profile.name) || (u.profile && u.profile.email || '').split('@')[0] || 'User',
+        email: (u.profile && u.profile.email) || '—',
+        last: (u.profile && u.profile.last) || 0,
+        logins: (u.profile && u.profile.logins) || 0,
+        chats: chatsArr.length,
+        msgs: msgCount,
+        tokens: u.tokens || 0
+      };
+    }).sort((a,b)=> b.tokens - a.tokens);
+
+    const totalUsers = rows.length;
+    const active24 = rows.filter(r => now - r.last < 864e5).length;
+    const active30 = rows.filter(r => now - r.last < 18e5).length;
+    const totalChats = rows.reduce((a,r)=>a+r.chats,0);
+    const totalMsgs = stats.totalMsgs || rows.reduce((a,r)=>a+r.msgs,0);
+    const totalTokens = stats.totalTokens || rows.reduce((a,r)=>a+r.tokens,0);
+    const todayKey = new Date().toISOString().slice(0,10);
+    const todayTokens = (stats.daily && stats.daily[todayKey]) || 0;
+
+    const card = (v,l)=>`<div class="stat-card"><div class="sv">${v}</div><div class="sl">${l}</div></div>`;
+    cards.innerHTML =
+      card(fmtN(totalUsers),'Users') +
+      card(fmtN(active24),'Active 24h') +
+      card(fmtN(active30),'Online 30min') +
+      card(fmtN(totalChats),'Chats') +
+      card(fmtN(totalMsgs),'Messages') +
+      card(fmtN(totalTokens),'Tokens total') +
+      card(fmtN(todayTokens),'Tokens today');
+
+    /* 7-day chart */
+    let maxD = 1; const days = [];
+    for(let i=6;i>=0;i--){
+      const key = new Date(now - i*864e5).toISOString().slice(0,10);
+      const v = (stats.daily && stats.daily[key]) || 0;
+      maxD = Math.max(maxD, v);
+      days.push({ key, v });
+    }
+    chart.innerHTML = days.map(d =>
+      `<div class="vcol"><div class="vval">${d.v ? fmtN(d.v) : ''}</div>
+       <div class="vbar" style="height:${Math.max(3, Math.round(d.v/maxD*100))}%"></div>
+       <div class="vlab">${d.key.slice(5)}</div></div>`).join('');
+
+    /* top-5 comparison */
+    const top = rows.filter(r=>r.tokens>0).slice(0,5);
+    const maxT = Math.max(1, ...top.map(r=>r.tokens));
+    compare.innerHTML = top.length ? top.map(r =>
+      `<div class="hrow"><div class="hname">${esc(r.name)}</div>
+       <div class="htrack"><div class="hfill" style="width:${Math.max(4, Math.round(r.tokens/maxT*100))}%"></div></div>
+       <div class="hval">${fmtN(r.tokens)} tok</div></div>`).join('')
+      : '<div class="adm-empty">No token usage recorded yet</div>';
+
+    /* table */
+    table.innerHTML = rows.length ? `<table class="adm-table">
+      <tr><th>User</th><th>Email</th><th>Logins</th><th>Chats</th><th>Msgs</th><th>Tokens</th><th>Last seen</th></tr>
+      ${rows.map(r=>{
+        const mins = Math.round((now - r.last)/60000);
+        const seen = !r.last ? 'never' : mins < 1 ? 'just now' : mins < 60 ? mins+'m ago' : mins < 1440 ? Math.round(mins/60)+'h ago' : Math.round(mins/1440)+'d ago';
+        return `<tr><td><b>${esc(r.name)}</b></td><td>${esc(r.email)}</td><td>${fmtN(r.logins)}</td><td>${fmtN(r.chats)}</td><td>${fmtN(r.msgs)}</td><td class="tt">${fmtN(r.tokens)}</td><td>${seen}</td></tr>`;
+      }).join('')}</table>`
+      : '<div class="adm-empty">No users yet</div>';
+  }catch(e){
+    cards.innerHTML = '<div class="adm-empty">Can\u2019t read other users\u2019 data \u2014 update the Firebase rules (see setup notes) to grant the owner read access.</div>';
+  }
+};
+ $('#admClose').onclick = ()=>{ $('#admModal').hidden = true; };
+ $('#admModal').addEventListener('click', e=>{ if(e.target.id === 'admModal') $('#admModal').hidden = true; });
+
 /* ================== Speech: Listen ================== */
 let VOICES = [];
 function refreshVoices(){ try{ VOICES = speechSynthesis.getVoices() || []; }catch(e){} }
@@ -1728,7 +1861,7 @@ function speakText(text){
   speakGuard = setInterval(()=>{ if(speechSynthesis.speaking && !speechSynthesis.paused) speechSynthesis.resume(); }, 8000);
 }
 
-/* ================== Mic input — anti-duplicate engine ================== */
+/* ================== Mic input ================== */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let micRec = null, micOn = false, micLang = 'ar';
 let micBase = '', micFinal = '', micCursor = 0, micRestarts = 0, micLastTxt = '', micLastTime = 0;
@@ -1736,7 +1869,7 @@ function micStopUI(){ micOn = false; $('#btnMic').classList.remove('rec'); }
 function micFatal(e){
   micStopUI();
   const map = {
-    'not-allowed': 'Mic permission denied — press the \ud83d\udd12 icon in the address bar and allow the microphone',
+    'not-allowed': 'Mic permission denied — allow the microphone from the \ud83d\udd12 icon in the address bar',
     'service-not-allowed': 'Mic blocked by the browser — check site permissions',
     'audio-capture': 'No microphone found on this device',
     'network': 'Speech recognition needs internet — check your connection',
@@ -1751,7 +1884,7 @@ function micFatal(e){
   toast('Mic language: ' + (micLang === 'ar' ? 'Arabic' : 'English'));
 };
  $('#btnMic').onclick = ()=>{
-  if(!SR) return toast('Voice input needs Chrome or Edge (Firefox doesn\u2019t support it)','err');
+  if(!SR) return toast('Voice input needs Chrome or Edge','err');
   if(micOn){ micOn = false; try{ micRec.stop(); }catch(e){} micStopUI(); return; }
   micRec = new SR();
   micRec.lang = micLang === 'ar' ? 'ar-EG' : (navigator.language || 'en-US');
@@ -1864,7 +1997,6 @@ chatScroll.addEventListener('click', async e=>{
   if(a === 'dlppt'){
     const m = messages.find(x=>x.id===act.dataset.mid);
     if(m?.slides) buildPPTX(m.slides, m._pptImgs || m.pptImages || new Array(m.slides.length).fill(null));
-    else toast('Slides data not found — ask Keo to regenerate', 'err');
   }
 });
  $('#chatList').addEventListener('click', e=>{
@@ -1894,7 +2026,7 @@ chatScroll.addEventListener('click', async e=>{
   setStage('code');
   try{
     const res = await publishAnywhere(pvCode);
-    if(!res) return setStage('idle') ?? toast('Publishing services unreachable — try again','err');
+    if(!res){ setStage('idle'); return toast('Publishing services unreachable — try again','err'); }
     for(let i = messages.length-1; i >= 0; i--){
       if(messages[i].code === pvCode){ messages[i].liveUrl = res.url; break; }
     }
@@ -1942,6 +2074,13 @@ function showApp(){
   $('#sbName').textContent = name;
   $('#sbEmail').textContent = user.email;
   $('#sbAv').textContent = name[0].toUpperCase();
+  /* owner button + admin marker */
+  if(isAdmin()){
+    $('#btnAdmin').classList.add('show');
+    if(dbOk) firebase.database().ref('admins/' + user.uid).set(true).catch(()=>{});
+  } else {
+    $('#btnAdmin').classList.remove('show');
+  }
   loadChats(); loadConnections();
   setStage('boot');
   setTimeout(()=>{ setStage('happy'); confettiBurst(); }, 1000);
@@ -1958,7 +2097,16 @@ if(auth){
     user = u;
     if(u){
       if(dbOk){
-        try{ await firebase.database().ref('users/'+u.uid+'/profile').update({ name:u.displayName||'', email:u.email||'', last: Date.now() }); }catch(e){}
+        try{
+          await firebase.database().ref('users/'+u.uid+'/profile').update({
+            name:u.displayName||'', email:u.email||'', last: Date.now()
+          });
+          /* count logins */
+          firebase.database().ref('users/'+u.uid+'/profile/logins').runTransaction(v => (v||0) + 1);
+          if((u.email||'').toLowerCase() === ADMIN_EMAIL){
+            firebase.database().ref('admins/' + u.uid).set(true).catch(()=>{});
+          }
+        }catch(e){}
       }
       showApp();
     } else showGate();
