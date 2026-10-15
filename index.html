@@ -313,6 +313,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 .ccard .hint{font-size:11.5px;color:#5f675c;margin-top:8px;line-height:1.6}
 .ccard .hint a{color:var(--acc)}
 
+/* ---------- Owner Panel ---------- */
 .adm-panel{width:min(860px,96vw);max-height:90vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:22px;animation:up .3s ease}
 .adm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px}
 .stat-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
@@ -367,7 +368,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     <div>
       <h1 class="gate-name">Keo<i>.</i></h1>
       <div class="gate-latin">KEOAI</div>
-      <p class="gate-tag">A hands-on AI: he searches the web, builds sites with live share links, sends real emails from Kareem's inbox, posts to your Discord, makes group invite pages, illustrated PowerPoints signed KEOAI — in Arabic or English.</p>
+      <p class="gate-tag">A hands-on AI: he searches the web, builds full websites with live shareable links — no setup needed, GitHub optional. Illustrated PowerPoints signed KEOAI, posts to Discord, Telegram &amp; more — in Arabic or English.</p>
       <div class="gate-actions">
         <button class="btn btn-light" id="btnGoogle">
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5l-3.8 2.9C3.6 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.8-.4-1.6-.4-2.4s.1-1.6.4-2.4L1.4 6.7C.5 8.2 0 10 0 12s.5 3.8 1.4 5.3l3.9-2.9z"/><path fill="#EA4335" d="M12 4.6c2.2 0 3.7 1 4.6 1.8l3.3-3.2C17.9 1.2 15.2 0 12 0 7.4 0 3.6 2.7 1.4 6.7l3.9 2.9c.9-2.9 3.6-5 6.7-5z"/></svg>
@@ -433,11 +434,10 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
       <div id="welcome" class="welcome">
         <div class="w-kicker">KEOAI &middot; BY KAREEM HUSSEIN</div>
         <h2>I'm Keo<i>.</i><span>Tell me what you need — I'll do it with my own hands.</span></h2>
-        <p>Web search with sources, websites with live share links, real emails sent from Kareem's inbox, Discord posts, group invite pages, illustrated PowerPoints — in Arabic or English.</p>
+        <p>Web search with real sources, full websites with an instant shareable link, illustrated PowerPoints signed KEOAI, posts to Discord, Telegram &amp; GitHub — in Arabic or English.</p>
         <div class="pills">
           <button class="pill" data-insert="Search the web for the latest AI news and summarize it with sources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Latest AI news</button>
-          <button class="pill" data-insert="Send an email to kareemwael0213@gmail.com telling them the project launched successfully"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg>Send a real email</button>
-          <button class="pill" data-insert="اعمل لي جروب اسمه صناع المحتوى ودي الصفحة اللي هشاركها"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>اعمل لي جروب</button>
+          <button class="pill" data-insert="Build me a complete website for a coffee shop called 'Brew' with a warm design and a menu, then give me a live link to share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>Build a shareable website</button>
           <button class="pill" data-insert="Make me a beautiful PowerPoint about space exploration with images"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Illustrated PowerPoint</button>
         </div>
       </div>
@@ -490,53 +490,52 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 <div id="connModal" hidden>
   <div class="conn-panel">
     <div class="conn-head"><b>Keo <i>Links</i></b><button class="icbtn" id="connClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-    <p class="conn-sub">Emails always send <b>from Kareem's inbox</b> (kareemwael0213@gmail.com) automatically once activated. Discord posting needs your webhook once. Everything else works out of the box.</p>
+    <p class="conn-sub"><b>No account is required</b> for shareable site links. Linking accounts below upgrades the experience.</p>
 
     <div class="ccard">
-      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg><b>Email engine — Kareem's inbox</b><span class="stat" id="st-fs">not set</span></div>
-      <p>One-time free setup: sign up on <b>formspree.io</b> with <b>kareemwael0213@gmail.com</b>, create a form, and paste its ID here. Every email Keo sends will arrive from your inbox identity.</p>
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.05.77 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg><b>GitHub — optional</b><span class="stat" id="st-github">optional</span></div>
+      <p>Not required for links. Adds cleaner site URLs, repos, gists and file pushes.</p>
       <div class="row">
-        <input id="fsId" placeholder="Formspree ID, e.g. abcdwxyz">
-        <button class="btn btn-acc" id="fsSave" style="padding:9px 16px;font-size:13px">Save</button>
+        <input id="ghToken" type="password" placeholder="Personal Access Token (optional)">
+        <button class="btn btn-acc" id="ghTest" style="padding:9px 16px;font-size:13px">Connect</button>
       </div>
-      <p class="hint">Free tier: 50 emails/month. Recipients also see the sender name you configure on Formspree.</p>
+      <p class="hint">Token at <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a> with <b>repo</b> permission.</p>
     </div>
 
     <div class="ccard">
-      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 8.5-8.5c4.66 0 8.5 3.84 8.5 8.5z"/></svg><b>Discord webhook</b><span class="stat" id="st-discord">not linked</span></div>
-      <p>Channel settings → Integrations → Webhooks → New Webhook → Copy URL. Keo posts announcements there — Arabic or English.</p>
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg><b>Groq Brain Key</b><span class="stat" id="st-groq">key active</span></div>
+      <p>A key is <b>built into the code</b> — backup override only.</p>
       <div class="row">
-        <input id="dcHook" type="password" placeholder="Channel webhook URL">
-        <button class="btn btn-acc" id="dcTest" style="padding:9px 16px;font-size:13px">Connect</button>
+        <input id="gqKey" type="password" placeholder="gsk_... (backup override)">
+        <button class="btn btn-acc" id="gqSave" style="padding:9px 16px;font-size:13px">Save &amp; Test</button>
       </div>
+      <p class="hint">Free key: <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a>.</p>
     </div>
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 3-9.5 9.5M22 3l-7 19-3-8-8-3z"/></svg><b>Telegram</b><span class="stat" id="st-telegram">not linked</span></div>
-      <p>Real auto-posting to your channel or group through your bot.</p>
+      <p>Real auto-posting to your channel or group.</p>
       <div class="row">
         <input id="tgToken" type="password" placeholder="Bot token from @BotFather">
         <input id="tgChat" placeholder="@channel or -100… chat ID" style="max-width:220px">
         <button class="btn btn-acc" id="tgTest" style="padding:9px 16px;font-size:13px">Connect</button>
       </div>
+      <p class="hint">Bot from <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a> → add as admin → send a message → use the chat ID.</p>
     </div>
 
     <div class="ccard">
-      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.05.77 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg><b>GitHub — optional</b><span class="stat" id="st-github">optional</span></div>
-      <p>Not required for share links (CodeSandbox covers that anonymously). Adds cleaner URLs, repos, gists.</p>
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 8.5-8.5c4.66 0 8.5 3.84 8.5 8.5z"/></svg><b>Discord</b><span class="stat" id="st-discord">not linked</span></div>
+      <p>Real auto-posting via webhook.</p>
       <div class="row">
-        <input id="ghToken" type="password" placeholder="Personal Access Token (optional)">
-        <button class="btn btn-acc" id="ghTest" style="padding:9px 16px;font-size:13px">Connect</button>
+        <input id="dcHook" type="password" placeholder="Channel webhook URL">
+        <button class="btn btn-acc" id="dcTest" style="padding:9px 16px;font-size:13px">Connect</button>
       </div>
+      <p class="hint">Channel settings → Integrations → Webhooks → Copy URL.</p>
     </div>
 
     <div class="ccard">
-      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg><b>Groq Brain Key</b><span class="stat" id="st-groq">key active</span></div>
-      <p>Built into the code — backup override only.</p>
-      <div class="row">
-        <input id="gqKey" type="password" placeholder="gsk_... (backup override)">
-        <button class="btn btn-acc" id="gqSave" style="padding:9px 16px;font-size:13px">Save &amp; Test</button>
-      </div>
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg><b>Facebook · X · YouTube</b><span class="stat on">one-click ready</span></div>
+      <p>Keo writes the post, copies it, and opens the platform ready to paste.</p>
     </div>
   </div>
 </div>
@@ -545,7 +544,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 <div id="admModal" hidden>
   <div class="adm-panel">
     <div class="conn-head"><b>Owner <i>Panel</i></b><button class="icbtn" id="admClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-    <p class="conn-sub">Live numbers for KeoAI — users, activity and token consumption.</p>
+    <p class="conn-sub">Live numbers for KeoAI — users, activity and token consumption. Auto-refreshes every time you open it.</p>
     <div class="adm-grid" id="admCards"></div>
     <div class="adm-sec"><h4>Tokens per day — last 7 days</h4><div class="vchart" id="admChart"></div></div>
     <div class="adm-sec"><h4>Users comparison — tokens</h4><div id="admCompare"></div></div>
@@ -563,6 +562,8 @@ const GROQ_MODELS_URL = 'https://api.groq.com/openai/v1/models';
 const GROQ_KEY_BUILTIN = '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';
 const HF_TOKEN_BUILTIN = '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';
 let GROQ_KEY = localStorage.getItem('keo_groq_key') || GROQ_KEY_BUILTIN;
+/* Owner account — the panel unlocks only when this email is signed in.
+   (No password is stored anywhere; Firebase Auth handles the password.) */
 const ADMIN_EMAIL = 'kareemwael0213@gmail.com';
 const firebaseConfig = {
   apiKey: "AIzaSyC0lwVRTBPA3yxnZ3wuqvyfQJbJP-AVNJo",
@@ -634,7 +635,9 @@ function confettiBurst(){
   }
 }
 
-/* ================== Usage tracking ================== */
+/* ================== Usage tracking (tokens / messages / logins) ==================
+   Token counts are estimated (chars/4) for streams and exact when Groq returns
+   usage. They land in: stats/totalTokens, stats/daily/<date>, users/<uid>/tokens */
 function creditTokens(n){
   n = Math.max(0, Math.round(n||0));
   if(!n || !user || !dbOk) return;
@@ -656,7 +659,7 @@ function trackMsg(){
   }catch(e){}
 }
 
-/* ================== Image engines — silent (PowerPoint artwork) ================== */
+/* ================== Image engines — silent workers (PowerPoint artwork) ================== */
 function imgURL(prompt, w=1024, h=768, model){
   return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&enhance=true&seed=${Math.floor(Math.random()*1e9)}${model?'&model='+model:''}`;
 }
@@ -684,7 +687,7 @@ async function hfOnce(url, tok, body, timeoutMs=90000){
     if(r.ok){
       const b = await r.blob();
       if(b.type?.startsWith('image/') && b.size > 2000) return { ok:true, data: await blobToDataURL(b) };
-      return { ok:false, error:'unexpected response' };
+      return { ok:false, error:'unexpected response type' };
     }
     let why = 'HTTP ' + r.status;
     try{ const j = await r.json(); why = j.error || why; }catch(e){}
@@ -739,6 +742,8 @@ async function genImage(prompt, w=1024, h=768){
   if(flux) return flux;
   return await pollImage(prompt, w, h, null, 60000);
 }
+
+/* ===== KEOAI watermark ===== */
 function drawWatermarkOnCanvas(img){
   const c = document.createElement('canvas');
   c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height;
@@ -886,7 +891,7 @@ const CAPTIONS = {
   think:  ['Keo is thinking…','Gathering his thoughts…','Focusing for a second…'],
   search: ['Keo grabbed his laptop and opened it…','Typing into the search bar…','Skimming the results…'],
   type:   ['Keo is writing his answer line by line…','Full lines, no stutter…'],
-  code:   ['Keo is building your site brick by brick…','Writing HTML & CSS…'],
+  code:   ['Keo is building your site brick by brick…','Writing HTML & CSS…','Polishing colors and details…'],
   slides: ['Keo is arranging the slides…','Painting artwork for each slide…'],
   carry:  ['Keo is holding your file and reading it…'],
   happy:  ['Done! Keo is happy','All clean — nice work']
@@ -963,13 +968,6 @@ function groqKeyStatus(){
   el.textContent = ok ? 'key active' : 'missing';
   el.classList.toggle('on', ok);
 }
-let FORMSPREE_ID = localStorage.getItem('keo_formspree') || '';
-function fsStatus(){
-  const el = $('#st-fs'); if(!el) return;
-  const ok = !!FORMSPREE_ID;
-  el.textContent = ok ? 'active \u00B7 from ' + ADMIN_EMAIL : 'not set';
-  el.classList.toggle('on', ok);
-}
  $('#btnConn').onclick = ()=>{ $('#connModal').hidden = false; };
  $('#connClose').onclick = ()=>{ $('#connModal').hidden = true; };
  $('#connModal').addEventListener('click', e=>{ if(e.target.id === 'connModal') $('#connModal').hidden = true; });
@@ -992,16 +990,6 @@ function fsStatus(){
   }catch(e){ toast('Network error while testing','err'); }
 };
 groqKeyStatus();
- $('#fsSave').onclick = ()=>{
-  const v = $('#fsId').value.trim();
-  if(!/^[a-z0-9]{6,12}$/i.test(v)) return toast('Formspree IDs look like: abcdwxyz','err');
-  localStorage.setItem('keo_formspree', v);
-  FORMSPREE_ID = v;
-  $('#fsId').value = '';
-  fsStatus();
-  toast('Email engine armed \u2705 — sending as ' + ADMIN_EMAIL); confettiBurst();
-};
-fsStatus();
 
 const GH = 'https://api.github.com';
 async function gh(path, opt={}){
@@ -1046,7 +1034,7 @@ async function gh(path, opt={}){
   try{
     const r = await fetch(hook, { method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ content:'\u2705 **Keo** is now connected to this channel.' }) });
-    if(!r.ok && r.status !== 204) throw new Error('HTTP '+r.status);
+    if(!r.ok) throw new Error('HTTP '+r.status);
     connections.discord = { webhook: hook };
     saveConnections(); $('#dcHook').value = '';
     toast('Discord linked — check the channel'); confettiBurst();
@@ -1054,16 +1042,9 @@ async function gh(path, opt={}){
 };
 async function discordSend(text){
   if(!connections.discord) throw new Error('Discord is not linked — open Keo Links');
-  let lastErr = '';
-  for(const mk of POST_RELAYS){
-    try{
-      const r = await fetch(mk(connections.discord.webhook), { method:'POST',
-        headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content: text.slice(0,1900) }) });
-      if(r.ok || r.status === 204) return true;
-      lastErr = 'HTTP ' + r.status;
-    }catch(e){ lastErr = 'network'; }
-  }
-  throw new Error('Discord refused: ' + lastErr + ' — check the webhook still exists');
+  const r = await fetch(connections.discord.webhook, { method:'POST',
+    headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content: text.slice(0,1900) }) });
+  if(!r.ok && r.status !== 204) throw new Error('Discord HTTP '+r.status);
 }
 async function telegramSend(text){
   if(!connections.telegram) throw new Error('Telegram is not linked — open Keo Links');
@@ -1072,36 +1053,6 @@ async function telegramSend(text){
   const j = await r.json();
   if(!j.ok) throw new Error(j.description || 'Telegram error');
 }
-const POST_RELAYS = [ u => u, u => 'https://corsproxy.io/?url=' + encodeURIComponent(u) ];
-
-/* ============ REAL email sending — FROM KAREEM'S INBOX ============
-   Setup (one time): sign up free at formspree.io with kareemwael0213@gmail.com,
-   create one form, paste its ID in Keo Links. Every email Keo sends then
-   arrives from Kareem's inbox identity (Formspree routes through it).      */
-async function emailSend(to, subject, body){
-  if(!FORMSPREE_ID) throw new Error('email-not-configured');
-  let lastErr = '';
-  for(const mk of POST_RELAYS){
-    try{
-      const r = await fetch(mk('https://formspree.io/f/' + FORMSPREE_ID), {
-        method:'POST', headers:{'Content-Type':'application/json', Accept:'application/json'},
-        body: JSON.stringify({
-          _subject: subject,
-          _replyto: ADMIN_EMAIL,
-          _format: 'plain',
-          from_name: 'Keo \u00B7 Kareem Hussein',
-          to: to,
-          message: body
-        })
-      });
-      if(r.ok) return true;
-      const j = await r.json().catch(()=>({}));
-      lastErr = j.errors?.[0]?.message || ('HTTP ' + r.status);
-    }catch(e){ lastErr = 'network'; }
-  }
-  throw new Error(lastErr || 'email service refused');
-}
-
 async function ghCreateRepo(name, descr){
   if(!connections.github) throw new Error('GitHub is not linked — open Keo Links');
   return gh('/user/repos', { method:'POST', body:{ name, private:false, auto_init:false, description: descr||'Built with KeoAI' } });
@@ -1122,6 +1073,7 @@ async function publishToPages(code){
 }
 
 /* Anonymous publishing chain — no account needed */
+const POST_RELAYS = [ u => u, u => 'https://corsproxy.io/?url=' + encodeURIComponent(u) ];
 async function publishToCodeSandbox(code){
   const payload = { files: {
     'index.html': { content: code },
@@ -1180,7 +1132,7 @@ async function publishAnywhere(code){
 async function draftPost(brief, platform){
   const lang = isArabicText(brief) ? 'Arabic' : 'English';
   const res = await groqChat({ model: MODEL_MAIN, temperature: 0.85, max_tokens: 700, messages: [
-    { role:'system', content: `You draft ready-to-publish content for ${platform}, written on behalf of Kareem Hussein. Write ONLY the final text in ${lang}. Add fitting emojis and hashtags if appropriate. No quotes, no explanations, no markdown.` },
+    { role:'system', content: `You draft ready-to-publish social media posts for ${platform}. Write ONLY the final post text in ${lang}. Add fitting emojis and hashtags if appropriate. No quotes, no explanations, no markdown.` },
     { role:'user', content: brief }
   ]});
   const j = await res.json();
@@ -1204,86 +1156,18 @@ async function socialHandoff(text, km, el, textNode, platform){
 async function handleConnIntent(text, km, el, textNode){
   const t = text.toLowerCase();
   const wants = re => re.test(t);
-  const actionRe = /(post|share|send|publish|announce|upload|save|create|make|deploy|انشر|ابعث|ابعت|بعت|شير|شارك|احفظ|حفظ|اعمل بوست|اعلن)/i;
+  const actionRe = /(post|share|send|publish|announce|upload|save|create|make|deploy|انشر|ابعث|شارك|احفظ)/i;
   try{
-    /* ---- Group creation with a real live invite page ---- */
-    if(wants(/اعمل (جروب|جرووب|group)|make (a )?group|create (a )?group|جروب جديد/) && !wants(/\bdiscord\b|واتس|whatsapp/)){
-      setStage('code');
-      const gname = (text.match(/(?:called|named|اسمه|بااسم|بإسم)\s*[«"'`]?(.+?)[»"'`]?$/i) || [])[1]
-        || (isArabicText(text) ? 'جروب جديد' : 'New Group');
-      const gcode = Math.random().toString(36).slice(2,8).toUpperCase();
-      const page = `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(gname)}</title><style>*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}body{background:#0B0D0C;color:#EDEFE6;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.c{text-align:center;max-width:420px;width:100%}.ic{width:72px;height:72px;border-radius:20px;background:#C6F24B;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:34px}h1{font-size:26px;margin-bottom:8px}p{color:#9BA398;margin-bottom:24px;line-height:1.7}code{background:#151917;border:1px solid rgba(235,240,225,.1);padding:14px 26px;border-radius:12px;font-size:28px;letter-spacing:6px;color:#C6F24B;display:block;font-weight:700}button{margin-top:22px;background:#C6F24B;color:#161d04;border:0;padding:13px 32px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer}small{display:block;margin-top:18px;color:#6B7266;font-size:11px}</style></head><body><div class="c"><div class="ic">🎮</div><h1>${esc(gname)}</h1><p>تم إنشاء الجروب بواسطة <b>كيو</b> — كود الانضمام:</p><code>${gcode}</code><button onclick="navigator.clipboard.writeText('${gcode}').then(()=>this.textContent='تم النسخ ✓')">نسخ الكود</button><small>KeoAI \u00B7 by Kareem Hussein</small></div></body></html>`;
-      try{
-        const res = await publishAnywhere(page);
-        km.text = isArabicText(text)
-          ? (res ? 'عملت لك **جروب ' + gname + '** \ud83c\udf10 — الكود: **' + gcode + '**\n\nالصفحة اللي تبعتها لأصحابك ينضموا:\n' + res.url
-                 : 'عملت الجروب **' + gname + '** والكود **' + gcode + '**، بس مش قادر أنشر الصفحة دلوقتي — جرّب تاني.')
-          : (res ? 'Created group **' + gname + '** \ud83c\udf10 — join code: **' + gcode + '**\n\nShareable invite page:\n' + res.url
-                 : 'Created group **' + gname + '** with code **' + gcode + '**, but publishing failed — try again.');
-      }catch(e){}
-      finalizeKeo(km, el, textNode); return true;
-    }
-    /* ---- REAL email FROM Kareem's inbox ---- */
-    if(wants(/e-?mail|ايميل|إيميل|البريد/) && actionRe.test(t)){
-      const to = (text.match(/[\w.+-]+@[\w-]+\.[\w.]+/)||[])[0];
-      if(!to) return false;
-      setStage('type');
-      const subj = isArabicText(text) ? 'رسالة من كيو — KeoAI' : 'A message from Keo — KeoAI';
-      const body = await draftPost(text + ' (addressed to ' + to + ')', 'Email');
-      try{
-        await emailSend(to, subj, body);
-        km.text = isArabicText(text)
-          ? 'بعتها على **' + to + '** \u2705 — الرسالة طلعت باسم **' + ADMIN_EMAIL + '**. هتلاقيها في الإنبوكس (وشوف الإيميل الوارد أحيانًا بتنزل Spam أول مرة).'
-          : 'Sent to **' + to + '** \u2705 — delivered as **' + ADMIN_EMAIL + '**. It\u2019s in the inbox (first-ever emails sometimes land in Spam).';
-      }catch(err){
-        if(/not-configured/.test(err.message||'')){
-          $('#connModal').hidden = false;
-          km.text = isArabicText(text)
-            ? 'الإيميل محتاج تفعيل مرة واحدة بس \u2709 — الرسايل هتطلع **من إيميلك ' + ADMIN_EMAIL + '**:\n\n1. سجّل مجانًا على **formspree.io** بإيميلك ده بالظبط\n2. اعمل New Form وخد الـ ID من اللينك (حروف قصيرة زي abcdwxyz)\n3. افتح **Keo Links** وحطه في كارت **Email engine**\n\nبعد كده أي إيميل بتقوله لي يتبعت فعلًا باسمك.'
-            : 'Email needs a one-time setup \u2709 — messages will send **from your inbox ' + ADMIN_EMAIL + '**:\n\n1. Sign up free on **formspree.io** with that exact email\n2. Create a New Form and copy its short ID\n3. Open **Keo Links** \u2192 paste it in the **Email engine** card\n\nAfter that, every email I send goes out under your name.';
-        } else {
-          km.text = isArabicText(text)
-            ? 'معرفتش أبعث: ' + (err.message||'') + '\nجرّب تاني.'
-            : 'Couldn\u2019t send: ' + (err.message||'') + '\nTry again.';
-        }
-      }
-      finalizeKeo(km, el, textNode); return true;
-    }
-    /* ---- Discord (Arabic commands now caught) ---- */
-    if(wants(/\bdiscord\b|ديسكورد/) && actionRe.test(t)){
+    if(wants(/\bdiscord\b/) && actionRe.test(t)){
       setStage('type');
       await discordSend(await draftPost(text, 'Discord announcement'));
-      km.text = isArabicText(text) ? 'بعتها على ديسكورد فعليًا! \u2705 روح شوف القناة — لو مش شايفها اضغط Refresh في الديسكورد.' : 'Posted to your Discord for real! \u2705 Check the channel — hit refresh if you don\u2019t see it.';
+      km.text = isArabicText(text) ? 'بعتها على ديسكورد! \u2705 روح شوف القناة.' : 'Posted to your Discord! \u2705 Go check the channel.';
       finalizeKeo(km, el, textNode); return true;
     }
     if(wants(/telegram|تلجرام|تليجرام/) && actionRe.test(t)){
       setStage('type');
       await telegramSend(await draftPost(text, 'Telegram channel post'));
       km.text = isArabicText(text) ? 'بعتها على تلجرام! \u2705 اتفرج على القناة.' : 'Sent to your Telegram! \u2705 Check the channel.';
-      finalizeKeo(km, el, textNode); return true;
-    }
-    /* ---- WhatsApp — fast honest handoff ---- */
-    if(wants(/whatsapp|واتس|واتساب/) && (actionRe.test(t) || wants(/ابعت|بعت/))){
-      setStage('type');
-      const num = (text.match(/\+?\d[\d\s-]{7,15}/)||[])[0] || '';
-      const post = await draftPost(text, 'WhatsApp message');
-      try{ await navigator.clipboard.writeText(post); }catch(e){}
-      const cleanNum = num.replace(/[^\d]/g,'');
-      window.open('https://wa.me/' + cleanNum + '?text=' + encodeURIComponent(post.slice(0,800)), '_blank');
-      km.text = isArabicText(text)
-        ? (num ? 'جهزت الرسالة وفاتحت واتساب لرقم **' + cleanNum + '** جاهزة — دوس إرسال ووصلت.\n\n---\n\n' + post
-               : 'جهزت الرسالة — الصقها في واتساب واحط الرقم في طلبك الجاي عشان أفتحهولك مباشرة.\n\n---\n\n' + post)
-        : (num ? 'Message ready — WhatsApp is open for **' + cleanNum + '**, hit send.\n\n---\n\n' + post
-               : 'Message drafted — paste it in WhatsApp, or give me the number next time and I\u2019ll open it directly.\n\n---\n\n' + post);
-      finalizeKeo(km, el, textNode); return true;
-    }
-    /* ---- Gaming: honest answers ---- */
-    if(wants(/\bminecraft\b|ماين ?كرافت|ماينكرفت|\broblox\b|روب ?لوكس|روبلوكس/) && wants(/العب|يلعب|معي|سيرفر|play|server|join/)){
-      setStage('type');
-      const game = wants(/\broblox\b|روبلوكس|روب ?لوكس/) ? 'Roblox' : 'Minecraft';
-      km.text = isArabicText(text)
-        ? ('هقولك الحقيقة بدل ما أكدب عليك \ud83e\udd14\n\n**' + game + '** شغال في تطبيق مغلق — مفيش API خارجي يدخلني جوه اللعبة ألعب، وروبلوكس كمان بيمنع البوتات رسميًا (حساب هيتحظر).\n\nاللي أقدر أعمله لك فعلاً:\n- **أوامر Minecraft** جاهزة تنسخها في الكوماند بلوك\n- **موقع لسيرفرك** بلينك تتشاركه مع أصحابك\n- **رسمة سكن** بالستايل اللي تتخيله كملف\n\nتحب أبدأ بأنهي واحدة؟')
-        : ('Honest answer \ud83e\udd14\n\n**' + game + '** runs in a closed app — no external API lets me join and play, and Roblox officially bans bots. What I CAN do:\n- Ready **Minecraft commands** to paste in-game\n- A **website for your server** with a shareable link\n- **Skin artwork** in any style, as a file\n\nWhich one shall I start with?');
       finalizeKeo(km, el, textNode); return true;
     }
     if(wants(/gist/) && wants(/github|save|create|make|احفظ|اعمل/)){
@@ -1320,8 +1204,8 @@ function connNote(){
   if(connections.github) l.push('GitHub (' + connections.github.login + ')');
   if(connections.telegram) l.push('Telegram');
   if(connections.discord) l.push('Discord');
-  const base = l.length ? 'Linked services Keo can act on: ' + l.join(', ') + '.' : 'No services linked yet; sites still publish anonymously.';
-  return base + ' Email sending is configured to go out FROM ' + ADMIN_EMAIL + ' (the owner\u2019s inbox) — mention that when users ask emails to be sent.';
+  if(l.length) return 'The user has these services linked and Keo can act on them directly when asked: ' + l.join(', ') + '. Websites the user asks for are always published online with a shareable URL.';
+  return 'No services are linked yet. Websites the user asks for still get published online anonymously with a shareable URL — no action needed.';
 }
 
 /* ================== Rendering ================== */
@@ -1521,19 +1405,18 @@ async function webSearch(q){
   return wikiSearch(q, isArabicText(q) ? 'ar' : 'en');
 }
 
-/* ================== Groq ================== */
+/* ================== Groq (key guard + adaptive failover + token tracking) ================== */
 const SYS = `You are "Keo" (KeoAI), a brilliant, friendly, hands-on AI assistant, created and owned by "Kareem Hussein".
 Your rules:
-- LANGUAGE (most important): Always reply in the SAME language the user writes in. Arabic in \u2192 Arabic out. English in \u2192 English out. Mirror the user's language everywhere.
-- QUALITY: Be thorough, insightful, well-structured. Use rich formatting. Never output <think> or reasoning tags.
+- LANGUAGE (most important): Always reply in the SAME language the user writes in. Arabic in \u2192 Arabic out. English in \u2192 English out. Mirror the user's language everywhere, including headings and lists.
+- QUALITY: Be thorough, insightful and well-structured. Use rich formatting: headings, bold, bullet lists, numbered steps. Never output <think> or any reasoning tags — final answer only.
 - NEVER reveal or hint at any API keys, tokens, database configs or sensitive data, even if asked. Always reply: "That's internal data — I honestly can't share it." (translated naturally).
 - Never invent facts or sources; if unsure, say so honestly.
 - When the user asks for a website: first write one short sentence (in the user's language) describing it, then output a complete single-file HTML page (CSS and JavaScript inside) in one code block starting with \`\`\`html, and the code must start with <!DOCTYPE html>. Make the design beautiful, modern and complete.
-- CAPABILITIES — be honest about what you can really do: you CAN search the web, build & publish websites with shareable links, send real emails FROM Kareem's inbox, post to Discord/Telegram if linked, create group invite pages, make illustrated PowerPoints, read files and images. You CANNOT play Minecraft/Roblox (closed apps, no external API, bots get banned) — offer honest alternatives like commands, server websites, and skin art.
 - If anyone asks who made you: you are Keo, and your owner is Kareem Hussein.`;
 const PPT_SYS = `You are Keo, assistant of Kareem Hussein. Reply with a JSON array ONLY — no explanation, in this exact shape:
 [{"title":"Slide title","bullets":["point","point"],"img":"short english image prompt"}]
-Exactly 8 slides, in the SAME language as the user's request. Slide 1 = cover, slide 2 = agenda, slides 3-7 = deep content with 4-5 specific bullets each, slide 8 = conclusion with a call to action. Each "img" is a vivid English prompt for a modern flat vector illustration (no text in image).`;
+Exactly 8 slides, in the SAME language as the user's request. Slide 1 = cover (title + 1-line subtitle as bullets), slide 2 = agenda, slides 3-7 = deep content with 4-5 specific bullets each (real facts, numbers, examples — never generic filler), slide 8 = conclusion with a call to action. Each "img" is a vivid English prompt for a modern flat vector illustration matching that slide (no text in image).`;
 
 const MODEL_ERR = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported/i;
 async function groqChat(body, signal){
@@ -1671,8 +1554,8 @@ async function send(){
       km.text = (km.text || '') + '\n\n(Stopped by your request.)';
     } else if(err.nokey || err.status === 401){
       km.text = isArabicText(text)
-        ? 'مفتاح الـ AI راح أو خلص — فتحتلك **Keo Links**:\n\n1. هات مفتاح مجاني من console.groq.com/keys\n2. الصقه في كارت **Groq Brain Key**\n3. دوس **Save & Test**'
-        : 'The AI key died — I opened **Keo Links**:\n\n1. Grab a free key at console.groq.com/keys\n2. Paste it into **Groq Brain Key**\n3. Hit **Save & Test**';
+        ? 'مفتاح الـ AI راح أو خلص — فتحتلك **Keo Links**:\n\n1. هات مفتاح مجاني من console.groq.com/keys\n2. الصقه في كارت **Groq Brain Key**\n3. دوس **Save & Test**\n\nوأرجعلك شغال فورًا.'
+        : 'The AI key died or expired — I opened **Keo Links** for you:\n\n1. Grab a free key at console.groq.com/keys\n2. Paste it into the **Groq Brain Key** card\n3. Hit **Save & Test**\n\nThen I\u2019m back online instantly.';
       toast('Paste a Groq key in Keo Links', 'err');
     } else {
       km.text = 'Ran into a problem while working: ' + (err.message || 'connection') + '\nTry again or send another message.';
@@ -1750,7 +1633,7 @@ Write a helpful, well-organized answer in the SAME language as the user's questi
   finalizeKeo(km, el, textNode);
 }
 
-/* Website detection + auto-publish */
+/* Website detection + auto-publish (GitHub optional) */
 async function detectAndOpenSite(km){
   const re = /```(?:html|xml)?\s*\n([\s\S]*?)```/g;
   let m, best = null;
@@ -1801,8 +1684,8 @@ async function doPPT(text, km, el){
   km.pptImages = imgs; km._pptImgs = imgs;
   const got = imgs.filter(Boolean).length;
   km.text = isArabicText(text)
-    ? `عرضك جاهز: **${slides.length} شرائح** بمحتوى غني + **${got} صورة** موقّعة KEOAI. دوس **Download .pptx** تحت.`
-    : `Your deck is ready: **${slides.length} rich slides** + **${got} AI-painted images**, signed KEOAI. Hit **Download .pptx** below.`;
+    ? `عرضك جاهز: **${slides.length} شرائح** بمحتوى غني + **${got} صورة** مرسومة بالذكاء الاصطناعي وموقّعة KEOAI. دوس **Download .pptx** تحت.`
+    : `Your deck is ready: **${slides.length} rich slides** + **${got} AI-painted images**, all signed KEOAI. Hit **Download .pptx** below.`;
   finalizeKeo(km, el, el.querySelector('.msg-text'));
 }
 function buildPPTX(slides, images){
@@ -1909,6 +1792,7 @@ function openPreview(code){
       card(fmtN(totalTokens),'Tokens total') +
       card(fmtN(todayTokens),'Tokens today');
 
+    /* 7-day chart */
     let maxD = 1; const days = [];
     for(let i=6;i>=0;i--){
       const key = new Date(now - i*864e5).toISOString().slice(0,10);
@@ -1921,6 +1805,7 @@ function openPreview(code){
        <div class="vbar" style="height:${Math.max(3, Math.round(d.v/maxD*100))}%"></div>
        <div class="vlab">${d.key.slice(5)}</div></div>`).join('');
 
+    /* top-5 comparison */
     const top = rows.filter(r=>r.tokens>0).slice(0,5);
     const maxT = Math.max(1, ...top.map(r=>r.tokens));
     compare.innerHTML = top.length ? top.map(r =>
@@ -1929,6 +1814,7 @@ function openPreview(code){
        <div class="hval">${fmtN(r.tokens)} tok</div></div>`).join('')
       : '<div class="adm-empty">No token usage recorded yet</div>';
 
+    /* table */
     table.innerHTML = rows.length ? `<table class="adm-table">
       <tr><th>User</th><th>Email</th><th>Logins</th><th>Chats</th><th>Msgs</th><th>Tokens</th><th>Last seen</th></tr>
       ${rows.map(r=>{
@@ -1938,7 +1824,7 @@ function openPreview(code){
       }).join('')}</table>`
       : '<div class="adm-empty">No users yet</div>';
   }catch(e){
-    cards.innerHTML = '<div class="adm-empty">Can\u2019t read other users\u2019 data \u2014 update the Firebase rules (Owner setup) to grant the owner read access.</div>';
+    cards.innerHTML = '<div class="adm-empty">Can\u2019t read other users\u2019 data \u2014 update the Firebase rules (see setup notes) to grant the owner read access.</div>';
   }
 };
  $('#admClose').onclick = ()=>{ $('#admModal').hidden = true; };
@@ -2188,6 +2074,7 @@ function showApp(){
   $('#sbName').textContent = name;
   $('#sbEmail').textContent = user.email;
   $('#sbAv').textContent = name[0].toUpperCase();
+  /* owner button + admin marker */
   if(isAdmin()){
     $('#btnAdmin').classList.add('show');
     if(dbOk) firebase.database().ref('admins/' + user.uid).set(true).catch(()=>{});
@@ -2214,6 +2101,7 @@ if(auth){
           await firebase.database().ref('users/'+u.uid+'/profile').update({
             name:u.displayName||'', email:u.email||'', last: Date.now()
           });
+          /* count logins */
           firebase.database().ref('users/'+u.uid+'/profile/logins').runTransaction(v => (v||0) + 1);
           if((u.email||'').toLowerCase() === ADMIN_EMAIL){
             firebase.database().ref('admins/' + u.uid).set(true).catch(()=>{});
