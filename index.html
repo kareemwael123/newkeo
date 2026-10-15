@@ -77,7 +77,7 @@ main{display:flex;height:calc(100vh - 58px)}
 .chatitem:hover{background:var(--panel2)}
 .chatitem.on{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
 .chatitem.on::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:var(--acc)}
-.ci-t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;word-break:normal;}
 .ci-x{opacity:0;color:var(--mut);width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center}
 .chatitem:hover .ci-x{opacity:1}
 .ci-x:hover{color:var(--err);background:rgba(255,107,87,.1)}
