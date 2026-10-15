@@ -560,7 +560,6 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 
 <script>
 /* ================== Engine setup — primary HF, silent fallback ================== */
-/* --- PHASE 1 (primary): Hugging Face — abstracted internally as "primary core" --- */
 const HF_URL = 'https://router.huggingface.co/v1';
 const HF_KEY = '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';
 const HF_TEXT = [
@@ -576,7 +575,6 @@ const HF_VISION = [
 ];
 let hfTextIdx = 0, hfVisIdx = 0;
 
-/* --- PHASE 2 (fallback): secondary engine — credential from Firebase --- */
 const AI_URL = 'https://api.groq.com/openai/v1';
 let KEY_REAL = localStorage.getItem('keo_key') || '';
 let KEY_READY = false;
@@ -1595,25 +1593,31 @@ async function coreChat(body, signal){
 }
 function balanced(s){ const f = (String(s).match(/```/g)||[]).length; return f%2 ? s+'\n```' : s; }
 
+/* Robust typer: position-based reveal — immune to <think> tag length shifts,
+   smooth word-level chunks (Arabic never splits letter-by-letter) */
 function makeTyper(textEl){
-  let rec = '', shown = '', timer = null, finished = false, onDone = null;
+  let rec = '', shownLen = 0, timer = null, finished = false, onDone = null;
   const strip = s => s.replace(/<think>[\s\S]*?<\/think>/g, '').replace(/<think>[\s\S]*$/, '');
+  const target = () => strip(rec);
   const paint = fin => {
-    textEl.dir = isArabicText(shown) ? 'rtl' : 'ltr';
-    textEl.innerHTML = md(balanced(strip(shown))) + (fin ? '' : '<span class="caret"></span>');
+    const t = target();
+    textEl.dir = isArabicText(t) ? 'rtl' : 'ltr';
+    textEl.innerHTML = md(balanced(t.slice(0, shownLen))) + (fin ? '' : '<span class="caret"></span>');
     scrollPin();
   };
   function tick(){
-    if(shown.length < strip(rec).length){
-      const rest = strip(rec).slice(shown.length);
+    const t = target();
+    if(shownLen > t.length) shownLen = t.length;
+    if(shownLen < t.length){
+      const rest = t.slice(shownLen);
       let take = Math.min(rest.length, 24);
       if(rest.length > take){
         const br = rest.slice(0, take + 8).search(/[\s.,!؟?;:،؛—…)\]]/);
         if(br >= 2 && br <= take + 8) take = br + 1;
       }
-      shown += rest.slice(0, take);
+      shownLen += take;
       paint(false);
-      timer = setTimeout(tick, 55);
+      timer = setTimeout(tick, 50);
     } else {
       timer = null;
       if(finished){ paint(true); if(onDone){ const d = onDone; onDone = null; d(); } }
@@ -1623,7 +1627,7 @@ function makeTyper(textEl){
   return {
     push(t){ rec += t; if(!timer) timer = setTimeout(tick, 0); },
     end(cb){ finished = true; onDone = cb || onDone; if(!timer) timer = setTimeout(tick, 0); },
-    text(){ return strip(rec); }
+    text(){ return target(); }
   };
 }
 async function streamCore(msgs, typer, opt = {}){
@@ -2133,11 +2137,31 @@ window.addEventListener('paste', e=>{
  $('#chipPpt').onclick = e=>{ pptIntent = !pptIntent; e.currentTarget.classList.toggle('active', pptIntent); };
  $('#btnSend').onclick = send;
  $('#btnSend').addEventListener('mousedown', e=>{ e.preventDefault(); ta.focus(); });
-ta.addEventListener('input', ()=>{ ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 200) + 'px'; });
+
+/* ================== Smart Enter — short words merge instead of letter-splits ==================
+   Enter on a short text (≤3 chars) waits 900ms; if you keep typing, the send
+   keeps postponing until you pause — so "ا ه ل ا" becomes ONE message "اهلا".
+   Longer texts send instantly. Shift+Enter always makes a new line.            */
+let enterTimer = null;
+function scheduleShortSend(){
+  clearTimeout(enterTimer);
+  enterTimer = setTimeout(()=>{ enterTimer = null; send(); }, 900);
+}
+ta.addEventListener('input', ()=>{
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
+  if(enterTimer && ta.value.trim().length <= 3) scheduleShortSend();
+});
 ta.addEventListener('keydown', e=>{
   if(e.key === 'Enter' && !e.shiftKey){
     e.preventDefault();
-    send();
+    const text = ta.value.trim();
+    if(text.length > 0 && text.length <= 3){
+      scheduleShortSend();
+    } else {
+      clearTimeout(enterTimer);
+      send();
+    }
   }
 });
 
