@@ -73,7 +73,7 @@ main{display:flex;height:calc(100vh - 58px)}
 .sb-top{padding:14px;display:flex;flex-direction:column;gap:8px}
 #btnNew{width:100%;justify-content:center}
 .sb-row{display:flex;gap:8px}
-.sb-row .btn{flex:1;justify-content:center;padding:10px 5px;font-size:12px}
+.sb-row .btn{flex:1;justify-content:center;padding:10px 6px;font-size:12.5px}
 .sb-label{padding:6px 18px;font-size:11.5px;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase}
 #chatList{flex:1;overflow-y:auto;padding:4px 10px}
 .chatitem{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:13.5px;color:#cfd4c6;cursor:pointer;transition:.15s;position:relative}
@@ -100,7 +100,7 @@ main{display:flex;height:calc(100vh - 58px)}
 .msg{max-width:800px;margin:0 auto 22px;animation:up .35s ease both}
 @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .msg-user{display:flex;justify-content:flex-end}
-.msg-user .bub{background:var(--panel2);border:1px solid var(--line);border-radius:16px 16px 4px 16px;padding:11px 15px;max-width:76%;font-size:14.5px;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+.msg-user .bub{background:var(--panel2);border:1px solid var(--line);border-radius:16px 16px 4px 16px;padding:11px 15px;max-width:76%;font-size:14.5px;line-height:1.75;white-space:pre-wrap}
 .msg-user .files{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
 .ffile{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--mut);border:1px dashed var(--line);border-radius:8px;padding:3px 8px}
 .msg-keo{display:flex;gap:12px;align-items:flex-start}
@@ -157,13 +157,12 @@ main{display:flex;height:calc(100vh - 58px)}
 #composer{padding:10px 22px 16px}
 .comp-box{max-width:800px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 14px 10px;transition:border-color .2s}
 .comp-box:focus-within{border-color:rgba(198,242,75,.4)}
-#ta{width:100%;background:none;border:0;outline:none;resize:none;color:var(--text);font-family:inherit;font-size:14.5px;line-height:1.7;max-height:200px}
+#ta{width:100%;background:none;border:0;outline:none;resize:none;color:var(--text);font-family:inherit;font-size:14.5px;line-height:1.7;max-height:150px}
 #ta::placeholder{color:#6d756a}
 .comp-row{display:flex;align-items:center;gap:8px;margin-top:6px}
 .comp-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.sendbtn{margin-left:auto;width:40px;height:40px;border-radius:12px;background:var(--acc);color:var(--acc-ink);display:flex;align-items:center;justify-content:center;transition:.2s;cursor:pointer;flex-shrink:0}
+.sendbtn{margin-left:auto;width:40px;height:40px;border-radius:12px;background:var(--acc);color:var(--acc-ink);display:flex;align-items:center;justify-content:center;transition:.2s}
 .sendbtn:hover{filter:brightness(1.07)}
-.sendbtn:active{transform:scale(.94)}
 .sendbtn svg{width:19px;height:19px}
 .sendbtn .i-stop{display:none}
 .sendbtn.busy{background:#3a4136;color:var(--acc)}
@@ -173,7 +172,7 @@ main{display:flex;height:calc(100vh - 58px)}
 .atchip{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:12.5px}
 .atchip img{width:26px;height:26px;object-fit:cover;border-radius:6px}
 .atchip svg{width:15px;height:15px;color:var(--acc)}
-.atchip .an{max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atchip .an{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .atchip button{color:var(--mut)}.atchip button:hover{color:var(--err)}
 .comp-note{max-width:800px;margin:8px auto 0;text-align:center;font-size:11px;color:#5f675c}
 
@@ -337,12 +336,6 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 .adm-table tr:hover td{background:rgba(198,242,75,.04)}
 .adm-table .tt{color:var(--acc);font-weight:700}
 .adm-empty{color:var(--mut);font-size:12.5px;text-align:center;padding:20px}
-.keycard{border:1px solid rgba(198,242,75,.3);border-radius:14px;padding:15px;margin-bottom:12px;background:linear-gradient(135deg,#12160f,#101312)}
-.keycard input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--text);font-family:monospace;font-size:12px;outline:none;margin-bottom:8px}
-.keycard input:focus{border-color:rgba(198,242,75,.5)}
-.keyrow{display:flex;gap:8px;align-items:center}
-.keystat{font-size:12px;color:var(--mut)}
-.keystat b{color:var(--acc)}
 
 #backdrop{display:none}
 @media(max-width:900px){
@@ -367,13 +360,14 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 </head>
 <body>
 
+<!-- Login gate -->
 <div id="gate">
   <div class="gate-inner">
     <div id="gateBot" class="bot"></div>
     <div>
       <h1 class="gate-name">Keo<i>.</i></h1>
       <div class="gate-latin">KEOAI</div>
-      <p class="gate-tag">A hands-on AI with a massive context: he reads whole books and giant codebases, searches the web, builds sites with live shareable links, sends real emails from Kareem's inbox, posts to Discord, and makes illustrated PowerPoints — in Arabic or English.</p>
+      <p class="gate-tag">A hands-on AI: he searches the web, builds sites with live share links, sends real emails from Kareem's inbox, posts to your Discord, makes group invite pages, illustrated PowerPoints signed KEOAI — in Arabic or English.</p>
       <div class="gate-actions">
         <button class="btn btn-light" id="btnGoogle">
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5l-3.8 2.9C3.6 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.8-.4-1.6-.4-2.4s.1-1.6.4-2.4L1.4 6.7C.5 8.2 0 10 0 12s.5 3.8 1.4 5.3l3.9-2.9z"/><path fill="#EA4335" d="M12 4.6c2.2 0 3.7 1 4.6 1.8l3.3-3.2C17.9 1.2 15.2 0 12 0 7.4 0 3.6 2.7 1.4 6.7l3.9 2.9c.9-2.9 3.6-5 6.7-5z"/></svg>
@@ -398,6 +392,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
   </div>
 </div>
 
+<!-- App -->
 <header>
   <button class="icbtn" id="hamb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <div class="brand"><span class="nm">Keo<i>.</i></span><span class="lt">KEOAI</span></div>
@@ -438,11 +433,11 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
       <div id="welcome" class="welcome">
         <div class="w-kicker">KEOAI &middot; BY KAREEM HUSSEIN</div>
         <h2>I'm Keo<i>.</i><span>Tell me what you need — I'll do it with my own hands.</span></h2>
-        <p>Giant-context engine: paste whole books, huge codebases or long transcripts and I read them all. Plus web search with sources, websites with live share links, real emails from Kareem's inbox, Discord posts, group pages, and illustrated PowerPoints — in Arabic or English.</p>
+        <p>Web search with sources, websites with live share links, real emails sent from Kareem's inbox, Discord posts, group invite pages, illustrated PowerPoints — in Arabic or English.</p>
         <div class="pills">
           <button class="pill" data-insert="Search the web for the latest AI news and summarize it with sources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Latest AI news</button>
-          <button class="pill" data-insert="Here is my whole project code (I'll paste it in parts). Read it all and find the bugs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>Analyze my huge code</button>
           <button class="pill" data-insert="Send an email to kareemwael0213@gmail.com telling them the project launched successfully"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg>Send a real email</button>
+          <button class="pill" data-insert="اعمل لي جروب اسمه صناع المحتوى ودي الصفحة اللي هشاركها"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>اعمل لي جروب</button>
           <button class="pill" data-insert="Make me a beautiful PowerPoint about space exploration with images"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Illustrated PowerPoint</button>
         </div>
       </div>
@@ -450,22 +445,22 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     <div id="composer">
       <div id="attRow"></div>
       <div class="comp-box">
-        <textarea id="ta" rows="1" placeholder="Ask Keo anything… paste huge texts, whole documents, or attach files up to 10 MB"></textarea>
+        <textarea id="ta" rows="1" placeholder="Ask Keo anything… or attach a file and tell him what to do with it"></textarea>
         <div class="comp-row">
           <div class="comp-tools">
-            <button class="icbtn" id="btnAttach" title="Attach files (up to 10 MB)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+            <button class="icbtn" id="btnAttach" title="Attach files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
             <button class="icbtn" id="btnMic" title="Voice input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg></button>
             <button class="chip" id="btnMicLang" title="Speech recognition language">AR</button>
             <button class="chip" id="chipSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Web search</button>
             <button class="chip" id="chipPpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Presentation</button>
           </div>
-          <button class="sendbtn" id="btnSend" title="Send (Enter) — while working, click to stop">
+          <button class="sendbtn" id="btnSend" title="Send">
             <svg class="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
             <svg class="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/></svg>
           </button>
         </div>
       </div>
-      <div class="comp-note">Keo can make mistakes — double-check important info. Enter sends, Shift+Enter = new line.</div>
+      <div class="comp-note">Keo can make mistakes — double-check important info.</div>
     </div>
   </section>
 
@@ -485,29 +480,31 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
   </aside>
 </main>
 
+<!-- Keo stage -->
 <div id="stage">
   <div id="stageCap"><span class="capDot"></span><span id="capText">Keo is standing by</span></div>
   <div id="stageBot" class="bot" title="Poke Keo"></div>
 </div>
 
+<!-- Connections modal -->
 <div id="connModal" hidden>
   <div class="conn-panel">
     <div class="conn-head"><b>Keo <i>Links</i></b><button class="icbtn" id="connClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-    <p class="conn-sub">Keo's engine is managed remotely — nothing to set up there. These links just extend what he can reach.</p>
+    <p class="conn-sub">Emails always send <b>from Kareem's inbox</b> (kareemwael0213@gmail.com) automatically once activated. Discord posting needs your webhook once. Everything else works out of the box.</p>
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg><b>Email engine — Kareem's inbox</b><span class="stat" id="st-fs">not set</span></div>
-      <p>One-time free setup: sign up on <b>formspree.io</b> with <b>kareemwael0213@gmail.com</b>, create a form, paste its ID here.</p>
+      <p>One-time free setup: sign up on <b>formspree.io</b> with <b>kareemwael0213@gmail.com</b>, create a form, and paste its ID here. Every email Keo sends will arrive from your inbox identity.</p>
       <div class="row">
         <input id="fsId" placeholder="Formspree ID, e.g. abcdwxyz">
         <button class="btn btn-acc" id="fsSave" style="padding:9px 16px;font-size:13px">Save</button>
       </div>
-      <p class="hint">Free tier: 50 emails/month.</p>
+      <p class="hint">Free tier: 50 emails/month. Recipients also see the sender name you configure on Formspree.</p>
     </div>
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 8.5-8.5c4.66 0 8.5 3.84 8.5 8.5z"/></svg><b>Discord webhook</b><span class="stat" id="st-discord">not linked</span></div>
-      <p>Channel settings → Integrations → Webhooks → Copy URL.</p>
+      <p>Channel settings → Integrations → Webhooks → New Webhook → Copy URL. Keo posts announcements there — Arabic or English.</p>
       <div class="row">
         <input id="dcHook" type="password" placeholder="Channel webhook URL">
         <button class="btn btn-acc" id="dcTest" style="padding:9px 16px;font-size:13px">Connect</button>
@@ -516,7 +513,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 3-9.5 9.5M22 3l-7 19-3-8-8-3z"/></svg><b>Telegram</b><span class="stat" id="st-telegram">not linked</span></div>
-      <p>Real auto-posting through your bot.</p>
+      <p>Real auto-posting to your channel or group through your bot.</p>
       <div class="row">
         <input id="tgToken" type="password" placeholder="Bot token from @BotFather">
         <input id="tgChat" placeholder="@channel or -100… chat ID" style="max-width:220px">
@@ -526,30 +523,29 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.05.77 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg><b>GitHub — optional</b><span class="stat" id="st-github">optional</span></div>
-      <p>Cleaner site URLs, repos, gists. Sites get share links without it.</p>
+      <p>Not required for share links (CodeSandbox covers that anonymously). Adds cleaner URLs, repos, gists.</p>
       <div class="row">
         <input id="ghToken" type="password" placeholder="Personal Access Token (optional)">
         <button class="btn btn-acc" id="ghTest" style="padding:9px 16px;font-size:13px">Connect</button>
       </div>
     </div>
+
+    <div class="ccard">
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg><b>Groq Brain Key</b><span class="stat" id="st-groq">key active</span></div>
+      <p>Built into the code — backup override only.</p>
+      <div class="row">
+        <input id="gqKey" type="password" placeholder="gsk_... (backup override)">
+        <button class="btn btn-acc" id="gqSave" style="padding:9px 16px;font-size:13px">Save &amp; Test</button>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- Owner panel -->
 <div id="admModal" hidden>
   <div class="adm-panel">
     <div class="conn-head"><b>Owner <i>Panel</i></b><button class="icbtn" id="admClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-    <p class="conn-sub">Manage Keo's engine credential remotely and watch live numbers.</p>
-
-    <div class="keycard">
-      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:var(--acc)"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg><b>Engine Credential</b><span class="keystat" id="keyState">loading…</span></div>
-      <p style="font-size:12.5px;color:var(--mut);line-height:1.7;margin:6px 0 10px">Stored in Firebase under your control — never in the code. Users' browsers read it at runtime; only you can write it. Rotate anytime by pasting a new one.</p>
-      <input id="admKey" type="password" placeholder="Paste new engine credential (gsk_…)">
-      <div class="keyrow">
-        <button class="btn btn-acc" id="keySave" style="padding:9px 16px;font-size:13px">Save to Firebase</button>
-        <span class="keystat" id="keyHint"></span>
-      </div>
-    </div>
-
+    <p class="conn-sub">Live numbers for KeoAI — users, activity and token consumption.</p>
     <div class="adm-grid" id="admCards"></div>
     <div class="adm-sec"><h4>Tokens per day — last 7 days</h4><div class="vchart" id="admChart"></div></div>
     <div class="adm-sec"><h4>Users comparison — tokens</h4><div id="admCompare"></div></div>
@@ -558,20 +554,16 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 </div>
 
 <div id="toasts"></div>
-<input type="file" id="fileInput" hidden multiple accept=".txt,.md,.json,.csv,.js,.ts,.html,.css,.py,.xml,.yml,.yaml,.log,image/*">
+<input type="file" id="fileInput" hidden multiple accept=".txt,.md,.json,.csv,.js,.ts,.html,.css,.py,.xml,.yml,.yaml,image/*">
 
 <script>
-/* ================== Core connection — credential lives in Firebase ================== */
-const AI_URL = 'https://api.groq.com/openai/v1';
-let KEY_REAL = localStorage.getItem('keo_key') || '';
-let KEY_READY = false;
+/* ================== Config ================== */
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const GROQ_MODELS_URL = 'https://api.groq.com/openai/v1/models';
+const GROQ_KEY_BUILTIN = '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';
+const HF_TOKEN_BUILTIN = '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';
+let GROQ_KEY = localStorage.getItem('keo_groq_key') || GROQ_KEY_BUILTIN;
 const ADMIN_EMAIL = 'kareemwael0213@gmail.com';
-const MODEL_ID = 'keo-core';
-const MAXTOK = 16384;
-const HISTORY_TURNS = 30;
-const MAX_FILE_MB = 10;
-const MAX_FILE_BYTES = MAX_FILE_MB * 1024 * 1024;
-const MAX_TEXT_CHARS = 300000;
 const firebaseConfig = {
   apiKey: "AIzaSyC0lwVRTBPA3yxnZ3wuqvyfQJbJP-AVNJo",
   authDomain: "kareem-8ed77.firebaseapp.com",
@@ -583,15 +575,32 @@ const firebaseConfig = {
   measurementId: "G-919VM45PXW"
 };
 
-const CORE_CHAIN = [
+const MAIN_CHAIN = [
   'openai/gpt-oss-120b','openai/gpt-oss-20b',
   'llama-3.3-70b-versatile','meta-llama/llama-3.3-70b-versatile',
   'moonshotai/kimi-k2-instruct','qwen/qwen3-32b','llama-3.1-8b-instant'
 ];
-const CORE_VISION = [
+const VISION_CHAIN = [
   'meta-llama/llama-4-scout-17b-16e-instruct','meta-llama/llama-4-maverick-17b-128e-instruct'
 ];
-let coreIdx = 0, visionIdx = 0;
+let MODEL_MAIN = MAIN_CHAIN[0], MODEL_VISION = VISION_CHAIN[0], mainIdx = 0, visionIdx = 0;
+const MAXTOK = 16384;
+async function initModels(){
+  if(!GROQ_KEY) return;
+  try{
+    const r = await fetch(GROQ_MODELS_URL, { headers:{ Authorization:'Bearer '+GROQ_KEY } });
+    if(!r.ok) return;
+    const j = await r.json();
+    const ids = new Set((j.data || []).map(m => m.id));
+    const pick = chain => chain.find(id => ids.has(id));
+    const anyChat = [...ids].find(id => /(llama|gpt|qwen|kimi|deepseek|gemini|mixtral)/i.test(id) && !/whisper|tts|guard|embed|moderation|playai/i.test(id));
+    MODEL_MAIN = pick(MAIN_CHAIN) || anyChat || MODEL_MAIN;
+    MODEL_VISION = pick(VISION_CHAIN) || MODEL_MAIN;
+    mainIdx = Math.max(0, MAIN_CHAIN.indexOf(MODEL_MAIN));
+    visionIdx = Math.max(0, VISION_CHAIN.indexOf(MODEL_VISION));
+    console.log('[Keo] models:', MODEL_MAIN, '| vision:', MODEL_VISION);
+  }catch(e){}
+}
 
 /* ================== Utilities ================== */
 const $ = s => document.querySelector(s);
@@ -599,19 +608,6 @@ const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>
 const delay = ms => new Promise(r => setTimeout(r, ms));
 const isArabicText = s => /[\u0600-\u06FF]/.test(String(s||''));
 const fmtN = n => (n||0).toLocaleString('en-US');
-
-/* safe clipboard — prevents writeText crashes in insecure contexts */
-(function(){
-  const has = navigator.clipboard && navigator.clipboard.writeText;
-  const _ct = has ? navigator.clipboard.writeText.bind(navigator.clipboard) : null;
-  navigator.clipboard = navigator.clipboard || {};
-  navigator.clipboard.writeText = (t) => _ct ? _ct(t) : new Promise(res=>{
-    const x = document.createElement('textarea');
-    x.value = t; document.body.appendChild(x); x.select();
-    try{ document.execCommand('copy'); }catch(e){}
-    x.remove(); res();
-  });
-})();
 
 function toast(msg, type='ok'){
   const t = document.createElement('div');
@@ -660,12 +656,66 @@ function trackMsg(){
   }catch(e){}
 }
 
-/* ================== Silent artwork engine (PowerPoint slides only) ================== */
+/* ================== Image engines — silent (PowerPoint artwork) ================== */
 function imgURL(prompt, w=1024, h=768, model){
   return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&enhance=true&seed=${Math.floor(Math.random()*1e9)}${model?'&model='+model:''}`;
 }
 function blobToDataURL(b){
   return new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>res(null); fr.readAsDataURL(b); });
+}
+function getHfToken(){ return localStorage.getItem('keo_hf_token') || HF_TOKEN_BUILTIN; }
+const HF_MODELS = [
+  { name:'black-forest-labs/FLUX.1-dev', steps:28 },
+  { name:'black-forest-labs/FLUX.1-schnell', steps:8 }
+];
+const HF_RELAYS = [
+  u => u,
+  u => 'https://corsproxy.io/?url=' + encodeURIComponent(u),
+  u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+  u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)
+];
+let hfBroken = false;
+async function hfOnce(url, tok, body, timeoutMs=90000){
+  const c = new AbortController(); const t = setTimeout(()=>c.abort(), timeoutMs);
+  try{
+    const r = await fetch(url, { method:'POST',
+      headers:{ Authorization:'Bearer '+tok, 'Content-Type':'application/json' }, body, signal:c.signal });
+    clearTimeout(t);
+    if(r.ok){
+      const b = await r.blob();
+      if(b.type?.startsWith('image/') && b.size > 2000) return { ok:true, data: await blobToDataURL(b) };
+      return { ok:false, error:'unexpected response' };
+    }
+    let why = 'HTTP ' + r.status;
+    try{ const j = await r.json(); why = j.error || why; }catch(e){}
+    return { ok:false, error:why };
+  }catch(e){ clearTimeout(t); return { ok:false, error:'network blocked' }; }
+}
+async function hfCall(model, prompt, steps){
+  const tok = getHfToken();
+  if(!tok) return { ok:false, error:'no token' };
+  const body = JSON.stringify({ inputs: prompt, parameters:{ width:1024, height:1024, num_inference_steps: steps } });
+  const url = 'https://router.huggingface.co/hf-inference/models/' + model;
+  let lastErr = 'unknown';
+  for(const mk of HF_RELAYS){
+    const res = await hfOnce(mk(url), tok, body);
+    if(res.ok) return res;
+    lastErr = res.error;
+    if(/HTTP 40[123]/.test(lastErr)) return { ok:false, error:lastErr, model };
+  }
+  const legacy = await hfOnce('https://api-inference.huggingface.co/models/' + model, tok, body);
+  if(legacy.ok) return legacy;
+  return { ok:false, error:lastErr, model };
+}
+async function hfImage(prompt){
+  if(hfBroken) return null;
+  for(const m of HF_MODELS){
+    const res = await hfCall(m.name, prompt, m.steps);
+    if(res.ok){ console.log('[Keo] slide art via', m.name); return res.data; }
+    console.warn('[Keo] HF', m.name, '\u2192', res.error);
+    if(/HTTP 40[123]/.test(res.error)) hfBroken = true;
+  }
+  return null;
 }
 async function pollImage(prompt, w, h, model, timeoutMs=100000){
   for(let i=0;i<3;i++){
@@ -683,6 +733,8 @@ async function pollImage(prompt, w, h, model, timeoutMs=100000){
   return null;
 }
 async function genImage(prompt, w=1024, h=768){
+  const hd = await hfImage(prompt);
+  if(hd) return hd;
   const flux = await pollImage(prompt, w, h, 'flux');
   if(flux) return flux;
   return await pollImage(prompt, w, h, null, 60000);
@@ -876,22 +928,6 @@ const authErrors = {
 };
 function showAuthError(e){ toast(authErrors[e?.code] || ('Something went wrong: ' + (e?.message||'').slice(0,90)), 'err'); }
 
-/* credential lives in Firebase — fetched at runtime, cached locally */
-async function fetchKey(){
-  if(!dbOk) return;
-  try{
-    const s = await firebase.database().ref('config/aiKey').once('value');
-    const v = (s.val()||'').trim();
-    if(v && v !== KEY_REAL){
-      KEY_REAL = v;
-      localStorage.setItem('keo_key', v);
-      coreIdx = 0; visionIdx = 0;
-      console.log('[Keo] core credential refreshed from owner config');
-    }
-    KEY_READY = !!KEY_REAL;
-  }catch(e){}
-}
-
 /* ================== App state ================== */
 let messages = [], chats = {}, currentChatId = null, chatTitle = '';
 let attachments = [], searchIntent = false, pptIntent = false;
@@ -915,22 +951,47 @@ async function loadConnections(){
 }
 function renderConnStatus(){
   const n = ['github','telegram','discord'].filter(k => connections[k]).length;
-  const cc = $('#connCount'); if(cc) cc.style.display = n ? '' : 'none';
+  $('#connCount') && ($('#connCount').style.display = n ? '' : 'none');
   const set = (id, on, txt) => { const e = $('#'+id); if(e){ e.textContent = txt; e.classList.toggle('on', on); } };
   set('st-github', !!connections.github, connections.github ? ('linked as ' + connections.github.login) : 'optional');
   set('st-telegram', !!connections.telegram, connections.telegram ? 'linked' : 'not linked');
   set('st-discord', !!connections.discord, connections.discord ? 'linked' : 'not linked');
 }
+function groqKeyStatus(){
+  const el = $('#st-groq'); if(!el) return;
+  const ok = GROQ_KEY && GROQ_KEY.startsWith('gsk_') && GROQ_KEY.length > 30;
+  el.textContent = ok ? 'key active' : 'missing';
+  el.classList.toggle('on', ok);
+}
 let FORMSPREE_ID = localStorage.getItem('keo_formspree') || '';
 function fsStatus(){
   const el = $('#st-fs'); if(!el) return;
-  el.textContent = FORMSPREE_ID ? ('active \u00B7 from ' + ADMIN_EMAIL) : 'not set';
-  el.classList.toggle('on', !!FORMSPREE_ID);
+  const ok = !!FORMSPREE_ID;
+  el.textContent = ok ? 'active \u00B7 from ' + ADMIN_EMAIL : 'not set';
+  el.classList.toggle('on', ok);
 }
  $('#btnConn').onclick = ()=>{ $('#connModal').hidden = false; };
  $('#connClose').onclick = ()=>{ $('#connModal').hidden = true; };
  $('#connModal').addEventListener('click', e=>{ if(e.target.id === 'connModal') $('#connModal').hidden = true; });
 
+ $('#gqSave').onclick = async ()=>{
+  const v = $('#gqKey').value.trim();
+  if(!v.startsWith('gsk_')) return toast('Groq keys start with gsk_','err');
+  GROQ_KEY = v;
+  localStorage.setItem('keo_groq_key', v);
+  $('#gqKey').value = '';
+  toast('Key saved — testing it now…');
+  mainIdx = 0; MODEL_MAIN = MAIN_CHAIN[0];
+  initModels();
+  try{
+    const r = await fetch(GROQ_URL, { method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
+      body: JSON.stringify({ model: MODEL_MAIN, messages:[{role:'user',content:'ping'}], max_tokens:5 }) });
+    if(r.ok){ groqKeyStatus(); confettiBurst(); toast('Works! Keo\u2019s brain is online \u2705'); }
+    else { const j = await r.json().catch(()=>({})); toast('Groq said: ' + (j.error?.message || ('HTTP '+r.status)), 'err'); }
+  }catch(e){ toast('Network error while testing','err'); }
+};
+groqKeyStatus();
  $('#fsSave').onclick = ()=>{
   const v = $('#fsId').value.trim();
   if(!/^[a-z0-9]{6,12}$/i.test(v)) return toast('Formspree IDs look like: abcdwxyz','err');
@@ -991,7 +1052,6 @@ async function gh(path, opt={}){
     toast('Discord linked — check the channel'); confettiBurst();
   }catch(err){ toast('Discord error: '+err.message,'err'); }
 };
-const POST_RELAYS = [ u => u, u => 'https://corsproxy.io/?url=' + encodeURIComponent(u) ];
 async function discordSend(text){
   if(!connections.discord) throw new Error('Discord is not linked — open Keo Links');
   let lastErr = '';
@@ -1012,6 +1072,12 @@ async function telegramSend(text){
   const j = await r.json();
   if(!j.ok) throw new Error(j.description || 'Telegram error');
 }
+const POST_RELAYS = [ u => u, u => 'https://corsproxy.io/?url=' + encodeURIComponent(u) ];
+
+/* ============ REAL email sending — FROM KAREEM'S INBOX ============
+   Setup (one time): sign up free at formspree.io with kareemwael0213@gmail.com,
+   create one form, paste its ID in Keo Links. Every email Keo sends then
+   arrives from Kareem's inbox identity (Formspree routes through it).      */
 async function emailSend(to, subject, body){
   if(!FORMSPREE_ID) throw new Error('email-not-configured');
   let lastErr = '';
@@ -1020,8 +1086,12 @@ async function emailSend(to, subject, body){
       const r = await fetch(mk('https://formspree.io/f/' + FORMSPREE_ID), {
         method:'POST', headers:{'Content-Type':'application/json', Accept:'application/json'},
         body: JSON.stringify({
-          _subject: subject, _replyto: ADMIN_EMAIL, _format: 'plain',
-          from_name: 'Keo \u00B7 Kareem Hussein', to: to, message: body
+          _subject: subject,
+          _replyto: ADMIN_EMAIL,
+          _format: 'plain',
+          from_name: 'Keo \u00B7 Kareem Hussein',
+          to: to,
+          message: body
         })
       });
       if(r.ok) return true;
@@ -1031,6 +1101,7 @@ async function emailSend(to, subject, body){
   }
   throw new Error(lastErr || 'email service refused');
 }
+
 async function ghCreateRepo(name, descr){
   if(!connections.github) throw new Error('GitHub is not linked — open Keo Links');
   return gh('/user/repos', { method:'POST', body:{ name, private:false, auto_init:false, description: descr||'Built with KeoAI' } });
@@ -1049,6 +1120,8 @@ async function publishToPages(code){
   try{ await gh(`/repos/${me.login}/${name}/pages`, { method:'POST', body:{ source:{ branch:'main', path:'/' } } }); }catch(e){}
   return `https://${me.login}.github.io/${name}/`;
 }
+
+/* Anonymous publishing chain — no account needed */
 async function publishToCodeSandbox(code){
   const payload = { files: {
     'index.html': { content: code },
@@ -1106,7 +1179,7 @@ async function publishAnywhere(code){
 }
 async function draftPost(brief, platform){
   const lang = isArabicText(brief) ? 'Arabic' : 'English';
-  const res = await coreChat({ temperature: 0.85, max_tokens: 700, messages: [
+  const res = await groqChat({ model: MODEL_MAIN, temperature: 0.85, max_tokens: 700, messages: [
     { role:'system', content: `You draft ready-to-publish content for ${platform}, written on behalf of Kareem Hussein. Write ONLY the final text in ${lang}. Add fitting emojis and hashtags if appropriate. No quotes, no explanations, no markdown.` },
     { role:'user', content: brief }
   ]});
@@ -1133,7 +1206,8 @@ async function handleConnIntent(text, km, el, textNode){
   const wants = re => re.test(t);
   const actionRe = /(post|share|send|publish|announce|upload|save|create|make|deploy|انشر|ابعث|ابعت|بعت|شير|شارك|احفظ|حفظ|اعمل بوست|اعلن)/i;
   try{
-    if(wants(/اعمل (جروب|جرووب|group)|make (a )?group|create (a )?group|جروب جديد/) && !wants(/\bdiscord\b|ديسكورد|واتس|whatsapp/)){
+    /* ---- Group creation with a real live invite page ---- */
+    if(wants(/اعمل (جروب|جرووب|group)|make (a )?group|create (a )?group|جروب جديد/) && !wants(/\bdiscord\b|واتس|whatsapp/)){
       setStage('code');
       const gname = (text.match(/(?:called|named|اسمه|بااسم|بإسم)\s*[«"'`]?(.+?)[»"'`]?$/i) || [])[1]
         || (isArabicText(text) ? 'جروب جديد' : 'New Group');
@@ -1149,6 +1223,7 @@ async function handleConnIntent(text, km, el, textNode){
       }catch(e){}
       finalizeKeo(km, el, textNode); return true;
     }
+    /* ---- REAL email FROM Kareem's inbox ---- */
     if(wants(/e-?mail|ايميل|إيميل|البريد/) && actionRe.test(t)){
       const to = (text.match(/[\w.+-]+@[\w-]+\.[\w.]+/)||[])[0];
       if(!to) return false;
@@ -1158,14 +1233,14 @@ async function handleConnIntent(text, km, el, textNode){
       try{
         await emailSend(to, subj, body);
         km.text = isArabicText(text)
-          ? 'بعتها على **' + to + '** \u2705 — الرسالة طلعت باسم **' + ADMIN_EMAIL + '**. هتلاقيها في الإنبوكس (أول مرة أحيانًا بتنزل Spam).'
-          : 'Sent to **' + to + '** \u2705 — delivered as **' + ADMIN_EMAIL + '** (first-ever emails sometimes land in Spam).';
+          ? 'بعتها على **' + to + '** \u2705 — الرسالة طلعت باسم **' + ADMIN_EMAIL + '**. هتلاقيها في الإنبوكس (وشوف الإيميل الوارد أحيانًا بتنزل Spam أول مرة).'
+          : 'Sent to **' + to + '** \u2705 — delivered as **' + ADMIN_EMAIL + '**. It\u2019s in the inbox (first-ever emails sometimes land in Spam).';
       }catch(err){
         if(/not-configured/.test(err.message||'')){
           $('#connModal').hidden = false;
           km.text = isArabicText(text)
-            ? 'الإيميل محتاج تفعيل مرة واحدة بس \u2709 — الرسايل هتطلع **من إيميلك ' + ADMIN_EMAIL + '**:\n\n1. سجّل مجانًا على **formspree.io** بإيميلك ده بالظبط\n2. اعمل New Form وخد الـ ID من اللينك\n3. افتح **Keo Links** وحطه في كارت **Email engine**\n\nبعد كده أي إيميل بتقوله لي يتبعت فعلًا باسمك.'
-            : 'Email needs a one-time setup \u2709 — messages send **from ' + ADMIN_EMAIL + '**:\n\n1. Sign up free on **formspree.io**\n2. Create a New Form and copy its short ID\n3. Open **Keo Links** \u2192 **Email engine** card\n\nAfter that, every email I send goes out under that name.';
+            ? 'الإيميل محتاج تفعيل مرة واحدة بس \u2709 — الرسايل هتطلع **من إيميلك ' + ADMIN_EMAIL + '**:\n\n1. سجّل مجانًا على **formspree.io** بإيميلك ده بالظبط\n2. اعمل New Form وخد الـ ID من اللينك (حروف قصيرة زي abcdwxyz)\n3. افتح **Keo Links** وحطه في كارت **Email engine**\n\nبعد كده أي إيميل بتقوله لي يتبعت فعلًا باسمك.'
+            : 'Email needs a one-time setup \u2709 — messages will send **from your inbox ' + ADMIN_EMAIL + '**:\n\n1. Sign up free on **formspree.io** with that exact email\n2. Create a New Form and copy its short ID\n3. Open **Keo Links** \u2192 paste it in the **Email engine** card\n\nAfter that, every email I send goes out under your name.';
         } else {
           km.text = isArabicText(text)
             ? 'معرفتش أبعث: ' + (err.message||'') + '\nجرّب تاني.'
@@ -1174,10 +1249,11 @@ async function handleConnIntent(text, km, el, textNode){
       }
       finalizeKeo(km, el, textNode); return true;
     }
+    /* ---- Discord (Arabic commands now caught) ---- */
     if(wants(/\bdiscord\b|ديسكورد/) && actionRe.test(t)){
       setStage('type');
       await discordSend(await draftPost(text, 'Discord announcement'));
-      km.text = isArabicText(text) ? 'بعتها على ديسكورد فعليًا! \u2705 روح شوف القناة — لو مش شايفها اعمل Refresh.' : 'Posted to your Discord for real! \u2705 Check the channel — hit refresh if you don\u2019t see it.';
+      km.text = isArabicText(text) ? 'بعتها على ديسكورد فعليًا! \u2705 روح شوف القناة — لو مش شايفها اضغط Refresh في الديسكورد.' : 'Posted to your Discord for real! \u2705 Check the channel — hit refresh if you don\u2019t see it.';
       finalizeKeo(km, el, textNode); return true;
     }
     if(wants(/telegram|تلجرام|تليجرام/) && actionRe.test(t)){
@@ -1186,6 +1262,7 @@ async function handleConnIntent(text, km, el, textNode){
       km.text = isArabicText(text) ? 'بعتها على تلجرام! \u2705 اتفرج على القناة.' : 'Sent to your Telegram! \u2705 Check the channel.';
       finalizeKeo(km, el, textNode); return true;
     }
+    /* ---- WhatsApp — fast honest handoff ---- */
     if(wants(/whatsapp|واتس|واتساب/) && (actionRe.test(t) || wants(/ابعت|بعت/))){
       setStage('type');
       const num = (text.match(/\+?\d[\d\s-]{7,15}/)||[])[0] || '';
@@ -1194,17 +1271,18 @@ async function handleConnIntent(text, km, el, textNode){
       const cleanNum = num.replace(/[^\d]/g,'');
       window.open('https://wa.me/' + cleanNum + '?text=' + encodeURIComponent(post.slice(0,800)), '_blank');
       km.text = isArabicText(text)
-        ? (num ? 'جهزت الرسالة وفاتحت واتساب لرقم **' + cleanNum + '** جاهزة — دوس إرسال.\n\n---\n\n' + post
-               : 'جهزت الرسالة — الصقها في واتساب.\n\n---\n\n' + post)
+        ? (num ? 'جهزت الرسالة وفاتحت واتساب لرقم **' + cleanNum + '** جاهزة — دوس إرسال ووصلت.\n\n---\n\n' + post
+               : 'جهزت الرسالة — الصقها في واتساب واحط الرقم في طلبك الجاي عشان أفتحهولك مباشرة.\n\n---\n\n' + post)
         : (num ? 'Message ready — WhatsApp is open for **' + cleanNum + '**, hit send.\n\n---\n\n' + post
-               : 'Message drafted — paste it in WhatsApp.\n\n---\n\n' + post);
+               : 'Message drafted — paste it in WhatsApp, or give me the number next time and I\u2019ll open it directly.\n\n---\n\n' + post);
       finalizeKeo(km, el, textNode); return true;
     }
+    /* ---- Gaming: honest answers ---- */
     if(wants(/\bminecraft\b|ماين ?كرافت|ماينكرفت|\broblox\b|روب ?لوكس|روبلوكس/) && wants(/العب|يلعب|معي|سيرفر|play|server|join/)){
       setStage('type');
       const game = wants(/\broblox\b|روبلوكس|روب ?لوكس/) ? 'Roblox' : 'Minecraft';
       km.text = isArabicText(text)
-        ? ('هقولك الحقيقة بدل ما أكدب عليك \ud83e\udd14\n\n**' + game + '** شغال في تطبيق مغلق — مفيش API خارجي يدخلني جوه اللعبة ألعب، وروبلوكس كمان بيمنع البوتات رسميًا.\n\nاللي أقدر أعمله لك فعلاً:\n- **أوامر Minecraft** جاهزة تنسخها في الكوماند بلوك\n- **موقع لسيرفرك** بلينك تتشاركه مع أصحابك\n- **رسمة سكن** بالستايل اللي تتخيله كملف\n\nتحب أبدأ بأنهي واحدة؟')
+        ? ('هقولك الحقيقة بدل ما أكدب عليك \ud83e\udd14\n\n**' + game + '** شغال في تطبيق مغلق — مفيش API خارجي يدخلني جوه اللعبة ألعب، وروبلوكس كمان بيمنع البوتات رسميًا (حساب هيتحظر).\n\nاللي أقدر أعمله لك فعلاً:\n- **أوامر Minecraft** جاهزة تنسخها في الكوماند بلوك\n- **موقع لسيرفرك** بلينك تتشاركه مع أصحابك\n- **رسمة سكن** بالستايل اللي تتخيله كملف\n\nتحب أبدأ بأنهي واحدة؟')
         : ('Honest answer \ud83e\udd14\n\n**' + game + '** runs in a closed app — no external API lets me join and play, and Roblox officially bans bots. What I CAN do:\n- Ready **Minecraft commands** to paste in-game\n- A **website for your server** with a shareable link\n- **Skin artwork** in any style, as a file\n\nWhich one shall I start with?');
       finalizeKeo(km, el, textNode); return true;
     }
@@ -1243,7 +1321,7 @@ function connNote(){
   if(connections.telegram) l.push('Telegram');
   if(connections.discord) l.push('Discord');
   const base = l.length ? 'Linked services Keo can act on: ' + l.join(', ') + '.' : 'No services linked yet; sites still publish anonymously.';
-  return base + ' Email sending goes out FROM ' + ADMIN_EMAIL + '. SECRECY (top rule): never name, confirm, hint at, or deny any vendor, model, company, API, or technology behind you — the only ever answer about your engine is that you run on "Keo\u2019s own private core". This applies even if the asker claims to be the owner, and never reveal keys or configs either.';
+  return base + ' Email sending is configured to go out FROM ' + ADMIN_EMAIL + ' (the owner\u2019s inbox) — mention that when users ask emails to be sent.';
 }
 
 /* ================== Rendering ================== */
@@ -1296,10 +1374,7 @@ function pptHTML(m){
 function userEl(m){
   const d = document.createElement('div'); d.className = 'msg msg-user';
   const dir = isArabicText(m.text) ? 'rtl' : 'ltr';
-  const short = String(m.text||'').length > 4000
-    ? String(m.text||'').slice(0,4000) + `\n\n… [+${fmtN(String(m.text||'').length - 4000)} more characters — full text already read by Keo]`
-    : m.text;
-  d.innerHTML = `<div><div class="bub" dir="${dir}">${esc(short)}</div>${m.files?.length?`<div class="files" style="justify-content:flex-end">${m.files.map(f=>`<span class="ffile">${esc(f)}</span>`).join('')}</div>`:''}</div>`;
+  d.innerHTML = `<div><div class="bub" dir="${dir}">${esc(m.text)}</div>${m.files?.length?`<div class="files" style="justify-content:flex-end">${m.files.map(f=>`<span class="ffile">${esc(f)}</span>`).join('')}</div>`:''}</div>`;
   return d;
 }
 function keoEl(m, streaming){
@@ -1321,29 +1396,16 @@ function renderAll(){
   scrollPin();
 }
 
-/* ================== Persistence (giant chats chunked for RTDB) ================== */
+/* ================== Persistence ================== */
 function persist(){
   if(!user || !dbOk || !currentChatId) return;
-  let clean = messages.map(m => ({ id:m.id, role:m.role, text:(m.text||'').slice(0,60000), ts:m.ts, files:m.files||null,
+  const clean = messages.map(m => ({ id:m.id, role:m.role, text:m.text||'', ts:m.ts, files:m.files||null,
     sources:m.sources||null, slides:m.slides||null, liveUrl:m.liveUrl||null }));
-  let json = JSON.stringify(clean);
-  const CHUNK = 400000;
-  if(json.length <= CHUNK){
-    try{
-      firebase.database().ref('users/'+user.uid+'/chats/'+currentChatId).set({ title:chatTitle, updated:Date.now(), messages:clean });
-    }catch(e){ dbWarned(); }
-  } else {
-    const total = Math.ceil(json.length / CHUNK);
-    const upd = { title:chatTitle, updated:Date.now(), chunks:total, messages:null };
-    for(let i=0;i<total;i++){
-      upd['chunk'+i] = json.slice(i*CHUNK, (i+1)*CHUNK);
-    }
-    try{
-      firebase.database().ref('users/'+user.uid+'/chats/'+currentChatId).set(upd);
-    }catch(e){ dbWarned(); }
-  }
-  chats[currentChatId] = { title:chatTitle, updated:Date.now() };
-  renderChatList();
+  try{
+    firebase.database().ref('users/'+user.uid+'/chats/'+currentChatId).set({ title:chatTitle, updated:Date.now(), messages:clean });
+    chats[currentChatId] = { title:chatTitle, updated:Date.now() };
+    renderChatList();
+  }catch(e){ dbWarned(); }
 }
 let dbWarnedOnce = false;
 function dbWarned(){ if(!dbWarnedOnce){ dbWarnedOnce = true; toast('Weak database connection — works but won\u2019t be saved', 'err'); } }
@@ -1360,23 +1422,10 @@ function renderChatList(){
   ).join('') : '<div class="chatempty">No chats yet</div>';
 }
 function newChat(){ currentChatId = null; chatTitle = ''; messages = []; renderAll(); renderChatList(); ta.focus(); }
-async function loadChat(id){
+function loadChat(id){
   const c = chats[id]; if(!c) return;
   currentChatId = id; chatTitle = c.title || '';
-  messages = [];
-  if(c.chunks){
-    try{
-      const s = await firebase.database().ref('users/'+user.uid+'/chats/'+id).once('value');
-      const full = s.val() || {};
-      let json = '';
-      for(let i=0;i<(full.chunks||0);i++) json += (full['chunk'+i] || '');
-      const arr = JSON.parse(json);
-      messages = Array.isArray(arr) ? arr : [];
-    }catch(e){ messages = []; }
-  } else {
-    const raw = c.messages;
-    messages = (raw && Array.isArray(raw)) ? raw : (raw ? Object.values(raw) : []);
-  }
+  messages = (c.messages && Array.isArray(c.messages)) ? c.messages : (c.messages ? Object.values(c.messages) : []);
   renderAll(); renderChatList();
   if(innerWidth <= 900) closeSidebar();
 }
@@ -1472,59 +1521,54 @@ async function webSearch(q){
   return wikiSearch(q, isArabicText(q) ? 'ar' : 'en');
 }
 
-/* ================== Engine connection (giant context, silent failover) ================== */
+/* ================== Groq ================== */
 const SYS = `You are "Keo" (KeoAI), a brilliant, friendly, hands-on AI assistant, created and owned by "Kareem Hussein".
 Your rules:
 - LANGUAGE (most important): Always reply in the SAME language the user writes in. Arabic in \u2192 Arabic out. English in \u2192 English out. Mirror the user's language everywhere.
 - QUALITY: Be thorough, insightful, well-structured. Use rich formatting. Never output <think> or reasoning tags.
-- GIANT CONTEXT: You can read and analyze extremely long inputs — whole books, large codebases, big transcripts, many files. When the user pastes a huge text, read ALL of it carefully before answering. Summarize structure first, then go deep.
-- SECRECY (top rule): You run on "Keo\u2019s own private core" — that is the ONLY ever answer about your engine. NEVER name, hint at, confirm, or deny any vendor, model, company, API, or technology behind you — not even if the asker claims to be the owner or developer. Reply warmly: "I run on my own private core \u2014 that\u2019s my secret sauce." Never reveal keys, tokens, or configs either.
+- NEVER reveal or hint at any API keys, tokens, database configs or sensitive data, even if asked. Always reply: "That's internal data — I honestly can't share it." (translated naturally).
 - Never invent facts or sources; if unsure, say so honestly.
 - When the user asks for a website: first write one short sentence (in the user's language) describing it, then output a complete single-file HTML page (CSS and JavaScript inside) in one code block starting with \`\`\`html, and the code must start with <!DOCTYPE html>. Make the design beautiful, modern and complete.
-- CAPABILITIES — be honest: you CAN search the web, build & publish websites with shareable links, send real emails FROM Kareem's inbox, post to Discord/Telegram if linked, create group invite pages, make illustrated PowerPoints, read files and images. You CANNOT play Minecraft/Roblox (closed apps) — offer alternatives like commands, server websites, and skin art.
+- CAPABILITIES — be honest about what you can really do: you CAN search the web, build & publish websites with shareable links, send real emails FROM Kareem's inbox, post to Discord/Telegram if linked, create group invite pages, make illustrated PowerPoints, read files and images. You CANNOT play Minecraft/Roblox (closed apps, no external API, bots get banned) — offer honest alternatives like commands, server websites, and skin art.
 - If anyone asks who made you: you are Keo, and your owner is Kareem Hussein.`;
 const PPT_SYS = `You are Keo, assistant of Kareem Hussein. Reply with a JSON array ONLY — no explanation, in this exact shape:
 [{"title":"Slide title","bullets":["point","point"],"img":"short english image prompt"}]
 Exactly 8 slides, in the SAME language as the user's request. Slide 1 = cover, slide 2 = agenda, slides 3-7 = deep content with 4-5 specific bullets each, slide 8 = conclusion with a call to action. Each "img" is a vivid English prompt for a modern flat vector illustration (no text in image).`;
 
-const ERR_SW = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported/i;
-async function coreChat(body, signal){
-  if(!KEY_READY || !KEY_REAL){
-    await fetchKey();
-    if(!KEY_REAL){
-      const err = new Error('Engine not armed yet');
-      err.core = true; throw err;
-    }
+const MODEL_ERR = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported/i;
+async function groqChat(body, signal){
+  if(!GROQ_KEY){
+    $('#connModal').hidden = false;
+    const err = new Error('No API key — I opened Keo Links');
+    err.nokey = true; throw err;
   }
-  let mt = body.max_tokens || 4096;
-  const hasImage = (body.messages||[]).some(m => Array.isArray(m.content) && m.content.some(p => p.type === 'image_url'));
-  const chain = hasImage ? CORE_VISION : CORE_CHAIN;
-  let idx = hasImage ? visionIdx : coreIdx;
-  let model = chain[idx];
+  let model = body.model, mt = body.max_tokens || 4096;
   for(let attempt = 0; attempt < 6; attempt++){
-    const res = await fetch(AI_URL + '/chat/completions', {
+    const res = await fetch(GROQ_URL, {
       method:'POST',
-      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + KEY_REAL },
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+GROQ_KEY },
       body: JSON.stringify({ ...body, model, max_tokens: mt }), signal
     });
     if(res.ok) return res;
     let msg = 'HTTP ' + res.status;
     try{ const j = await res.json(); msg = j.error?.message || msg; }catch(e){}
     if(res.status === 401){
-      await fetchKey();
-      if(KEY_REAL) continue;
-      const err = new Error('Engine credential needs a refresh'); err.core = true; throw err;
+      $('#connModal').hidden = false;
+      const err = new Error('Invalid API key — I opened Keo Links: paste a fresh Groq key from console.groq.com/keys');
+      err.status = 401; throw err;
     }
     if(/max.?tokens|context window|too large/i.test(msg) && mt > 4096){ mt = mt > 8192 ? 8192 : 4096; continue; }
-    if([400,404,503].includes(res.status) && ERR_SW.test(msg)){
-      if(hasImage && visionIdx < CORE_VISION.length - 1){ visionIdx++; idx = visionIdx; model = CORE_VISION[visionIdx]; }
-      else if(!hasImage && coreIdx < CORE_CHAIN.length - 1){ coreIdx++; idx = coreIdx; model = CORE_CHAIN[coreIdx]; }
+    const canSwitch = [400,404,503].includes(res.status) && MODEL_ERR.test(msg);
+    if(canSwitch && attempt < 5){
+      const isVision = model === MODEL_VISION;
+      if(isVision && visionIdx < VISION_CHAIN.length - 1){ visionIdx++; MODEL_VISION = VISION_CHAIN[visionIdx]; model = MODEL_VISION; }
+      else if(!isVision && mainIdx < MAIN_CHAIN.length - 1){ mainIdx++; MODEL_MAIN = MAIN_CHAIN[mainIdx]; model = MODEL_MAIN; }
       else break;
+      toast('Model switched automatically: ' + model);
       continue;
     }
     const err = new Error(msg); err.status = res.status; throw err;
   }
-  throw new Error('The engine is briefly unavailable \u2014 try again in a moment');
 }
 function balanced(s){ const f = (String(s).match(/```/g)||[]).length; return f%2 ? s+'\n```' : s; }
 
@@ -1542,13 +1586,13 @@ function makeTyper(textEl){
       const nl = rest.indexOf('\n');
       if(nl >= 0){ shown += rest.slice(0, nl + 1); }
       else {
-        let take = Math.min(rest.length, 120);
+        let take = Math.min(rest.length, 90);
         const sp = rest.lastIndexOf(' ', take);
-        if(sp > 40) take = sp + 1;
+        if(sp > 30) take = sp + 1;
         shown += rest.slice(0, take);
       }
       paint(false);
-      timer = setTimeout(tick, 90);
+      timer = setTimeout(tick, 110);
     } else {
       timer = null;
       if(finished){ paint(true); if(onDone){ const d = onDone; onDone = null; d(); } }
@@ -1561,9 +1605,9 @@ function makeTyper(textEl){
     text(){ return strip(rec); }
   };
 }
-async function streamCore(msgs, typer, opt = {}){
+async function streamGroq(msgs, typer, opt = {}){
   streamCtrl = new AbortController();
-  const res = await coreChat({ messages: msgs, temperature: opt.temperature ?? 0.7,
+  const res = await groqChat({ model: opt.model || MODEL_MAIN, messages: msgs, temperature: opt.temperature ?? 0.7,
     max_tokens: opt.max_tokens || MAXTOK, stream: true }, streamCtrl.signal);
   const rd = res.body.getReader(); const dec = new TextDecoder(); let buf = '';
   while(true){
@@ -1575,16 +1619,13 @@ async function streamCore(msgs, typer, opt = {}){
       if(!line.startsWith('data:')) continue;
       const d = line.slice(5).trim();
       if(d === '[DONE]') return;
-      try{ const j = JSON.parse(d);
-        if(j.error?.message) throw new Error(j.error.message);
-        const t = j.choices?.[0]?.delta?.content; if(t) typer.push(t);
-      }catch(e){ if(e.message && !/JSON/.test(e.message)) throw e; }
+      try{ const j = JSON.parse(d); const t = j.choices?.[0]?.delta?.content; if(t) typer.push(t); }catch(e){}
     }
   }
 }
 function history(){
   return messages.filter(m => m.text)
-    .slice(-HISTORY_TURNS).map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }));
+    .slice(-12).map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }));
 }
 function charsOf(msgs){
   return msgs.reduce((a,m)=> a + (typeof m.content === 'string' ? m.content.length : JSON.stringify(m.content).length), 0);
@@ -1598,7 +1639,7 @@ async function send(){
 
   if(!currentChatId){
     currentChatId = 'c' + Date.now();
-    chatTitle = (text || 'Chat with files').slice(0, 60);
+    chatTitle = (text || 'Chat with files').slice(0, 44);
   }
   const um = { id:'m'+Date.now(), role:'user', text: text || '(attached files)', ts:Date.now(),
     files: attachments.map(a=>a.name) };
@@ -1628,11 +1669,11 @@ async function send(){
   }catch(err){
     if(err.name === 'AbortError'){
       km.text = (km.text || '') + '\n\n(Stopped by your request.)';
-    } else if(err.core){
+    } else if(err.nokey || err.status === 401){
       km.text = isArabicText(text)
-        ? 'نوايا الخاصة لسه مش مسلحة \u26a0 — صاحب المنصة لازم يدخل مفتاح المحرك من **Owner Panel** مرة واحدة، وبعدها أنا شغال فورًا.'
-        : 'My private core isn\u2019t armed yet \u26a0 — the platform owner needs to add the engine credential once from the **Owner Panel**, and I\u2019m instantly alive.';
-      toast('Engine not armed — owner must add the credential', 'err');
+        ? 'مفتاح الـ AI راح أو خلص — فتحتلك **Keo Links**:\n\n1. هات مفتاح مجاني من console.groq.com/keys\n2. الصقه في كارت **Groq Brain Key**\n3. دوس **Save & Test**'
+        : 'The AI key died — I opened **Keo Links**:\n\n1. Grab a free key at console.groq.com/keys\n2. Paste it into **Groq Brain Key**\n3. Hit **Save & Test**';
+      toast('Paste a Groq key in Keo Links', 'err');
     } else {
       km.text = 'Ran into a problem while working: ' + (err.message || 'connection') + '\nTry again or send another message.';
       toast('Keo paused — try again', 'err');
@@ -1663,17 +1704,19 @@ async function doChat(text, km, el, textNode, atts){
   await delay(650 + Math.random()*650);
   const msgs = [{ role:'system', content: SYS + '\n' + connNote() }, ...history()];
   let lastContent = text;
-  const texts = atts.filter(a=>a.kind==='text').map(a=>`\n\n[Attached file: ${a.name}]\n${(a.text||'').slice(0, MAX_TEXT_CHARS)}`).join('');
+  const texts = atts.filter(a=>a.kind==='text').map(a=>`\n\n[Attached file: ${a.name}]\n${a.text.slice(0,12000)}`).join('');
   lastContent += texts;
   const imgs = atts.filter(a=>a.kind==='image');
+  let model = MODEL_MAIN;
   if(imgs.length){
+    model = MODEL_VISION;
     msgs.push({ role:'user', content: [ {type:'text', text: lastContent || 'Describe this image in detail'}, {type:'image_url', image_url:{url: imgs[0].dataUrl}} ] });
   } else {
     msgs.push({ role:'user', content: lastContent || 'Look at the attached files' });
   }
   setStage(atts.length ? 'carry' : 'type');
   const typer = makeTyper(textNode);
-  await streamCore(msgs, typer, { max_tokens: imgs.length ? 4096 : MAXTOK });
+  await streamGroq(msgs, typer, { model, max_tokens: imgs.length ? 4096 : MAXTOK });
   creditTokens(charsOf(msgs) + typer.text().length);
   await new Promise(res => typer.end(()=>{ km.text = typer.text(); res(); }));
   await detectAndOpenSite(km);
@@ -1700,13 +1743,14 @@ User question: ${text}
 Write a helpful, well-organized answer in the SAME language as the user's question, based on these results, citing sources inline as [1] [2]. If the results are insufficient, say so honestly.`;
   const msgs = [{ role:'system', content: SYS }, ...history().slice(0,-1), { role:'user', content: ctxBlock }];
   const typer = makeTyper(textNode);
-  await streamCore(msgs, typer, { temperature: 0.5, max_tokens: 8192 });
+  await streamGroq(msgs, typer, { temperature: 0.5, max_tokens: 8192 });
   creditTokens(charsOf(msgs) + typer.text().length);
   await new Promise(res => typer.end(()=>{ km.text = typer.text(); res(); }));
   await detectAndOpenSite(km);
   finalizeKeo(km, el, textNode);
 }
 
+/* Website detection + auto-publish */
 async function detectAndOpenSite(km){
   const re = /```(?:html|xml)?\s*\n([\s\S]*?)```/g;
   let m, best = null;
@@ -1727,10 +1771,11 @@ async function detectAndOpenSite(km){
   }catch(e){}
 }
 
+/* PowerPoint: 8 slides + signed AI art (silent) */
 async function doPPT(text, km, el){
   setStage('slides');
-  const res = await coreChat({
-    temperature: 0.5, max_tokens: 4096,
+  const res = await groqChat({
+    model: MODEL_MAIN, temperature: 0.5, max_tokens: 4096,
     messages: [
       { role:'system', content: PPT_SYS },
       { role:'user', content: 'Presentation topic: ' + text + '\nReturn JSON only.' }
@@ -1813,25 +1858,10 @@ function openPreview(code){
   $('#pvFrame').srcdoc = code;
 }
 
-/* ================== Owner Panel (remote engine credential) ================== */
+/* ================== Owner Panel ================== */
  $('#btnAdmin').onclick = async ()=>{
   if(!isAdmin()) return;
   $('#admModal').hidden = false;
-  const keyState = $('#keyState'), keyHint = $('#keyHint');
-  $('#admKey').value = '';
-  if(dbOk){
-    try{
-      const s = await firebase.database().ref('config/aiKey').once('value');
-      const v = (s.val()||'').trim();
-      keyState.innerHTML = v ? 'armed \u2705 (' + v.slice(0,7) + '…' + v.slice(-4) + ')' : 'not armed \u26a0';
-      keyHint.textContent = v ? 'Editing will hot-swap it for every user instantly.' : 'Paste a credential and save to wake Keo up.';
-    }catch(e){
-      keyState.textContent = 'read failed';
-    }
-  } else {
-    keyState.textContent = 'db offline';
-  }
-
   const cards = $('#admCards'), chart = $('#admChart'), compare = $('#admCompare'), table = $('#admTable');
   cards.innerHTML = '<div class="adm-empty">Loading live stats…</div>';
   chart.innerHTML = ''; compare.innerHTML = ''; table.innerHTML = '';
@@ -1845,7 +1875,8 @@ function openPreview(code){
     const stats = sSnap.val() || {};
     const now = Date.now();
     const rows = Object.entries(usersRaw).map(([uid,u])=>{
-      const chatsArr = Object.values(u.chats || {});
+      const chatsMap = u.chats || {};
+      const chatsArr = Object.values(chatsMap);
       const msgCount = chatsArr.reduce((a,c)=> a + ((c.messages && (Array.isArray(c.messages)?c.messages.length:Object.values(c.messages).length))||0), 0);
       return {
         uid,
@@ -1912,21 +1943,6 @@ function openPreview(code){
 };
  $('#admClose').onclick = ()=>{ $('#admModal').hidden = true; };
  $('#admModal').addEventListener('click', e=>{ if(e.target.id === 'admModal') $('#admModal').hidden = true; });
- $('#keySave').onclick = async ()=>{
-  if(!isAdmin()) return;
-  const v = $('#admKey').value.trim();
-  if(!v.startsWith('gsk_')) return toast('The engine credential starts with gsk_','err');
-  if(v.length < 40) return toast('That credential looks too short','err');
-  try{
-    await firebase.database().ref('config/aiKey').set(v);
-    $('#admKey').value = '';
-    confettiBurst();
-    toast('Engine armed \u2705 — every user\u2019s Keo is alive now');
-    $('#keyState').innerHTML = 'armed \u2705 (' + v.slice(0,7) + '…' + v.slice(-4) + ')';
-  }catch(err){
-    toast('Save failed: ' + err.message + ' — check the Firebase rules for config/aiKey', 'err');
-  }
-};
 
 /* ================== Speech: Listen ================== */
 let VOICES = [];
@@ -2029,7 +2045,7 @@ function micFatal(e){
   }catch(e){ micFatal(e); }
 };
 
-/* ================== Attachments — giant files welcome ================== */
+/* ================== Attachments ================== */
 function renderAtt(){
   $('#attRow').innerHTML = attachments.map((a,i)=>
     `<span class="atchip">${a.kind==='image' ? `<img src="${a.dataUrl}">` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`}<span class="an">${esc(a.name)}</span><button data-rmatt="${i}">\u2715</button></span>`
@@ -2042,11 +2058,11 @@ function renderAtt(){
 function ingestFile(f){
   const isImg = f.type.startsWith('image/');
   if(isImg && f.size > 4.5*1024*1024) return toast('Image too large — under 4.5 MB', 'err');
-  if(!isImg && f.size > MAX_FILE_BYTES) return toast('File too large — under ' + MAX_FILE_MB + ' MB', 'err');
+  if(!isImg && f.size > 2*1024*1024) return toast('File too large — under 2 MB', 'err');
   const att = { name:f.name, size:f.size, kind: isImg?'image':'text' };
   const rd = new FileReader();
   rd.onload = ()=>{
-    if(isImg) att.dataUrl = rd.result; else att.text = String(rd.result||'').slice(0, MAX_TEXT_CHARS);
+    if(isImg) att.dataUrl = rd.result; else att.text = String(rd.result||'');
     attachments.push(att); renderAtt();
     setStage('carry');
     setTimeout(()=>{ if(!busy) setStage('idle'); }, 1700);
@@ -2067,16 +2083,8 @@ window.addEventListener('paste', e=>{
  $('#chipSearch').onclick = e=>{ searchIntent = !searchIntent; e.currentTarget.classList.toggle('active', searchIntent); };
  $('#chipPpt').onclick = e=>{ pptIntent = !pptIntent; e.currentTarget.classList.toggle('active', pptIntent); };
  $('#btnSend').onclick = send;
-/* safety net: button always reacts physically */
- $('#btnSend').addEventListener('mousedown', e=>{ e.preventDefault(); ta.focus(); });
-/* Enter sends instantly; Shift+Enter = new line — like every chat app */
-ta.addEventListener('input', ()=>{ ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 200) + 'px'; });
-ta.addEventListener('keydown', e=>{
-  if(e.key === 'Enter' && !e.shiftKey){
-    e.preventDefault();
-    send();
-  }
-});
+ta.addEventListener('input', ()=>{ ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 150) + 'px'; });
+ta.addEventListener('keydown', e=>{ if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); send(); } });
 
  $('#btnNew').onclick = newChat;
  $('#hamb').onclick = ()=>{ $('#sidebar').classList.add('open'); $('#backdrop').classList.add('show'); };
@@ -2186,7 +2194,7 @@ function showApp(){
   } else {
     $('#btnAdmin').classList.remove('show');
   }
-  loadChats(); loadConnections(); fetchKey();
+  loadChats(); loadConnections();
   setStage('boot');
   setTimeout(()=>{ setStage('happy'); confettiBurst(); }, 1000);
   setTimeout(()=>setStage('idle'), 2300);
@@ -2216,6 +2224,8 @@ if(auth){
     } else showGate();
   });
 } else showGate();
+
+initModels();
 </script>
 </body>
 </html>
