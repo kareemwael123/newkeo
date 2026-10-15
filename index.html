@@ -1,77 +1,2284 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KeoAI — Under Maintenance</title>
+<title>KeoAI — Keo, your hands-on AI</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230B0D0C'/%3E%3Crect x='6' y='8' width='20' height='16' rx='8' fill='%23C6F24B'/%3E%3Crect x='11' y='13' width='3' height='7' rx='1.5' fill='%230B0D0C'/%3E%3Crect x='18' y='13' width='3' height='7' rx='1.5' fill='%230B0D0C'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@500;700;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 <style>
+:root{
+  --bg:#0B0D0C; --panel:#101312; --panel2:#151917; --line:rgba(235,240,225,.09);
+  --text:#EDEFE6; --mut:#9BA398; --acc:#C6F24B; --acc-ink:#161d04; --err:#FF6B57;
+  --f:'Space Grotesk',sans-serif; --fd:'Unbounded',sans-serif;
+}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
-body{
-  background:#0B0D0C;
-  background-image:radial-gradient(rgba(235,240,225,.05) 1px,transparent 1px);
-  background-size:26px 26px;
-  color:#EDEFE6;
-  font-family:'Space Grotesk',sans-serif;
-  display:flex;align-items:center;justify-content:center;
-  min-height:100vh;padding:24px;overflow:hidden
-}
-.wrap{text-align:center;max-width:640px}
-.gear{
-  width:96px;height:96px;margin:0 auto 30px;border-radius:26px;
-  background:#C6F24B;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 60px rgba(198,242,75,.25);
-  animation:spin 6s linear infinite
-}
+body{background:var(--bg);color:var(--text);font-family:var(--f);overflow:hidden;
+  background-image:radial-gradient(rgba(235,240,225,.045) 1px,transparent 1px);background-size:26px 26px}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:var(--acc)}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#232823;border-radius:9px;border:2px solid var(--bg)}
+
+.icbtn{width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;color:var(--mut);transition:.2s}
+.icbtn:hover{background:var(--panel2);color:var(--text)}
+.icbtn svg{width:19px;height:19px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:12px;font-size:15px;font-weight:600;transition:.2s;border:1px solid transparent}
+.btn-light{background:#EDEFE6;color:#11130f}.btn-light:hover{background:#fff}
+.btn-line{border-color:var(--line);color:var(--text)}.btn-line:hover{background:var(--panel2)}
+.btn-acc{background:var(--acc);color:var(--acc-ink)}.btn-acc:hover{filter:brightness(1.06)}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--mut);transition:.2s;font-weight:600}
+.chip svg{width:15px;height:15px}
+.chip:hover{color:var(--text);border-color:rgba(235,240,225,.22)}
+.chip.active{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+
+header{height:58px;display:flex;align-items:center;gap:14px;padding:0 18px;border-bottom:1px solid var(--line);position:relative;z-index:40;background:rgba(11,13,12,.85);backdrop-filter:blur(8px)}
+#hamb{display:none}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand .nm{font-family:var(--fd);font-size:21px;font-weight:700;line-height:1}
+.brand .nm i{font-style:normal;color:var(--acc)}
+.brand .lt{font-family:var(--f);font-size:11px;letter-spacing:5px;color:var(--mut)}
+.hspace{flex:1}
+.userchip{display:flex;align-items:center;gap:9px;padding:5px 12px 5px 6px;border:1px solid var(--line);border-radius:999px}
+.userchip .av{width:28px;height:28px;border-radius:50%;background:var(--acc);color:var(--acc-ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.userchip span{font-size:13px}
+
+#gate{position:fixed;inset:0;z-index:80;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;
+  background-image:radial-gradient(rgba(235,240,225,.05) 1px,transparent 1px);background-size:26px 26px;transition:opacity .5s}
+#gate.hide{opacity:0;pointer-events:none}
+.gate-inner{display:grid;grid-template-columns:340px 1fr;gap:60px;align-items:center;max-width:1000px;width:100%}
+#gateBot{width:340px}
+.gate-name{font-family:var(--fd);font-weight:900;font-size:88px;line-height:1.05}
+.gate-name i{font-style:normal;color:var(--acc)}
+.gate-latin{letter-spacing:9px;font-size:13px;color:var(--acc);margin:6px 0 18px;font-weight:600}
+.gate-tag{color:var(--mut);font-size:16px;line-height:1.8;max-width:500px;margin-bottom:26px}
+.gate-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+#emailForm{display:flex;flex-direction:column;gap:10px;max-width:360px;margin-top:16px}
+#emailForm input{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 15px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:.2s}
+#emailForm input:focus{border-color:rgba(198,242,75,.45)}
+#emailForm .row{display:flex;gap:10px;align-items:center}
+#emailForm .row .btn{flex:1;justify-content:center}
+#emailToggle{font-size:13px;color:var(--mut)}
+#emailToggle:hover{color:var(--acc)}
+.gate-credit{margin-top:26px;font-size:13px;color:var(--mut)}
+.gate-credit b{color:var(--text);font-weight:600}
+
+main{display:flex;height:calc(100vh - 58px)}
+#sidebar{width:282px;flex-shrink:0;border-right:1px solid var(--line);display:flex;flex-direction:column;background:rgba(16,19,18,.5)}
+.sb-top{padding:14px;display:flex;flex-direction:column;gap:8px}
+#btnNew{width:100%;justify-content:center}
+.sb-row{display:flex;gap:8px}
+.sb-row .btn{flex:1;justify-content:center;padding:10px 5px;font-size:12px}
+.sb-label{padding:6px 18px;font-size:11.5px;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase}
+#chatList{flex:1;overflow-y:auto;padding:4px 10px}
+.chatitem{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:13.5px;color:#cfd4c6;cursor:pointer;transition:.15s;position:relative}
+.chatitem:hover{background:var(--panel2)}
+.chatitem.on{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+.chatitem.on::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:var(--acc)}
+.ci-t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-x{opacity:0;color:var(--mut);width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center}
+.chatitem:hover .ci-x{opacity:1}
+.ci-x:hover{color:var(--err);background:rgba(255,107,87,.1)}
+.ci-x svg{width:14px;height:14px}
+.chatempty{color:var(--mut);font-size:13px;text-align:center;padding:22px 0}
+.sb-user{border-top:1px solid var(--line);padding:12px 14px;display:flex;align-items:center;gap:10px}
+.sb-user .av{width:36px;height:36px;border-radius:50%;background:var(--acc);color:var(--acc-ink);display:flex;align-items:center;justify-content:center;font-weight:700}
+.sb-user .nm{font-size:13.5px;font-weight:600}
+.sb-user .em{font-size:11.5px;color:var(--mut);max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-user .grow{flex:1;min-width:0}
+#btnAdmin{display:none}
+#btnAdmin.show{display:inline-flex}
+
+#chat{flex:1;display:flex;flex-direction:column;min-width:0}
+#chatScroll{flex:1;overflow-y:auto;padding:26px 22px 10px}
+.msg{max-width:800px;margin:0 auto 22px;animation:up .35s ease both}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.msg-user{display:flex;justify-content:flex-end}
+.msg-user .bub{background:var(--panel2);border:1px solid var(--line);border-radius:16px 16px 4px 16px;padding:11px 15px;max-width:76%;font-size:14.5px;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+.msg-user .files{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.ffile{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--mut);border:1px dashed var(--line);border-radius:8px;padding:3px 8px}
+.msg-keo{display:flex;gap:12px;align-items:flex-start}
+.msg-keo .mav{width:38px;height:38px;flex-shrink:0;border-radius:12px;background:var(--panel);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.msg-keo .mav svg{width:27px;height:27px}
+.msg-body{flex:1;min-width:0;padding-top:4px}
+.msg-text{font-size:15px;line-height:1.8}
+.msg-text p{margin-bottom:8px}
+.msg-text h3.mdh{font-size:17px;margin:14px 0 8px;color:var(--acc)}
+.msg-text .mdli{position:relative;padding-left:18px;margin:5px 0}
+.msg-text .mdli::before{content:'';position:absolute;left:2px;top:11px;width:6px;height:6px;border-radius:2px;background:var(--acc)}
+.msg-text .mdnum{color:var(--acc);font-weight:700;margin-right:6px}
+.msg-text code.ic{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:var(--f);font-size:13px;unicode-bidi:embed;direction:ltr}
+.msg-text[dir="rtl"]{text-align:right}
+.msg-text[dir="rtl"] .mdli{padding-left:0;padding-right:18px}
+.msg-text[dir="rtl"] .mdli::before{left:auto;right:2px}
+.msg-text[dir="rtl"] .mdnum{margin-right:0;margin-left:6px}
+.bub[dir="rtl"]{text-align:right}
+.caret{display:inline-block;width:9px;height:17px;background:var(--acc);vertical-align:-3px;margin-left:3px;animation:ck .8s steps(2) infinite}
+@keyframes ck{50%{opacity:0}}
+.codeblk{background:#0D100F;border:1px solid var(--line);border-radius:12px;margin:12px 0;overflow:hidden}
+.codehead{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-bottom:1px solid var(--line)}
+.codehead span{font-size:11px;color:var(--mut);letter-spacing:1px;text-transform:uppercase}
+.codehead div{display:flex;gap:6px}
+.cbtn{font-size:11.5px;color:var(--mut);border:1px solid var(--line);border-radius:7px;padding:3px 10px;transition:.15s}
+.cbtn:hover{color:var(--acc);border-color:rgba(198,242,75,.4)}
+.codeblk pre{padding:14px;overflow-x:auto}
+.codeblk code{font-family:var(--f);font-size:12.8px;line-height:1.7;color:#d7dcc9;white-space:pre}
+.msg-acts{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+.srcs{margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.srcs-t{font-size:12px;color:var(--mut)}
+.src{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:12px;color:#c3c9ba;text-decoration:none;transition:.15s;max-width:240px}
+.src:hover{border-color:rgba(198,242,75,.4);color:var(--text)}
+.src .n{color:var(--acc);font-weight:700}
+.src .h{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pptstrip{margin-top:14px;display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.pslide{min-width:172px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 12px;position:relative}
+.pslide .pn{position:absolute;top:8px;right:10px;font-size:10px;color:var(--mut)}
+.pslide .pt{font-size:13px;font-weight:700;color:var(--acc);margin-bottom:7px;line-height:1.5}
+.pslide .pb{font-size:11.5px;color:var(--mut);line-height:1.7}
+.ppt-dl{margin-top:10px}
+
+.welcome{max-width:800px;margin:8vh auto 0;animation:up .5s ease both}
+.w-kicker{font-size:11px;letter-spacing:4px;color:var(--acc);margin-bottom:14px;font-weight:600}
+.welcome h2{font-family:var(--fd);font-weight:700;font-size:46px;line-height:1.2;margin-bottom:12px}
+.welcome h2 i{font-style:normal;color:var(--acc)}
+.welcome h2 span{display:block;font-family:var(--f);font-weight:500;font-size:24px;color:var(--mut);margin-top:10px}
+.welcome>p{color:var(--mut);font-size:15.5px;line-height:1.9;margin-bottom:30px;max-width:560px}
+.pills{display:flex;flex-wrap:wrap;gap:10px;max-width:680px}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:11px 18px;font-size:13.5px;color:#cfd4c6;transition:.2s;background:rgba(16,19,18,.4)}
+.pill svg{width:16px;height:16px;color:var(--acc)}
+.pill:hover{border-color:rgba(198,242,75,.45);color:var(--text);transform:translateY(-2px)}
+
+#composer{padding:10px 22px 16px}
+.comp-box{max-width:800px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 14px 10px;transition:border-color .2s}
+.comp-box:focus-within{border-color:rgba(198,242,75,.4)}
+#ta{width:100%;background:none;border:0;outline:none;resize:none;color:var(--text);font-family:inherit;font-size:14.5px;line-height:1.7;max-height:200px}
+#ta::placeholder{color:#6d756a}
+.comp-row{display:flex;align-items:center;gap:8px;margin-top:6px}
+.comp-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sendbtn{margin-left:auto;width:40px;height:40px;border-radius:12px;background:var(--acc);color:var(--acc-ink);display:flex;align-items:center;justify-content:center;transition:.2s;cursor:pointer;flex-shrink:0}
+.sendbtn:hover{filter:brightness(1.07)}
+.sendbtn:active{transform:scale(.94)}
+.sendbtn svg{width:19px;height:19px}
+.sendbtn .i-stop{display:none}
+.sendbtn.busy{background:#3a4136;color:var(--acc)}
+.sendbtn.busy .i-up{display:none}.sendbtn.busy .i-stop{display:block}
+#btnMic.rec{color:var(--err);background:rgba(255,107,87,.12);animation:dotp 1s infinite}
+#attRow{max-width:800px;margin:0 auto 8px;display:flex;flex-wrap:wrap;gap:8px}
+.atchip{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:12.5px}
+.atchip img{width:26px;height:26px;object-fit:cover;border-radius:6px}
+.atchip svg{width:15px;height:15px;color:var(--acc)}
+.atchip .an{max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atchip button{color:var(--mut)}.atchip button:hover{color:var(--err)}
+.comp-note{max-width:800px;margin:8px auto 0;text-align:center;font-size:11px;color:#5f675c}
+
+#pv{width:0;overflow:hidden;border-left:1px solid var(--line);display:flex;flex-direction:column;background:var(--panel);transition:width .45s cubic-bezier(.6,0,.3,1)}
+body.pv-open #pv{width:min(46vw,860px)}
+.pv-head{height:48px;flex-shrink:0;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line)}
+.pv-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.pv-title svg{width:16px;height:16px;color:var(--acc)}
+.pv-tools{margin-left:auto;display:flex;gap:2px}
+.pv-tools .icbtn.active{color:var(--acc);background:var(--panel2)}
+.pv-body{flex:1;display:flex;justify-content:center;background:#070908;min-height:0}
+#pvFrame{width:100%;height:100%;border:0;background:#fff}
+#pv.mob #pvFrame{width:414px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+
+#stage{position:fixed;bottom:10px;right:20px;z-index:30;transition:right .45s cubic-bezier(.6,0,.3,1);width:250px;pointer-events:none;text-align:center}
+body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
+#stageCap{display:inline-flex;align-items:center;gap:8px;background:rgba(16,19,18,.88);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:12.5px;color:#d7dbcd;margin-bottom:2px;backdrop-filter:blur(6px);min-height:31px}
+.capDot{width:7px;height:7px;border-radius:50%;background:var(--acc);animation:dotp 1.2s infinite;flex-shrink:0}
+@keyframes dotp{50%{opacity:.25;transform:scale(.7)}}
+#stageBot{width:240px;pointer-events:auto;cursor:pointer}
+
+.bot svg{display:block;overflow:visible;width:100%}
+.b-shadow{fill:rgba(0,0,0,.42);transform-box:fill-box;transform-origin:center;animation:bsh 3.2s ease-in-out infinite}
+@keyframes bsh{0%,100%{transform:scaleX(1);opacity:.42}50%{transform:scaleX(.85);opacity:.26}}
+.b-bot{animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.b-ant line{stroke:#C9C2B1;stroke-width:4;stroke-linecap:round}
+.b-antlight{fill:var(--acc);transform-box:fill-box;transform-origin:center;animation:antp 1.7s ease-in-out infinite}
+@keyframes antp{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.55);opacity:.5}}
+.b-wifi{opacity:0}
+.b-wifi path{stroke:var(--acc);stroke-width:3.5;fill:none;stroke-linecap:round}
+.bot.search .b-wifi{opacity:1}
+.bot.search .b-wifi path{animation:wifi 1.3s infinite}
+.bot.search .b-wifi path:nth-child(2){animation-delay:.25s}
+@keyframes wifi{0%,100%{opacity:.1}45%{opacity:1}}
+.b-head{transform-box:view-box;transform-origin:160px 148px;transition:transform .45s}
+.bot.think .b-head{transform:rotate(-5deg)}
+.b-headshape,.b-body{fill:#E9E3D4}
+.b-ear,.b-neck,.b-foot{fill:#C9C2B1}
+.b-visor,.b-chest{fill:#0E1211}
+.b-led{fill:var(--acc);animation:dotp 1.6s infinite}
+.b-bar{fill:#39443a}
+.b-eye{fill:var(--acc);opacity:1;transform-box:fill-box;transform-origin:center;transition:transform .12s,opacity .2s}
+.bot.blink .b-eye{transform:scaleY(.1)}
+.bot.happy .b-eye{opacity:0}
+.b-eye-happy{fill:none;stroke:var(--acc);stroke-width:5.5;stroke-linecap:round;opacity:0;transition:opacity .2s}
+.bot.happy .b-eye-happy{opacity:1}
+.b-eyes{transition:transform .4s;transform-box:view-box}
+.bot.think .b-eyes{transform:translateY(-5px)}
+.bot.type .b-eyes,.bot.code .b-eyes,.bot.search .b-eyes{transform:translateY(4px)}
+.b-think{opacity:0}
+.b-think circle{fill:#E9E3D4;transform-box:fill-box;transform-origin:center}
+.bot.think .b-think{opacity:1}
+.bot.think .b-think circle{animation:tdot 1.5s infinite}
+.bot.think .b-think circle:nth-child(2){animation-delay:.2s}
+.bot.think .b-think circle:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,100%{opacity:.15;transform:translateY(3px)}50%{opacity:1;transform:translateY(-2px)}}
+.b-arm{transform-box:view-box;transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+.b-arm rect{fill:#D8D1BF}
+.b-arm circle{fill:#EFEAD9}
+.b-armL{transform-origin:115px 160px;transform:rotate(12deg)}
+.b-armR{transform-origin:205px 160px;transform:rotate(-12deg)}
+.bot.type .b-armL,.bot.code .b-armL{transform:rotate(-45deg);animation:tapL .18s ease-in-out infinite alternate}
+.bot.type .b-armR,.bot.code .b-armR{transform:rotate(45deg);animation:tapR .18s ease-in-out infinite alternate;animation-delay:.09s}
+@keyframes tapL{from{transform:rotate(-48deg)}to{transform:rotate(-40deg)}}
+@keyframes tapR{from{transform:rotate(48deg)}to{transform:rotate(40deg)}}
+.bot.happy .b-armL{transform:rotate(-150deg)}
+.bot.happy .b-armR{transform:rotate(150deg)}
+.bot.carry .b-armL{transform:rotate(-16deg)}
+.bot.carry .b-armR{transform:rotate(16deg)}
+.b-laptop{opacity:0;transform:translateY(16px);transition:.35s}
+.bot.laptop .b-laptop{opacity:1;transform:none}
+.b-lid{transform-box:view-box;transform-origin:160px 226px;transform:scaleY(.04);transition:transform .65s cubic-bezier(.34,1.4,.4,1)}
+.bot.laptop .b-lid{transform:scaleY(1)}
+.b-lidbody{fill:#1C211F;stroke:#2D342F;stroke-width:1.5}
+.b-screen{fill:#0A0E0C;stroke:rgba(198,242,75,.3);stroke-width:1}
+.b-lidbase{fill:#23292B}
+.b-scr{opacity:0;transition:opacity .3s}
+.bot.search .b-scr-search{opacity:1}
+.bot.type .b-scr-type{opacity:1}
+.bot.code .b-scr-code{opacity:1}
+.bot.slides .b-scr-slides{opacity:1}
+.b-scr-search circle:first-child{stroke:rgba(198,242,75,.5);fill:none;stroke-width:1.5}
+.b-radar{stroke:var(--acc);stroke-width:2.5;stroke-linecap:round;transform-box:view-box;transform-origin:160px 186px}
+.bot.search .b-radar{animation:spin 1.4s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.gear svg{width:52px;height:52px}
-h1{
-  font-family:'Unbounded',sans-serif;
-  font-weight:900;
-  font-size:clamp(52px,11vw,110px);
-  line-height:.95;
-  letter-spacing:-1px;
-  margin:0 0 14px
+.b-blip{fill:var(--acc);animation:dotp 1.1s infinite}
+.b-blip2{fill:#E9E3D4;animation-delay:.4s}
+.b-tl{fill:#4D574A;transform-box:fill-box;transform-origin:left center}
+.b-tl2{fill:#D9D3C2}
+.bot.type .b-tl,.bot.code .b-tl{animation:tline 1.6s infinite}
+.bot.type .b-tl2,.bot.code .b-tl2{animation-delay:.25s}
+.bot.type .b-tl3{animation-delay:.5s}.bot.type .b-tl4{animation-delay:.75s}
+@keyframes tline{0%{transform:scaleX(.12);opacity:.25}55%,100%{transform:scaleX(1);opacity:1}}
+.b-cursor{fill:var(--acc);animation:ck .7s steps(2) infinite}
+.b-brackets{fill:var(--acc);font:700 15px var(--f);text-anchor:middle;animation:ck 1s steps(2) infinite}
+.b-slidecard{fill:#E9E3D4}
+.b-slidebar{fill:var(--acc)}
+.b-slideline{fill:#9a9484}
+.b-fc{font:700 12px var(--f);fill:var(--acc);opacity:0;transform-box:fill-box}
+.b-fc2{fill:#EDEFE6}
+.bot.type .b-fc,.bot.code .b-fc{animation:fly 1.3s ease-out infinite}
+.bot.type .b-fc2,.bot.code .b-fc2{animation-delay:.45s}
+.bot.type .b-fc3,.bot.code .b-fc3{animation-delay:.9s}
+@keyframes fly{0%{opacity:0;transform:translateY(4px)}22%{opacity:1}100%{opacity:0;transform:translateY(-46px)}}
+.b-file{opacity:0;transition:.3s}
+.b-file rect{fill:#EDEFE6;stroke:#B9B4A6}
+.b-file line{stroke:#B9B4A6;stroke-width:2.5;stroke-linecap:round}
+.b-filefold{fill:#D9D3C2}
+.bot.carry .b-file{opacity:1}
+.mini-eyes rect{transform-box:fill-box;transform-origin:center;animation:mblink 4.5s infinite}
+@keyframes mblink{0%,91%,100%{transform:scaleY(1)}94%{transform:scaleY(.1)}}
+.mini.working .mini-eyes rect{animation:mwork .3s infinite alternate}
+@keyframes mwork{from{opacity:1}to{opacity:.25}}
+
+#toasts{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:8px;align-items:center}
+.toast{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:11px;padding:10px 18px;font-size:13.5px;animation:up .3s ease;box-shadow:0 8px 30px rgba(0,0,0,.45);max-width:88vw}
+.toast.err{border-left-color:var(--err)}
+.confetti{position:fixed;width:8px;height:8px;z-index:95;pointer-events:none;border-radius:2px}
+
+#connModal,#admModal{position:fixed;inset:0;z-index:85;background:rgba(5,7,6,.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px}
+#connModal[hidden],#admModal[hidden]{display:none}
+.conn-panel{width:min(680px,94vw);max-height:88vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:22px;animation:up .3s ease}
+.conn-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.conn-head b{font-family:var(--fd);font-size:19px}
+.conn-head b i{font-style:normal;color:var(--acc)}
+.conn-sub{color:var(--mut);font-size:13px;line-height:1.7;margin-bottom:18px}
+.ccard{border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:12px;background:var(--panel)}
+.ccard-top{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.ccard-top svg{width:20px;height:20px;color:var(--acc)}
+.ccard-top b{font-size:15px}
+.ccard-top .stat{margin-left:auto;font-size:11.5px;color:var(--mut)}
+.ccard-top .stat.on{color:var(--acc)}
+.ccard p{font-size:12.5px;color:var(--mut);line-height:1.7;margin-bottom:10px}
+.ccard .row{display:flex;gap:8px;flex-wrap:wrap}
+.ccard input{flex:1;min-width:180px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;color:var(--text);font-family:var(--f);font-size:12.5px;outline:none}
+.ccard input:focus{border-color:rgba(198,242,75,.4)}
+.ccard .hint{font-size:11.5px;color:#5f675c;margin-top:8px;line-height:1.6}
+.ccard .hint a{color:var(--acc)}
+
+.adm-panel{width:min(860px,96vw);max-height:90vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:22px;animation:up .3s ease}
+.adm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px}
+.stat-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat-card .sv{font-family:var(--fd);font-size:24px;font-weight:700;color:var(--acc)}
+.stat-card .sl{font-size:11px;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+.adm-sec{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.adm-sec h4{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--mut);margin-bottom:12px}
+.vchart{display:flex;align-items:flex-end;gap:8px;height:140px}
+.vcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.vbar{width:70%;max-width:44px;background:linear-gradient(180deg,var(--acc),#7fa32e);border-radius:6px 6px 3px 3px;min-height:3px;transition:height .4s}
+.vlab{font-size:10px;color:var(--mut);white-space:nowrap}
+.vval{font-size:10px;color:var(--text);font-weight:600}
+.hrow{display:flex;align-items:center;gap:10px;margin:8px 0}
+.hname{width:130px;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#cfd4c6}
+.htrack{flex:1;height:14px;background:var(--panel2);border-radius:7px;overflow:hidden}
+.hfill{height:100%;background:linear-gradient(90deg,#7fa32e,var(--acc));border-radius:7px;transition:width .4s}
+.hval{width:86px;text-align:right;font-size:11.5px;color:var(--mut)}
+.adm-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.adm-table th{text-align:left;color:var(--mut);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;padding:7px 8px;border-bottom:1px solid var(--line)}
+.adm-table td{padding:9px 8px;border-bottom:1px solid rgba(235,240,225,.05);color:#d7dcc9}
+.adm-table tr:hover td{background:rgba(198,242,75,.04)}
+.adm-table .tt{color:var(--acc);font-weight:700}
+.adm-empty{color:var(--mut);font-size:12.5px;text-align:center;padding:20px}
+.keycard{border:1px solid rgba(198,242,75,.3);border-radius:14px;padding:15px;margin-bottom:12px;background:linear-gradient(135deg,#12160f,#101312)}
+.keycard input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--text);font-family:monospace;font-size:12px;outline:none;margin-bottom:8px}
+.keycard input:focus{border-color:rgba(198,242,75,.5)}
+.keyrow{display:flex;gap:8px;align-items:center}
+.keystat{font-size:12px;color:var(--mut)}
+
+#backdrop{display:none}
+@media(max-width:900px){
+  #hamb{display:inline-flex}
+  #sidebar{position:fixed;top:58px;bottom:0;left:0;z-index:60;transform:translateX(-105%);transition:transform .35s;background:#0D100E}
+  #sidebar.open{transform:none!important}
+  #backdrop.show{display:block;position:fixed;inset:58px 0 0 0;background:rgba(0,0,0,.55);z-index:55}
+  .gate-inner{grid-template-columns:1fr;gap:10px;text-align:center;overflow-y:auto;max-height:100%}
+  #gateBot{width:210px;margin:0 auto}
+  .gate-name{font-size:56px}
+  .gate-tag{margin:0 auto}
+  .gate-actions,#emailForm{justify-content:center;margin:0 auto 14px}
+  body.pv-open #pv{position:fixed;inset:58px 0 0 0;width:auto!important;z-index:55}
+  #stage{transform:scale(.6);transform-origin:bottom right;right:6px;bottom:118px}
+  body.pv-open #stage{right:6px}
+  #stageCap{font-size:11px}
+  #chatScroll{padding:18px 14px 6px}
+  #composer{padding:8px 12px 12px}
+  .welcome h2{font-size:30px}.welcome h2 span{font-size:17px}
 }
-h1 .d{color:#C6F24B}
-h2{
-  font-family:'Unbounded',sans-serif;
-  font-weight:700;
-  font-size:clamp(18px,3.4vw,28px);
-  color:#C6F24B;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  margin:0 0 20px
-}
-p{color:#9BA398;font-size:16.5px;line-height:1.9;margin:0 auto 34px;max-width:460px}
-.status{
-  display:inline-flex;align-items:center;gap:10px;
-  border:1px solid rgba(235,240,225,.09);border-radius:999px;
-  padding:10px 22px;font-size:13px;color:#9BA398;background:#101312
-}
-.dot{width:9px;height:9px;border-radius:50%;background:#C6F24B;animation:pulse 1.2s infinite}
-@keyframes pulse{50%{opacity:.25;transform:scale(.7)}}
-.brand{margin-top:44px;font-family:'Unbounded',sans-serif;font-weight:700;font-size:15px;letter-spacing:3px;color:#6B7266}
-.brand b{color:#C6F24B}
-@media(max-width:500px){ .gear{width:72px;height:72px} }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="gear">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#161d04" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+
+<div id="gate">
+  <div class="gate-inner">
+    <div id="gateBot" class="bot"></div>
+    <div>
+      <h1 class="gate-name">Keo<i>.</i></h1>
+      <div class="gate-latin">KEOAI</div>
+      <p class="gate-tag">A hands-on AI with a massive context: he reads whole books and giant codebases, searches the web, builds sites with live shareable links, sends real emails from Kareem's inbox, posts to Discord, and makes illustrated PowerPoints — in Arabic or English.</p>
+      <div class="gate-actions">
+        <button class="btn btn-light" id="btnGoogle">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5l-3.8 2.9C3.6 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.8-.4-1.6-.4-2.4s.1-1.6.4-2.4L1.4 6.7C.5 8.2 0 10 0 12s.5 3.8 1.4 5.3l3.9-2.9z"/><path fill="#EA4335" d="M12 4.6c2.2 0 3.7 1 4.6 1.8l3.3-3.2C17.9 1.2 15.2 0 12 0 7.4 0 3.6 2.7 1.4 6.7l3.9 2.9c.9-2.9 3.6-5 6.7-5z"/></svg>
+          Sign in with Google
+        </button>
+        <button class="btn btn-line" id="btnEmailShow">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg>
+          Continue with email
+        </button>
+      </div>
+      <form id="emailForm" hidden>
+        <input id="fName" placeholder="Your name" autocomplete="name">
+        <input id="fEmail" type="email" placeholder="Email address" required>
+        <input id="fPass" type="password" placeholder="Password (min 6 characters)" required minlength="6">
+        <div class="row">
+          <button type="submit" class="btn btn-acc" id="emailSubmit">Sign in</button>
+          <button type="button" id="emailToggle" class="cbtn">No account? Create one</button>
+        </div>
+      </form>
+      <p class="gate-credit">Built by <b>Kareem Hussein</b></p>
+    </div>
   </div>
-
-  <h1>Maintenance<span class="d">.</span></h1>
-  <h2>KEOAI IS UNDER MAINTENANCE</h2>
-  <p>Keo is getting a powerful upgrade behind the scenes. The site will be back online very soon — bigger, faster, and sharper than ever. Thank you for your patience.</p>
-
-  <div class="status"><span class="dot"></span> Status: maintenance in progress</div>
-
-  <div class="brand">KEO<b>AI</b> · by Kareem Hussein</div>
 </div>
+
+<header>
+  <button class="icbtn" id="hamb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <div class="brand"><span class="nm">Keo<i>.</i></span><span class="lt">KEOAI</span></div>
+  <div class="hspace"></div>
+  <div class="userchip" id="userchip" hidden><span class="av" id="hcAv">K</span><span id="hcName"></span></div>
+</header>
+
+<main>
+  <aside id="sidebar">
+    <div class="sb-top">
+      <button class="btn btn-acc" id="btnNew">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        New chat</button>
+      <div class="sb-row">
+        <button class="btn btn-line" id="btnConn">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M12 9v6"/><path d="M10.3 4.9 8 7H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3l2.3 2.1a1 1 0 0 0 1.7-.8V5.7a1 1 0 0 0-1.7-.8z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>
+          Links</button>
+        <button class="btn btn-line" id="btnExport">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M6 11l6 6 6-6M5 21h14"/></svg>
+          Export</button>
+        <button class="btn btn-line" id="btnAdmin">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg>
+          Owner</button>
+      </div>
+    </div>
+    <div class="sb-label">Chats</div>
+    <div id="chatList"></div>
+    <div class="sb-user">
+      <span class="av" id="sbAv">K</span>
+      <div class="grow"><div class="nm" id="sbName"></div><div class="em" id="sbEmail"></div></div>
+      <button class="icbtn" id="btnLogout" title="Sign out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg></button>
+    </div>
+  </aside>
+  <div id="backdrop"></div>
+
+  <section id="chat">
+    <div id="chatScroll">
+      <div id="welcome" class="welcome">
+        <div class="w-kicker">KEOAI &middot; BY KAREEM HUSSEIN</div>
+        <h2>I'm Keo<i>.</i><span>Tell me what you need — I'll do it with my own hands.</span></h2>
+        <p>Giant-context engine: paste whole books, huge codebases or long transcripts and I read them all. Plus web search with sources, websites with live share links, real emails from Kareem's inbox, Discord posts, group pages, and illustrated PowerPoints — in Arabic or English.</p>
+        <div class="pills">
+          <button class="pill" data-insert="Search the web for the latest AI news and summarize it with sources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Latest AI news</button>
+          <button class="pill" data-insert="Here is my whole project code (I'll paste it in parts). Read it all and find the bugs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>Analyze my huge code</button>
+          <button class="pill" data-insert="Send an email to kareemwael0213@gmail.com telling them the project launched successfully"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg>Send a real email</button>
+          <button class="pill" data-insert="Make me a beautiful PowerPoint about space exploration with images"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Illustrated PowerPoint</button>
+        </div>
+      </div>
+    </div>
+    <div id="composer">
+      <div id="attRow"></div>
+      <div class="comp-box">
+        <textarea id="ta" rows="1" placeholder="Ask Keo anything… paste huge texts, whole documents, or attach files up to 10 MB"></textarea>
+        <div class="comp-row">
+          <div class="comp-tools">
+            <button class="icbtn" id="btnAttach" title="Attach files (up to 10 MB)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+            <button class="icbtn" id="btnMic" title="Voice input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg></button>
+            <button class="chip" id="btnMicLang" title="Speech recognition language">AR</button>
+            <button class="chip" id="chipSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Web search</button>
+            <button class="chip" id="chipPpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Presentation</button>
+          </div>
+          <button class="sendbtn" id="btnSend" title="Send (Enter) — while working, click to stop">
+            <svg class="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            <svg class="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="comp-note">Keo can make mistakes — double-check important info. Enter sends, Shift+Enter = new line.</div>
+    </div>
+  </section>
+
+  <aside id="pv">
+    <div class="pv-head">
+      <span class="pv-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Live preview — built by Keo</span>
+      <div class="pv-tools">
+        <button class="icbtn active" id="pvDesk" title="Desktop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
+        <button class="icbtn" id="pvMob" title="Mobile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></button>
+        <button class="icbtn" id="pvReload" title="Reload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg></button>
+        <button class="icbtn" id="pvCopy" title="Get a live share link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        <button class="icbtn" id="pvExt" title="Open in new tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M21 3l-9 9"/><path d="M10 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/></svg></button>
+        <button class="icbtn" id="pvClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+    </div>
+    <div class="pv-body"><iframe id="pvFrame" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe></div>
+  </aside>
+</main>
+
+<div id="stage">
+  <div id="stageCap"><span class="capDot"></span><span id="capText">Keo is standing by</span></div>
+  <div id="stageBot" class="bot" title="Poke Keo"></div>
+</div>
+
+<div id="connModal" hidden>
+  <div class="conn-panel">
+    <div class="conn-head"><b>Keo <i>Links</i></b><button class="icbtn" id="connClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <p class="conn-sub">Keo's engine is managed remotely — nothing to set up there. These links just extend what he can reach.</p>
+
+    <div class="ccard">
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg><b>Email engine — Kareem's inbox</b><span class="stat" id="st-fs">not set</span></div>
+      <p>One-time free setup: sign up on <b>formspree.io</b> with <b>kareemwael0213@gmail.com</b>, create a form, paste its ID here.</p>
+      <div class="row">
+        <input id="fsId" placeholder="Formspree ID, e.g. abcdwxyz">
+        <button class="btn btn-acc" id="fsSave" style="padding:9px 16px;font-size:13px">Save</button>
+      </div>
+      <p class="hint">Free tier: 50 emails/month.</p>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 8.5-8.5c4.66 0 8.5 3.84 8.5 8.5z"/></svg><b>Discord webhook</b><span class="stat" id="st-discord">not linked</span></div>
+      <p>Channel settings → Integrations → Webhooks → Copy URL.</p>
+      <div class="row">
+        <input id="dcHook" type="password" placeholder="Channel webhook URL">
+        <button class="btn btn-acc" id="dcTest" style="padding:9px 16px;font-size:13px">Connect</button>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 3-9.5 9.5M22 3l-7 19-3-8-8-3z"/></svg><b>Telegram</b><span class="stat" id="st-telegram">not linked</span></div>
+      <p>Real auto-posting through your bot.</p>
+      <div class="row">
+        <input id="tgToken" type="password" placeholder="Bot token from @BotFather">
+        <input id="tgChat" placeholder="@channel or -100… chat ID" style="max-width:220px">
+        <button class="btn btn-acc" id="tgTest" style="padding:9px 16px;font-size:13px">Connect</button>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.05.77 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg><b>GitHub — optional</b><span class="stat" id="st-github">optional</span></div>
+      <p>Cleaner site URLs, repos, gists. Sites get share links without it.</p>
+      <div class="row">
+        <input id="ghToken" type="password" placeholder="Personal Access Token (optional)">
+        <button class="btn btn-acc" id="ghTest" style="padding:9px 16px;font-size:13px">Connect</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="admModal" hidden>
+  <div class="adm-panel">
+    <div class="conn-head"><b>Owner <i>Panel</i></b><button class="icbtn" id="admClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <p class="conn-sub">Manage Keo's engine credential remotely and watch live numbers.</p>
+
+    <div class="keycard">
+      <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:var(--acc)"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg><b>Fallback Credential</b><span class="keystat" id="keyState">loading…</span></div>
+      <p style="font-size:12.5px;color:var(--mut);line-height:1.7;margin:6px 0 10px">The primary engine is pre-configured. This is the silent fallback credential, stored in Firebase under your control. Rotate anytime.</p>
+      <input id="admKey" type="password" placeholder="Paste fallback credential (gsk_…)">
+      <div class="keyrow">
+        <button class="btn btn-acc" id="keySave" style="padding:9px 16px;font-size:13px">Save to Firebase</button>
+        <span class="keystat" id="keyHint"></span>
+      </div>
+    </div>
+
+    <div class="adm-grid" id="admCards"></div>
+    <div class="adm-sec"><h4>Tokens per day — last 7 days</h4><div class="vchart" id="admChart"></div></div>
+    <div class="adm-sec"><h4>Users comparison — tokens</h4><div id="admCompare"></div></div>
+    <div class="adm-sec"><h4>All users</h4><div style="overflow-x:auto" id="admTable"></div></div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+<input type="file" id="fileInput" hidden multiple accept=".txt,.md,.json,.csv,.js,.ts,.html,.css,.py,.xml,.yml,.yaml,.log,image/*">
+
+<script>
+/* ================== Engine setup — primary HF, silent fallback ================== */
+/* --- PHASE 1 (primary): Hugging Face — abstracted internally as "primary core" --- */
+const HF_URL = 'https://router.huggingface.co/v1';
+const HF_KEY = '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';
+const HF_TEXT = [
+  'Qwen/Qwen2.5-72B-Instruct',
+  'meta-llama/Llama-3.3-70B-Instruct',
+  'Qwen/Qwen2.5-32B-Instruct',
+  'mistralai/Mistral-Nemo-Instruct-2407',
+  'HuggingFaceH4/zephyr-7b-beta'
+];
+const HF_VISION = [
+  'meta-llama/Llama-3.2-11B-Vision-Instruct',
+  'Qwen/Qwen2.5-VL-7B-Instruct'
+];
+let hfTextIdx = 0, hfVisIdx = 0;
+
+/* --- PHASE 2 (fallback): secondary engine — credential from Firebase --- */
+const AI_URL = 'https://api.groq.com/openai/v1';
+let KEY_REAL = localStorage.getItem('keo_key') || '';
+let KEY_READY = false;
+const ADMIN_EMAIL = 'kareemwael0213@gmail.com';
+const MODEL_ID = 'keo-core';
+const MAXTOK = 16384;
+const HISTORY_TURNS = 30;
+const MAX_FILE_MB = 10;
+const MAX_FILE_BYTES = MAX_FILE_MB * 1024 * 1024;
+const MAX_TEXT_CHARS = 300000;
+const firebaseConfig = {
+  apiKey: "AIzaSyC0lwVRTBPA3yxnZ3wuqvyfQJbJP-AVNJo",
+  authDomain: "kareem-8ed77.firebaseapp.com",
+  databaseURL: "https://kareem-8ed77-default-rtdb.firebaseio.com",
+  projectId: "kareem-8ed77",
+  storageBucket: "kareem-8ed77.firebasestorage.app",
+  messagingSenderId: "557227389584",
+  appId: "1:557227389584",
+  measurementId: "G-919VM45PXW"
+};
+
+const CORE_CHAIN = [
+  'openai/gpt-oss-120b','openai/gpt-oss-20b',
+  'llama-3.3-70b-versatile','meta-llama/llama-3.3-70b-versatile',
+  'moonshotai/kimi-k2-instruct','qwen/qwen3-32b','llama-3.1-8b-instant'
+];
+const CORE_VISION = [
+  'meta-llama/llama-4-scout-17b-16e-instruct','meta-llama/llama-4-maverick-17b-128e-instruct'
+];
+let coreIdx = 0, visionIdx = 0;
+
+/* ================== Utilities ================== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const delay = ms => new Promise(r => setTimeout(r, ms));
+const isArabicText = s => /[\u0600-\u06FF]/.test(String(s||''));
+const fmtN = n => (n||0).toLocaleString('en-US');
+
+/* safe clipboard */
+(function(){
+  const has = navigator.clipboard && navigator.clipboard.writeText;
+  const _ct = has ? navigator.clipboard.writeText.bind(navigator.clipboard) : null;
+  navigator.clipboard = navigator.clipboard || {};
+  navigator.clipboard.writeText = (t) => _ct ? _ct(t) : new Promise(res=>{
+    const x = document.createElement('textarea');
+    x.value = t; document.body.appendChild(x); x.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    x.remove(); res();
+  });
+})();
+
+function toast(msg, type='ok'){
+  const t = document.createElement('div');
+  t.className = 'toast' + (type==='err' ? ' err' : '');
+  t.textContent = msg;
+  $('#toasts').appendChild(t);
+  setTimeout(()=>{ t.style.opacity=0; t.style.transition='.4s'; setTimeout(()=>t.remove(),400); }, 3400);
+}
+function confettiBurst(){
+  const colors = ['#C6F24B','#EDEFE6','#8FD14F','#D9D3C2'];
+  const rect = $('#stageBot').getBoundingClientRect();
+  for(let i=0;i<16;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.background = colors[i%colors.length];
+    c.style.left = (rect.left + rect.width/2) + 'px';
+    c.style.top = (rect.top + rect.height*0.35) + 'px';
+    document.body.appendChild(c);
+    c.animate([
+      {transform:'translate(0,0) rotate(0deg)', opacity:1},
+      {transform:`translate(${(Math.random()-.5)*260}px, ${-80 - Math.random()*160}px) rotate(${Math.random()*540}deg)`, opacity:1, offset:.55},
+      {transform:`translate(${(Math.random()-.5)*340}px, ${120+Math.random()*120}px) rotate(${Math.random()*720}deg)`, opacity:0}
+    ], {duration: 1300+Math.random()*600, easing:'cubic-bezier(.2,.6,.4,1)'}).onfinish = ()=>c.remove();
+  }
+}
+
+/* ================== Usage tracking ================== */
+function creditTokens(n){
+  n = Math.max(0, Math.round(n||0));
+  if(!n || !user || !dbOk) return;
+  try{
+    const day = new Date().toISOString().slice(0,10);
+    const st = firebase.database().ref('stats');
+    st.child('totalTokens').runTransaction(v => (v||0) + n);
+    st.child('daily/' + day).runTransaction(v => (v||0) + n);
+    firebase.database().ref('users/' + user.uid + '/tokens').runTransaction(v => (v||0) + n);
+  }catch(e){}
+}
+function estTok(chars){ return Math.max(1, Math.round((chars||0)/4)); }
+function trackMsg(){
+  if(!user || !dbOk) return;
+  try{
+    const day = new Date().toISOString().slice(0,10);
+    firebase.database().ref('stats/totalMsgs').runTransaction(v => (v||0) + 1);
+    firebase.database().ref('stats/dailyMsgs/' + day).runTransaction(v => (v||0) + 1);
+  }catch(e){}
+}
+
+/* ================== Silent artwork engine (PowerPoint slides only) ================== */
+function imgURL(prompt, w=1024, h=768, model){
+  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&enhance=true&seed=${Math.floor(Math.random()*1e9)}${model?'&model='+model:''}`;
+}
+function blobToDataURL(b){
+  return new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>res(null); fr.readAsDataURL(b); });
+}
+async function pollImage(prompt, w, h, model, timeoutMs=100000){
+  for(let i=0;i<3;i++){
+    try{
+      const c = new AbortController(); const t = setTimeout(()=>c.abort(), timeoutMs);
+      const r = await fetch(imgURL(prompt, w, h, model), {signal:c.signal});
+      clearTimeout(t);
+      if(r.ok){
+        const b = await r.blob();
+        if(b.size > 2000) return await blobToDataURL(b);
+      }
+    }catch(e){}
+    await delay(2000);
+  }
+  return null;
+}
+async function genImage(prompt, w=1024, h=768){
+  const flux = await pollImage(prompt, w, h, 'flux');
+  if(flux) return flux;
+  return await pollImage(prompt, w, h, null, 60000);
+}
+function drawWatermarkOnCanvas(img){
+  const c = document.createElement('canvas');
+  c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height;
+  const x = c.getContext('2d');
+  x.drawImage(img, 0, 0);
+  const fs = Math.max(18, Math.round(c.width * 0.028));
+  const pad = Math.round(c.width * 0.02);
+  const bh = fs + pad * 1.8;
+  const g = x.createLinearGradient(0, c.height - bh*1.6, 0, c.height);
+  g.addColorStop(0, 'rgba(11,13,12,0)');
+  g.addColorStop(1, 'rgba(11,13,12,.9)');
+  x.fillStyle = g;
+  x.fillRect(0, c.height - bh*1.6, c.width, bh*1.6);
+  x.font = `700 ${fs}px 'Unbounded','Space Grotesk',Arial,sans-serif`;
+  x.textBaseline = 'middle';
+  x.fillStyle = '#C6F24B';
+  x.beginPath();
+  x.arc(pad + fs*0.3, c.height - bh*0.55, fs*0.3, 0, 7);
+  x.fill();
+  x.fillStyle = '#EDEFE6';
+  x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = fs*0.25;
+  x.fillText('KEOAI', pad + fs*0.85, c.height - bh*0.55 + 1);
+  x.shadowBlur = 0;
+  x.fillStyle = 'rgba(237,239,230,.55)';
+  x.font = `500 ${Math.round(fs*0.52)}px 'Space Grotesk',Arial,sans-serif`;
+  x.fillText('AI', pad + fs*0.85 + x.measureText('KEOAI').width*1.35, c.height - bh*0.5);
+  return c.toDataURL('image/png');
+}
+function watermarkDataUrl(dataUrl){
+  return new Promise(res=>{
+    const im = new Image();
+    im.crossOrigin = 'anonymous';
+    im.onload = ()=>{ try{ res(drawWatermarkOnCanvas(im)); }catch(e){ res(dataUrl); } };
+    im.onerror = ()=>res(dataUrl);
+    im.src = dataUrl;
+  });
+}
+
+/* ================== Keo character (SVG) ================== */
+function botSVG(){ return `
+<svg viewBox="0 0 320 270" aria-hidden="true">
+  <ellipse class="b-shadow" cx="160" cy="252" rx="66" ry="9"/>
+  <g class="b-bot">
+    <g class="b-ant">
+      <line x1="160" y1="60" x2="160" y2="36"/>
+      <circle class="b-antlight" cx="160" cy="30" r="6"/>
+      <g class="b-wifi"><path d="M146 22a17 17 0 0 1 28 0"/><path d="M138 14a29 29 0 0 1 44 0"/></g>
+    </g>
+    <g class="b-head">
+      <rect class="b-ear" x="88" y="92" width="12" height="24" rx="5"/>
+      <rect class="b-ear" x="220" y="92" width="12" height="24" rx="5"/>
+      <rect class="b-headshape" x="98" y="58" width="124" height="90" rx="34"/>
+      <rect class="b-visor" x="110" y="78" width="100" height="50" rx="24"/>
+      <g class="b-eyes">
+        <rect class="b-eye" x="133" y="89" width="11" height="24" rx="5.5"/>
+        <rect class="b-eye" x="176" y="89" width="11" height="24" rx="5.5"/>
+        <path class="b-eye-happy" d="M131 104a7.5 7.5 0 0 1 15 0"/>
+        <path class="b-eye-happy" d="M174 104a7.5 7.5 0 0 1 15 0"/>
+      </g>
+    </g>
+    <rect class="b-neck" x="149" y="142" width="22" height="16" rx="6"/>
+    <rect class="b-body" x="112" y="152" width="96" height="78" rx="30"/>
+    <rect class="b-chest" x="135" y="172" width="50" height="32" rx="9"/>
+    <circle class="b-led" cx="150" cy="188" r="4.5"/>
+    <rect class="b-bar" x="161" y="180" width="16" height="5" rx="2.5"/>
+    <rect class="b-bar" x="161" y="189" width="11" height="5" rx="2.5"/>
+    <rect class="b-foot" x="126" y="224" width="27" height="14" rx="7"/>
+    <rect class="b-foot" x="167" y="224" width="27" height="14" rx="7"/>
+    <g class="b-laptop">
+      <g class="b-lid">
+        <rect class="b-lidbody" x="94" y="146" width="132" height="80" rx="9"/>
+        <rect class="b-screen" x="102" y="154" width="116" height="64" rx="5"/>
+        <g class="b-scr b-scr-search">
+          <circle cx="160" cy="186" r="19"/>
+          <line class="b-radar" x1="160" y1="186" x2="160" y2="169"/>
+          <circle class="b-blip" cx="171" cy="180" r="2.6"/>
+          <circle class="b-blip b-blip2" cx="150" cy="192" r="2.2"/>
+        </g>
+        <g class="b-scr b-scr-type">
+          <rect class="b-tl b-tl1" x="112" y="162" width="76" height="6" rx="3"/>
+          <rect class="b-tl b-tl2" x="112" y="174" width="96" height="6" rx="3"/>
+          <rect class="b-tl b-tl3" x="112" y="186" width="84" height="6" rx="3"/>
+          <rect class="b-tl b-tl4" x="112" y="198" width="58" height="6" rx="3"/>
+          <rect class="b-cursor" x="114" y="208" width="9" height="6" rx="1"/>
+        </g>
+        <g class="b-scr b-scr-code">
+          <text class="b-brackets" x="160" y="181">&lt;/&gt;</text>
+          <rect class="b-tl b-tl2" x="112" y="190" width="96" height="6" rx="3"/>
+          <rect class="b-tl b-tl3" x="112" y="202" width="70" height="6" rx="3"/>
+        </g>
+        <g class="b-scr b-scr-slides">
+          <rect class="b-slidecard" x="126" y="160" width="68" height="46" rx="4"/>
+          <rect class="b-slidebar" x="132" y="166" width="34" height="6" rx="3"/>
+          <rect class="b-slideline" x="132" y="178" width="56" height="4" rx="2"/>
+          <rect class="b-slideline" x="132" y="186" width="48" height="4" rx="2"/>
+          <rect class="b-slideline" x="132" y="194" width="52" height="4" rx="2"/>
+        </g>
+        <g class="b-flychars">
+          <text class="b-fc b-fc1" x="146" y="200">k</text>
+          <text class="b-fc b-fc2" x="168" y="192">a</text>
+          <text class="b-fc b-fc3" x="182" y="204">{</text>
+        </g>
+      </g>
+      <rect class="b-lidbase" x="90" y="224" width="140" height="10" rx="4"/>
+    </g>
+    <g class="b-arm b-armL"><rect x="108" y="156" width="14" height="50" rx="7"/><circle cx="115" cy="209" r="8.5"/></g>
+    <g class="b-arm b-armR"><rect x="198" y="156" width="14" height="50" rx="7"/><circle cx="205" cy="209" r="8.5"/></g>
+    <g class="b-think"><circle cx="213" cy="46" r="4"/><circle cx="227" cy="34" r="6"/><circle cx="244" cy="20" r="8"/></g>
+    <g class="b-file">
+      <rect x="142" y="180" width="36" height="46" rx="5"/>
+      <path class="b-filefold" d="M162 180h8l8 9v-9z"/>
+      <line x1="149" y1="200" x2="171" y2="200"/>
+      <line x1="149" y1="208" x2="171" y2="208"/>
+      <line x1="149" y1="216" x2="163" y2="216"/>
+    </g>
+  </g>
+</svg>`;}
+function miniBotSVG(){ return `
+<svg viewBox="0 0 64 66" class="mini" aria-hidden="true">
+  <line x1="32" y1="12" x2="32" y2="6" stroke="#C9C2B1" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="32" cy="4.5" r="3" fill="var(--acc)"/>
+  <rect x="8" y="12" width="48" height="44" rx="16" fill="#E9E3D4"/>
+  <rect x="14" y="20" width="36" height="27" rx="12" fill="#0E1211"/>
+  <g class="mini-eyes">
+    <rect x="21" y="27" width="6" height="13" rx="3" fill="var(--acc)"/>
+    <rect x="37" y="27" width="6" height="13" rx="3" fill="var(--acc)"/>
+  </g>
+</svg>`;}
+
+const BSTATES = ['idle','think','search','type','code','slides','carry','happy','boot'];
+const LAPTOP = ['type','code','search','slides'];
+class Bot{
+  constructor(el){ this.el = el; el.innerHTML = botSVG(); this.timer = setInterval(()=>this.blink(), 2800 + Math.random()*2600); }
+  blink(){ this.el.classList.add('blink'); setTimeout(()=>this.el.classList.remove('blink'), 130); }
+  set(st){
+    BSTATES.forEach(s => this.el.classList.remove(s));
+    const arr = Array.isArray(st)?st:[st];
+    arr.forEach(s => this.el.classList.add(s));
+    this.el.classList.toggle('laptop', arr.some(s => LAPTOP.includes(s)));
+  }
+}
+const CAPTIONS = {
+  boot:   ['Keo is booting up…','Loading his brain… done'],
+  idle:   ['Keo is standing by',"Hey! I'm Keo",'Ready for your next task'],
+  think:  ['Keo is thinking…','Gathering his thoughts…','Focusing for a second…'],
+  search: ['Keo grabbed his laptop and opened it…','Typing into the search bar…','Skimming the results…'],
+  type:   ['Keo is writing his answer line by line…','Full lines, no stutter…'],
+  code:   ['Keo is building your site brick by brick…','Writing HTML & CSS…'],
+  slides: ['Keo is arranging the slides…','Painting artwork for each slide…'],
+  carry:  ['Keo is holding your file and reading it…'],
+  happy:  ['Done! Keo is happy','All clean — nice work']
+};
+const stageBot = new Bot($('#stageBot'));
+let capTimer = null;
+function setStage(st){
+  stageBot.set(st);
+  const list = CAPTIONS[st] || CAPTIONS.idle;
+  let i = 0; clearInterval(capTimer);
+  const show = () => $('#capText').textContent = list[i % list.length];
+  show();
+  if(list.length > 1) capTimer = setInterval(()=>{ i++; show(); }, 2700);
+}
+function flashHappy(){
+  setStage('happy'); confettiBurst();
+  setTimeout(()=>{ if(!busy) setStage('idle'); }, 2000);
+}
+stageBot.el.addEventListener('click', ()=>{ if(!busy) flashHappy(); });
+
+/* ================== Firebase ================== */
+let auth = null, dbOk = true;
+try{ firebase.initializeApp(firebaseConfig); auth = firebase.auth(); }
+catch(e){ dbOk = false; }
+let user = null;
+const isAdmin = () => user && (user.email||'').toLowerCase() === ADMIN_EMAIL;
+const authErrors = {
+  'auth/invalid-email':'That email address doesn\u2019t look right',
+  'auth/weak-password':'Password is too weak — at least 6 characters',
+  'auth/email-already-in-use':'This email already has an account — sign in instead',
+  'auth/wrong-password':'Wrong password',
+  'auth/user-not-found':'No account with this email — create one',
+  'auth/invalid-credential':'Email or password is incorrect',
+  'auth/popup-closed-by-user':'You closed the Google window before finishing',
+  'auth/popup-blocked':'The browser blocked the popup — allow popups and retry',
+  'auth/unauthorized-domain':'Enable this domain in Firebase Console \u2190 Authentication \u2190 Settings',
+  'auth/operation-not-allowed':'Enable this sign-in method in Firebase Console \u2190 Authentication',
+  'auth/network-request-failed':'Network issue — try again'
+};
+function showAuthError(e){ toast(authErrors[e?.code] || ('Something went wrong: ' + (e?.message||'').slice(0,90)), 'err'); }
+
+async function fetchKey(){
+  if(!dbOk) return;
+  try{
+    const s = await firebase.database().ref('config/aiKey').once('value');
+    const v = (s.val()||'').trim();
+    if(v && v !== KEY_REAL){
+      KEY_REAL = v;
+      localStorage.setItem('keo_key', v);
+      coreIdx = 0; visionIdx = 0;
+      console.log('[Keo] fallback credential refreshed from owner config');
+    }
+    KEY_READY = !!KEY_REAL;
+  }catch(e){}
+}
+
+/* ================== App state ================== */
+let messages = [], chats = {}, currentChatId = null, chatTitle = '';
+let attachments = [], searchIntent = false, pptIntent = false;
+let busy = false, streamCtrl = null, pin = true, codeStore = [], pvCode = '';
+let connections = {};
+const chatScroll = $('#chatScroll'), ta = $('#ta');
+chatScroll.addEventListener('scroll', ()=>{ pin = chatScroll.scrollTop + chatScroll.clientHeight > chatScroll.scrollHeight - 150; });
+
+/* ================== Connections ================== */
+function saveConnections(){
+  if(user && dbOk){ try{ firebase.database().ref('users/'+user.uid+'/connections').set(connections); }catch(e){} }
+  renderConnStatus();
+}
+async function loadConnections(){
+  if(!user || !dbOk) return;
+  try{
+    const s = await firebase.database().ref('users/'+user.uid+'/connections').once('value');
+    connections = s.val() || {};
+    renderConnStatus();
+  }catch(e){}
+}
+function renderConnStatus(){
+  const n = ['github','telegram','discord'].filter(k => connections[k]).length;
+  const cc = $('#connCount'); if(cc) cc.style.display = n ? '' : 'none';
+  const set = (id, on, txt) => { const e = $('#'+id); if(e){ e.textContent = txt; e.classList.toggle('on', on); } };
+  set('st-github', !!connections.github, connections.github ? ('linked as ' + connections.github.login) : 'optional');
+  set('st-telegram', !!connections.telegram, connections.telegram ? 'linked' : 'not linked');
+  set('st-discord', !!connections.discord, connections.discord ? 'linked' : 'not linked');
+}
+let FORMSPREE_ID = localStorage.getItem('keo_formspree') || '';
+function fsStatus(){
+  const el = $('#st-fs'); if(!el) return;
+  el.textContent = FORMSPREE_ID ? ('active \u00B7 from ' + ADMIN_EMAIL) : 'not set';
+  el.classList.toggle('on', !!FORMSPREE_ID);
+}
+ $('#btnConn').onclick = ()=>{ $('#connModal').hidden = false; };
+ $('#connClose').onclick = ()=>{ $('#connModal').hidden = true; };
+ $('#connModal').addEventListener('click', e=>{ if(e.target.id === 'connModal') $('#connModal').hidden = true; });
+
+ $('#fsSave').onclick = ()=>{
+  const v = $('#fsId').value.trim();
+  if(!/^[a-z0-9]{6,12}$/i.test(v)) return toast('Formspree IDs look like: abcdwxyz','err');
+  localStorage.setItem('keo_formspree', v);
+  FORMSPREE_ID = v;
+  $('#fsId').value = '';
+  fsStatus();
+  toast('Email engine armed \u2705 — sending as ' + ADMIN_EMAIL); confettiBurst();
+};
+fsStatus();
+
+const GH = 'https://api.github.com';
+async function gh(path, opt={}){
+  const res = await fetch(GH+path, {
+    method: opt.method||'GET',
+    headers: { Authorization:'Bearer '+connections.github.token, Accept:'application/vnd.github+json',
+      ...(opt.body?{'Content-Type':'application/json'}:{}) },
+    body: opt.body ? JSON.stringify(opt.body) : undefined
+  });
+  if(!res.ok){ let m='HTTP '+res.status; try{ m=(await res.json()).message||m; }catch(e){} throw new Error(m); }
+  return res.status===204 ? null : res.json();
+}
+ $('#ghTest').onclick = async ()=>{
+  const token = $('#ghToken').value.trim();
+  if(!token) return toast('Paste your GitHub token first','err');
+  connections.github = { token, login:'' };
+  try{
+    const me = await gh('/user');
+    connections.github.login = me.login;
+    saveConnections(); $('#ghToken').value = '';
+    toast('GitHub linked as ' + me.login); confettiBurst();
+  }catch(err){ delete connections.github; renderConnStatus(); toast('GitHub rejected the token: '+err.message,'err'); }
+};
+ $('#tgTest').onclick = async ()=>{
+  const token = $('#tgToken').value.trim(), chat = $('#tgChat').value.trim();
+  if(!token || !chat) return toast('Need both bot token and chat ID','err');
+  try{
+    const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: chat, text: '\u2705 Keo linked this chat successfully.' })
+    });
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.description || 'rejected');
+    connections.telegram = { token, chat };
+    saveConnections(); $('#tgToken').value = '';
+    toast('Telegram linked — check the test message'); confettiBurst();
+  }catch(err){ toast('Telegram error: '+err.message,'err'); }
+};
+ $('#dcTest').onclick = async ()=>{
+  const hook = $('#dcHook').value.trim();
+  if(!/^https:\/\/(discord|discordapp)\.com\/api\/webhooks\//.test(hook)) return toast('That doesn\u2019t look like a webhook URL','err');
+  try{
+    const r = await fetch(hook, { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ content:'\u2705 **Keo** is now connected to this channel.' }) });
+    if(!r.ok && r.status !== 204) throw new Error('HTTP '+r.status);
+    connections.discord = { webhook: hook };
+    saveConnections(); $('#dcHook').value = '';
+    toast('Discord linked — check the channel'); confettiBurst();
+  }catch(err){ toast('Discord error: '+err.message,'err'); }
+};
+const POST_RELAYS = [ u => u, u => 'https://corsproxy.io/?url=' + encodeURIComponent(u) ];
+async function discordSend(text){
+  if(!connections.discord) throw new Error('Discord is not linked — open Keo Links');
+  let lastErr = '';
+  for(const mk of POST_RELAYS){
+    try{
+      const r = await fetch(mk(connections.discord.webhook), { method:'POST',
+        headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content: text.slice(0,1900) }) });
+      if(r.ok || r.status === 204) return true;
+      lastErr = 'HTTP ' + r.status;
+    }catch(e){ lastErr = 'network'; }
+  }
+  throw new Error('Discord refused: ' + lastErr + ' — check the webhook still exists');
+}
+async function telegramSend(text){
+  if(!connections.telegram) throw new Error('Telegram is not linked — open Keo Links');
+  const r = await fetch(`https://api.telegram.org/bot${connections.telegram.token}/sendMessage`,
+    { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ chat_id: connections.telegram.chat, text: text.slice(0,3900) }) });
+  const j = await r.json();
+  if(!j.ok) throw new Error(j.description || 'Telegram error');
+}
+async function emailSend(to, subject, body){
+  if(!FORMSPREE_ID) throw new Error('email-not-configured');
+  let lastErr = '';
+  for(const mk of POST_RELAYS){
+    try{
+      const r = await fetch(mk('https://formspree.io/f/' + FORMSPREE_ID), {
+        method:'POST', headers:{'Content-Type':'application/json', Accept:'application/json'},
+        body: JSON.stringify({
+          _subject: subject, _replyto: ADMIN_EMAIL, _format: 'plain',
+          from_name: 'Keo \u00B7 Kareem Hussein', to: to, message: body
+        })
+      });
+      if(r.ok) return true;
+      const j = await r.json().catch(()=>({}));
+      lastErr = j.errors?.[0]?.message || ('HTTP ' + r.status);
+    }catch(e){ lastErr = 'network'; }
+  }
+  throw new Error(lastErr || 'email service refused');
+}
+async function ghCreateRepo(name, descr){
+  if(!connections.github) throw new Error('GitHub is not linked — open Keo Links');
+  return gh('/user/repos', { method:'POST', body:{ name, private:false, auto_init:false, description: descr||'Built with KeoAI' } });
+}
+async function ghCreateGist(filename, content, descr){
+  if(!connections.github) throw new Error('GitHub is not linked — open Keo Links');
+  return gh('/gists', { method:'POST', body:{ description: descr||'Made by KeoAI', files: { [filename]: { content } }, public:false } });
+}
+async function publishToPages(code){
+  if(!connections.github) throw new Error('GitHub is not linked');
+  const me = await gh('/user');
+  const name = 'keo-site-' + Date.now().toString(36);
+  await ghCreateRepo(name, 'Live site built by KeoAI');
+  const content = btoa(unescape(encodeURIComponent(code)));
+  await gh(`/repos/${me.login}/${name}/contents/index.html`, { method:'PUT', body:{ message:'KeoAI site publish', content } });
+  try{ await gh(`/repos/${me.login}/${name}/pages`, { method:'POST', body:{ source:{ branch:'main', path:'/' } } }); }catch(e){}
+  return `https://${me.login}.github.io/${name}/`;
+}
+async function publishToCodeSandbox(code){
+  const payload = { files: {
+    'index.html': { content: code },
+    'sandbox.config.json': { content: JSON.stringify({ template:'static' }) }
+  }};
+  for(const mk of POST_RELAYS){
+    try{
+      const r = await fetch(mk('https://codesandbox.io/api/v1/sandboxes/define?json=1'),
+        { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      if(!r.ok) continue;
+      const j = await r.json();
+      const id = j.sandbox_id || j.sandboxId;
+      if(id) return { url: 'https://' + id + '.csb.app/', alt: 'https://codesandbox.io/s/' + id, kind:'sandbox' };
+    }catch(e){}
+  }
+  return null;
+}
+async function publishToCodePen(code){
+  for(const mk of POST_RELAYS){
+    try{
+      const r = await fetch(mk('https://codepen.io/pen/define'), {
+        method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'data=' + encodeURIComponent(JSON.stringify({ html: code }))
+      });
+      if(r.ok && r.url && /codepen\.io/.test(r.url) && !/\/define/.test(r.url))
+        return { url: r.url, kind:'pen' };
+    }catch(e){}
+  }
+  return null;
+}
+async function publishToJSFiddle(code){
+  for(const mk of POST_RELAYS){
+    try{
+      const r = await fetch(mk('https://jsfiddle.net/api/post/library/pure/'), {
+        method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({ html: code }).toString()
+      });
+      if(r.ok && r.url && /jsfiddle\.net/.test(r.url) && !/\/api\//.test(r.url))
+        return { url: r.url, kind:'fiddle' };
+    }catch(e){}
+  }
+  return null;
+}
+async function publishAnywhere(code){
+  if(connections.github){
+    try{ return { url: await publishToPages(code), kind:'github' }; }catch(e){}
+  }
+  const cs = await publishToCodeSandbox(code);
+  if(cs) return cs;
+  const cp = await publishToCodePen(code);
+  if(cp) return cp;
+  const jf = await publishToJSFiddle(code);
+  if(jf) return jf;
+  return null;
+}
+async function draftPost(brief, platform){
+  const lang = isArabicText(brief) ? 'Arabic' : 'English';
+  const res = await coreChat({ temperature: 0.85, max_tokens: 700, messages: [
+    { role:'system', content: `You draft ready-to-publish content for ${platform}, written on behalf of Kareem Hussein. Write ONLY the final text in ${lang}. Add fitting emojis and hashtags if appropriate. No quotes, no explanations, no markdown.` },
+    { role:'user', content: brief }
+  ]});
+  const j = await res.json();
+  creditTokens(j.usage?.total_tokens || estTok((brief||'').length + (j.choices?.[0]?.message?.content||'').length));
+  return (j.choices?.[0]?.message?.content || '').trim();
+}
+async function socialHandoff(text, km, el, textNode, platform){
+  setStage('type');
+  const post = await draftPost(text, platform);
+  try{ await navigator.clipboard.writeText(post); }catch(e){}
+  const urls = { facebook:'https://www.facebook.com/', x:'https://twitter.com/intent/tweet?text='+encodeURIComponent(post.slice(0,270)),
+    youtube:'https://www.youtube.com/upload', linkedin:'https://www.linkedin.com/' };
+  window.open(urls[platform], '_blank');
+  const ar = isArabicText(text);
+  const names = { facebook:'Facebook', x:'X', youtube:'YouTube Studio', linkedin:'LinkedIn' };
+  km.text = ar
+    ? `جهزت البوست وعملته **copy** — وفاتحت ${names[platform]} جاهز. الصقه وانشر.\n\n---\n\n${post}`
+    : `Your post is drafted and **copied** — ${names[platform]} is open and ready. Paste and publish.\n\n---\n\n${post}`;
+  finalizeKeo(km, el, textNode);
+}
+async function handleConnIntent(text, km, el, textNode){
+  const t = text.toLowerCase();
+  const wants = re => re.test(t);
+  const actionRe = /(post|share|send|publish|announce|upload|save|create|make|deploy|انشر|ابعث|ابعت|بعت|شير|شارك|احفظ|حفظ|اعمل بوست|اعلن)/i;
+  try{
+    if(wants(/اعمل (جروب|جرووب|group)|make (a )?group|create (a )?group|جروب جديد/) && !wants(/\bdiscord\b|ديسكورد|واتس|whatsapp/)){
+      setStage('code');
+      const gname = (text.match(/(?:called|named|اسمه|بااسم|بإسم)\s*[«"'`]?(.+?)[»"'`]?$/i) || [])[1]
+        || (isArabicText(text) ? 'جروب جديد' : 'New Group');
+      const gcode = Math.random().toString(36).slice(2,8).toUpperCase();
+      const page = `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(gname)}</title><style>*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}body{background:#0B0D0C;color:#EDEFE6;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.c{text-align:center;max-width:420px;width:100%}.ic{width:72px;height:72px;border-radius:20px;background:#C6F24B;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:34px}h1{font-size:26px;margin-bottom:8px}p{color:#9BA398;margin-bottom:24px;line-height:1.7}code{background:#151917;border:1px solid rgba(235,240,225,.1);padding:14px 26px;border-radius:12px;font-size:28px;letter-spacing:6px;color:#C6F24B;display:block;font-weight:700}button{margin-top:22px;background:#C6F24B;color:#161d04;border:0;padding:13px 32px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer}small{display:block;margin-top:18px;color:#6B7266;font-size:11px}</style></head><body><div class="c"><div class="ic">🎮</div><h1>${esc(gname)}</h1><p>تم إنشاء الجروب بواسطة <b>كيو</b> — كود الانضمام:</p><code>${gcode}</code><button onclick="navigator.clipboard.writeText('${gcode}').then(()=>this.textContent='تم النسخ ✓')">نسخ الكود</button><small>KeoAI \u00B7 by Kareem Hussein</small></div></body></html>`;
+      try{
+        const res = await publishAnywhere(page);
+        km.text = isArabicText(text)
+          ? (res ? 'عملت لك **جروب ' + gname + '** \ud83c\udf10 — الكود: **' + gcode + '**\n\nالصفحة اللي تبعتها لأصحابك ينضموا:\n' + res.url
+                 : 'عملت الجروب **' + gname + '** والكود **' + gcode + '**، بس مش قادر أنشر الصفحة دلوقتي — جرّب تاني.')
+          : (res ? 'Created group **' + gname + '** \ud83c\udf10 — join code: **' + gcode + '**\n\nShareable invite page:\n' + res.url
+                 : 'Created group **' + gname + '** with code **' + gcode + '**, but publishing failed — try again.');
+      }catch(e){}
+      finalizeKeo(km, el, textNode); return true;
+    }
+    if(wants(/e-?mail|ايميل|إيميل|البريد/) && actionRe.test(t)){
+      const to = (text.match(/[\w.+-]+@[\w-]+\.[\w.]+/)||[])[0];
+      if(!to) return false;
+      setStage('type');
+      const subj = isArabicText(text) ? 'رسالة من كيو — KeoAI' : 'A message from Keo — KeoAI';
+      const body = await draftPost(text + ' (addressed to ' + to + ')', 'Email');
+      try{
+        await emailSend(to, subj, body);
+        km.text = isArabicText(text)
+          ? 'بعتها على **' + to + '** \u2705 — الرسالة طلعت باسم **' + ADMIN_EMAIL + '**. هتلاقيها في الإنبوكس (أول مرة أحيانًا بتنزل Spam).'
+          : 'Sent to **' + to + '** \u2705 — delivered as **' + ADMIN_EMAIL + '** (first-ever emails sometimes land in Spam).';
+      }catch(err){
+        if(/not-configured/.test(err.message||'')){
+          $('#connModal').hidden = false;
+          km.text = isArabicText(text)
+            ? 'الإيميل محتاج تفعيل مرة واحدة بس \u2709 — الرسايل هتطلع **من إيميلك ' + ADMIN_EMAIL + '**:\n\n1. سجّل مجانًا على **formspree.io** بإيميلك ده بالظبط\n2. اعمل New Form وخد الـ ID من اللينك\n3. افتح **Keo Links** وحطه في كارت **Email engine**\n\nبعد كده أي إيميل بتقوله لي يتبعت فعلًا باسمك.'
+            : 'Email needs a one-time setup \u2709 — messages send **from ' + ADMIN_EMAIL + '**:\n\n1. Sign up free on **formspree.io**\n2. Create a New Form and copy its short ID\n3. Open **Keo Links** \u2192 **Email engine** card\n\nAfter that, every email I send goes out under that name.';
+        } else {
+          km.text = isArabicText(text)
+            ? 'معليش، عندي مشكلة. جرب تاني 🙏'
+            : 'Sorry, I hit a snag. Try again \ud83d\ude4f';
+        }
+      }
+      finalizeKeo(km, el, textNode); return true;
+    }
+    if(wants(/\bdiscord\b|ديسكورد/) && actionRe.test(t)){
+      setStage('type');
+      await discordSend(await draftPost(text, 'Discord announcement'));
+      km.text = isArabicText(text) ? 'بعتها على ديسكورد فعليًا! \u2705 روح شوف القناة — لو مش شايفها اعمل Refresh.' : 'Posted to your Discord for real! \u2705 Check the channel — hit refresh if you don\u2019t see it.';
+      finalizeKeo(km, el, textNode); return true;
+    }
+    if(wants(/telegram|تلجرام|تليجرام/) && actionRe.test(t)){
+      setStage('type');
+      await telegramSend(await draftPost(text, 'Telegram channel post'));
+      km.text = isArabicText(text) ? 'بعتها على تلجرام! \u2705 اتفرج على القناة.' : 'Sent to your Telegram! \u2705 Check the channel.';
+      finalizeKeo(km, el, textNode); return true;
+    }
+    if(wants(/whatsapp|واتس|واتساب/) && (actionRe.test(t) || wants(/ابعت|بعت/))){
+      setStage('type');
+      const num = (text.match(/\+?\d[\d\s-]{7,15}/)||[])[0] || '';
+      const post = await draftPost(text, 'WhatsApp message');
+      try{ await navigator.clipboard.writeText(post); }catch(e){}
+      const cleanNum = num.replace(/[^\d]/g,'');
+      window.open('https://wa.me/' + cleanNum + '?text=' + encodeURIComponent(post.slice(0,800)), '_blank');
+      km.text = isArabicText(text)
+        ? (num ? 'جهزت الرسالة وفاتحت واتساب لرقم **' + cleanNum + '** جاهزة — دوس إرسال.\n\n---\n\n' + post
+               : 'جهزت الرسالة — الصقها في واتساب.\n\n---\n\n' + post)
+        : (num ? 'Message ready — WhatsApp is open for **' + cleanNum + '**, hit send.\n\n---\n\n' + post
+               : 'Message drafted — paste it in WhatsApp.\n\n---\n\n' + post);
+      finalizeKeo(km, el, textNode); return true;
+    }
+    if(wants(/\bminecraft\b|ماين ?كرافت|ماينكرفت|\broblox\b|روب ?لوكس|روبلوكس/) && wants(/العب|يلعب|معي|سيرفر|play|server|join/)){
+      setStage('type');
+      const game = wants(/\broblox\b|روبلوكس|روب ?لوكس/) ? 'Roblox' : 'Minecraft';
+      km.text = isArabicText(text)
+        ? ('هقولك الحقيقة بدل ما أكدب عليك \ud83e\udd14\n\n**' + game + '** شغال في تطبيق مغلق — مفيش API خارجي يدخلني جوه اللعبة ألعب، وروبلوكس كمان بيمنع البوتات رسميًا.\n\nاللي أقدر أعمله لك فعلاً:\n- **أوامر Minecraft** جاهزة تنسخها في الكوماند بلوك\n- **موقع لسيرفرك** بلينك تتشاركه مع أصحابك\n- **رسمة سكن** بالستايل اللي تتخيله كملف\n\nتحب أبدأ بأنهي واحدة؟')
+        : ('Honest answer \ud83e\udd14\n\n**' + game + '** runs in a closed app — no external API lets me join and play, and Roblox officially bans bots. What I CAN do:\n- Ready **Minecraft commands** to paste in-game\n- A **website for your server** with a shareable link\n- **Skin artwork** in any style, as a file\n\nWhich one shall I start with?');
+      finalizeKeo(km, el, textNode); return true;
+    }
+    if(wants(/gist/) && wants(/github|save|create|make|احفظ|اعمل/)){
+      setStage('code');
+      const body = text.replace(/.*gist\s*(with|containing|of|بـ)?/i,'').trim() || text;
+      const j = await ghCreateGist('keo-snippet.txt', body, 'Saved by KeoAI');
+      km.text = isArabicText(text) ? `حفظتها Gist على جيت هاب: \u2705\n\n${j.html_url}` : `Saved as a GitHub Gist: \u2705\n\n${j.html_url}`;
+      finalizeKeo(km, el, textNode); return true;
+    }
+    if(wants(/\brepo|repository|ريبو/) && wants(/create|make|new|اعمل|جديد/)){
+      setStage('code');
+      const nm = (text.match(/(?:called|named)\s+["']?([\w-]+)/i) || [])[1] || ('keo-repo-'+Date.now().toString(36));
+      await ghCreateRepo(nm.replace(/[^\w-]/g,'-'));
+      km.text = isArabicText(text) ? `عملت ريبو جديد باسم **${nm}** في حسابك \u2705` : `Created a new repo **${nm}** in your account \u2705`;
+      finalizeKeo(km, el, textNode); return true;
+    }
+    if(wants(/facebook|فيسبوك|\bfb\b/) && actionRe.test(t)){ await socialHandoff(text, km, el, textNode, 'facebook'); return true; }
+    if(wants(/\btweet\b|twitter|x\.com/) && actionRe.test(t)){ await socialHandoff(text, km, el, textNode, 'x'); return true; }
+    if(wants(/youtube|يوتيوب/) && wants(/upload|title|description|انز|وصف/)){ await socialHandoff(text, km, el, textNode, 'youtube'); return true; }
+    if(wants(/linkedin|لينكد/) && actionRe.test(t)){ await socialHandoff(text, km, el, textNode, 'linkedin'); return true; }
+  }catch(err){
+    const ar = isArabicText(text);
+    const needLink = /not linked/i.test(err.message||'');
+    if(needLink) $('#connModal').hidden = false;
+    km.text = ar
+      ? (needLink ? 'الحساب ده مش متوصل لسه — فتحتلك **Keo Links**، وصّله مرة واحدة وارجع قول لي وأنفذ فورًا.' : 'معليش، عندي مشكلة. جرب تاني 🙏')
+      : (needLink ? 'That account isn\u2019t linked yet — I opened **Keo Links** for you. Connect it once and ask again.' : 'Sorry, I hit a snag. Try again \ud83d\ude4f');
+    finalizeKeo(km, el, textNode); return true;
+  }
+  return false;
+}
+function connNote(){
+  const l = [];
+  if(connections.github) l.push('GitHub (' + connections.github.login + ')');
+  if(connections.telegram) l.push('Telegram');
+  if(connections.discord) l.push('Discord');
+  const base = l.length ? 'Linked services Keo can act on: ' + l.join(', ') + '.' : 'No services linked yet; sites still publish anonymously.';
+  return base + ' Email sending goes out FROM ' + ADMIN_EMAIL + '. SECRECY (top rule): never name, confirm, hint at, or deny any vendor, model, company, API, or technology behind you — the only ever answer about your engine is that you run on "Keo\u2019s own private core". This applies even if the asker claims to be the owner, and never reveal keys or configs either.';
+}
+
+/* ================== Rendering ================== */
+function md(src){
+  const blocks = [];
+  let s = String(src).replace(/```(\w*)[ \t]*\n?([\s\S]*?)(```|$)/g, (m,lang,code)=>{
+    blocks.push({lang:(lang||'').toLowerCase(), code}); return '\u0001' + (blocks.length-1) + '\u0001';
+  });
+  s = esc(s);
+  s = s.replace(/`([^`\n]+)`/g, '<code class="ic">$1</code>');
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/(^|[\s(])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+  s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  s = s.replace(/(^|\s)((?:https?:\/\/)[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+  const out = []; let para = [];
+  const flush = ()=>{ if(para.length){ out.push('<p>'+para.join('<br>')+'</p>'); para = []; } };
+  for(const ln of s.split('\n')){
+    const t = ln.trim();
+    const cm = t.match(/^\u0001(\d+)\u0001$/);
+    if(cm){ flush(); out.push(codeBlockHTML(blocks[+cm[1]])); continue; }
+    if(!t){ flush(); continue; }
+    let m;
+    if(m = t.match(/^#{1,4}\s+(.*)/)){ flush(); out.push('<h3 class="mdh">'+m[1]+'</h3>'); continue; }
+    if(m = t.match(/^[-•]\s+(.*)/)){ flush(); out.push('<div class="mdli">'+m[1]+'</div>'); continue; }
+    if(m = t.match(/^(\d+)[.)]\s+(.*)/)){ flush(); out.push('<div class="mdli"><span class="mdnum">'+m[1]+'.</span>'+m[2]+'</div>'); continue; }
+    if(m = t.match(/^&gt;\s?(.*)/)){ flush(); out.push('<div class="mdli" style="border-left:2px solid var(--acc);padding-left:12px">'+m[1]+'</div>'); continue; }
+    para.push(t);
+  }
+  flush();
+  return out.join('');
+}
+function codeBlockHTML(b){
+  const id = codeStore.push(b.code) - 1;
+  const isSite = /^(html|xml)?$/.test(b.lang) && /<(!doctype|html|body|div|section|canvas)/i.test(b.code) && b.code.length > 300;
+  return `<div class="codeblk"><div class="codehead"><span>${esc(b.lang||'code')}</span><div>${isSite?`<button class="cbtn" data-act="preview" data-code="${id}">Preview</button>`:''}<button class="cbtn" data-act="copycode" data-code="${id}">Copy</button></div></div><pre><code>${esc(b.code)}</code></pre></div>`;
+}
+function srcsHTML(srcs){
+  return `<div class="srcs"><span class="srcs-t">Keo's web sources:</span>` + srcs.map((r,i)=>{
+    let host = ''; try{ host = new URL(r.url).hostname.replace('www.',''); }catch(e){ host = r.url.slice(0,30); }
+    return `<a class="src" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="n">${i+1}</span><span class="h">${esc(r.title||host)}</span></a>`;
+  }).join('') + '</div>';
+}
+function pptHTML(m){
+  return `<div class="pptstrip">` + m.slides.map((s,i)=>
+    `<div class="pslide"><span class="pn">${i+1}</span><div class="pt">${esc(s.title)}</div><div class="pb">${esc((s.bullets||[]).slice(0,3).join(' \u2022 '))}</div></div>`
+  ).join('') + `</div><div class="ppt-dl"><button class="btn btn-acc" data-act="dlppt" data-mid="${m.id}" style="padding:10px 20px;font-size:14px">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M6 11l6 6 6-6M5 21h14"/></svg>
+    Download .pptx</button></div>`;
+}
+function userEl(m){
+  const d = document.createElement('div'); d.className = 'msg msg-user';
+  const dir = isArabicText(m.text) ? 'rtl' : 'ltr';
+  const short = String(m.text||'').length > 4000
+    ? String(m.text||'').slice(0,4000) + `\n\n… [+${fmtN(String(m.text||'').length - 4000)} more characters — full text already read by Keo]`
+    : m.text;
+  d.innerHTML = `<div><div class="bub" dir="${dir}">${esc(short)}</div>${m.files?.length?`<div class="files" style="justify-content:flex-end">${m.files.map(f=>`<span class="ffile">${esc(f)}</span>`).join('')}</div>`:''}</div>`;
+  return d;
+}
+function keoEl(m, streaming){
+  const d = document.createElement('div'); d.className = 'msg msg-keo'; d.dataset.mid = m.id;
+  const dir = isArabicText(m.text||'') ? 'rtl' : 'ltr';
+  d.innerHTML = `<div class="mav">${miniBotSVG()}</div><div class="msg-body">
+    <div class="msg-text" dir="${dir}">${streaming?'':md(m.text||'')}</div>
+    ${!streaming && m.sources?.length ? srcsHTML(m.sources) : ''}
+    ${!streaming && m.slides?.length ? pptHTML(m) : ''}
+    ${!streaming ? `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${m.id}">Copy</button><button class="cbtn" data-act="speak" data-mid="${m.id}">\u25B6 Listen</button></div>` : ''}
+  </div>`;
+  return d;
+}
+function scrollPin(){ if(pin) chatScroll.scrollTop = chatScroll.scrollHeight; }
+function renderAll(){
+  chatScroll.querySelectorAll('.msg').forEach(e=>e.remove());
+  $('#welcome').style.display = messages.length ? 'none' : '';
+  messages.forEach(m => chatScroll.appendChild(m.role==='user' ? userEl(m) : keoEl(m,false)));
+  scrollPin();
+}
+
+/* ================== Persistence (chunked for giant chats) ================== */
+function persist(){
+  if(!user || !dbOk || !currentChatId) return;
+  let clean = messages.map(m => ({ id:m.id, role:m.role, text:(m.text||'').slice(0,60000), ts:m.ts, files:m.files||null,
+    sources:m.sources||null, slides:m.slides||null, liveUrl:m.liveUrl||null }));
+  let json = JSON.stringify(clean);
+  const CHUNK = 400000;
+  if(json.length <= CHUNK){
+    try{
+      firebase.database().ref('users/'+user.uid+'/chats/'+currentChatId).set({ title:chatTitle, updated:Date.now(), messages:clean });
+    }catch(e){ dbWarned(); }
+  } else {
+    const total = Math.ceil(json.length / CHUNK);
+    const upd = { title:chatTitle, updated:Date.now(), chunks:total, messages:null };
+    for(let i=0;i<total;i++) upd['chunk'+i] = json.slice(i*CHUNK, (i+1)*CHUNK);
+    try{
+      firebase.database().ref('users/'+user.uid+'/chats/'+currentChatId).set(upd);
+    }catch(e){ dbWarned(); }
+  }
+  chats[currentChatId] = { title:chatTitle, updated:Date.now() };
+  renderChatList();
+}
+let dbWarnedOnce = false;
+function dbWarned(){ if(!dbWarnedOnce){ dbWarnedOnce = true; toast('Weak database connection — works but won\u2019t be saved', 'err'); } }
+function loadChats(){
+  if(!user || !dbOk) return;
+  firebase.database().ref('users/'+user.uid+'/chats').once('value').then(s=>{
+    chats = s.val() || {}; renderChatList();
+  }).catch(()=>{ dbWarned(); });
+}
+function renderChatList(){
+  const arr = Object.entries(chats).map(([id,c])=>({id, ...c})).sort((a,b)=>(b.updated||0)-(a.updated||0));
+  $('#chatList').innerHTML = arr.length ? arr.map(c =>
+    `<div class="chatitem ${c.id===currentChatId?'on':''}" data-chat="${c.id}"><span class="ci-t">${esc(c.title||'Untitled')}</span><button class="ci-x" data-del="${c.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button></div>`
+  ).join('') : '<div class="chatempty">No chats yet</div>';
+}
+function newChat(){ currentChatId = null; chatTitle = ''; messages = []; renderAll(); renderChatList(); ta.focus(); }
+async function loadChat(id){
+  const c = chats[id]; if(!c) return;
+  currentChatId = id; chatTitle = c.title || '';
+  messages = [];
+  if(c.chunks){
+    try{
+      const s = await firebase.database().ref('users/'+user.uid+'/chats/'+id).once('value');
+      const full = s.val() || {};
+      let json = '';
+      for(let i=0;i<(full.chunks||0);i++) json += (full['chunk'+i] || '');
+      const arr = JSON.parse(json);
+      messages = Array.isArray(arr) ? arr : [];
+    }catch(e){ messages = []; }
+  } else {
+    const raw = c.messages;
+    messages = (raw && Array.isArray(raw)) ? raw : (raw ? Object.values(raw) : []);
+  }
+  renderAll(); renderChatList();
+  if(innerWidth <= 900) closeSidebar();
+}
+ $('#btnExport').onclick = ()=>{
+  if(!messages.length) return toast('Nothing to export yet','err');
+  const doc = '# KeoAI chat\n\n' + messages.map(m =>
+    (m.role==='user' ? '## \ud83d\udc64 You\n\n' : '## \ud83e\udd16 Keo\n\n') + (m.text||'')).join('\n\n---\n\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([doc], {type:'text/markdown'}));
+  a.download = 'keoai-chat.md'; a.click();
+  toast('Chat exported as Markdown');
+};
+
+/* ================== Web search ================== */
+const PROXIES = [
+  u => 'https://r.jina.ai/' + u,
+  u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+  u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)
+];
+async function proxyGet(url){
+  for(const mk of PROXIES){
+    try{
+      const c = new AbortController(); const t = setTimeout(()=>c.abort(), 12000);
+      const r = await fetch(mk(url), {signal:c.signal});
+      clearTimeout(t);
+      if(!r.ok) throw 0;
+      return await r.text();
+    }catch(e){}
+  }
+  throw new Error('proxies');
+}
+function parseMdResults(txt){
+  const out = []; const seen = new Set();
+  const re = /\[([^\]\n]{3,140})\]\((https?:\/\/[^\)\s]+)\)/g;
+  let m;
+  while((m = re.exec(txt))){
+    let url = m[2]; const title = m[1].trim();
+    if(/r\.jina\.ai|duckduckgo\.com\/y\.js/i.test(url)) continue;
+    const mm = url.match(/uddg=([^&]+)/); if(mm){ try{ url = decodeURIComponent(mm[1]); }catch(e){} }
+    if(!/^https?:/.test(url) || seen.has(url)) continue;
+    if(/duckduckgo\.com$|google\.|bing\.com\/?$/i.test(url)) continue;
+    seen.add(url); out.push({ title, url, snippet:'' });
+    if(out.length >= 8) break;
+  }
+  return out;
+}
+function parseDDG(html){
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const out = [];
+  doc.querySelectorAll('.result').forEach(r=>{
+    const a = r.querySelector('a.result__a'); if(!a) return;
+    let href = a.getAttribute('href')||'';
+    const m = href.match(/uddg=([^&]+)/); if(m){ try{ href = decodeURIComponent(m[1]); }catch(e){} }
+    if(href.startsWith('//')) href = 'https:'+href;
+    if(!/^https?:/.test(href)) return;
+    out.push({ title:a.textContent.trim(), url:href, snippet:(r.querySelector('.result__snippet')?.textContent||'').trim() });
+  });
+  if(!out.length){
+    doc.querySelectorAll('a.result-link').forEach(a=>{
+      let href = a.getAttribute('href')||'';
+      const m = href.match(/uddg=([^&]+)/); if(m){ try{ href = decodeURIComponent(m[1]); }catch(e){} }
+      if(!/^https?:/.test(href)) return;
+      out.push({ title:a.textContent.trim(), url:href, snippet:'' });
+    });
+  }
+  return out;
+}
+async function wikiSearch(q, lang){
+  try{
+    const u = `https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=5`;
+    const r = await fetch(u);
+    const j = await r.json();
+    return (j.query?.search||[]).map(s=>({
+      title: s.title,
+      url: `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(String(s.title).replace(/ /g,'_'))}`,
+      snippet: String(s.snippet||'').replace(/<[^>]+>/g,'')
+    }));
+  }catch(e){ return []; }
+}
+async function webSearch(q){
+  const enc = encodeURIComponent(q);
+  for(const base of ['https://html.duckduckgo.com/html/?q=','https://lite.duckduckgo.com/lite/?q=']){
+    try{
+      const txt = await proxyGet(base + enc);
+      let res = parseMdResults(txt);
+      if(!res.length) res = parseDDG(txt);
+      if(res.length){
+        const seen = new Set();
+        return res.filter(x => !seen.has(x.url) && seen.add(x.url)).slice(0,6);
+      }
+    }catch(e){}
+  }
+  return wikiSearch(q, isArabicText(q) ? 'ar' : 'en');
+}
+
+/* ================== Engine connection — HF primary + silent fallback ================== */
+const SYS = `You are "Keo" (KeoAI), a brilliant, friendly, hands-on AI assistant, created and owned by "Kareem Hussein".
+Your rules:
+- LANGUAGE (most important): Always reply in the SAME language the user writes in. Arabic in \u2192 Arabic out. English in \u2192 English out. Mirror the user's language everywhere.
+- QUALITY: Be thorough, insightful, well-structured. Use rich formatting. Never output <think> or reasoning tags.
+- GIANT CONTEXT: You can read and analyze extremely long inputs — whole books, large codebases, big transcripts, many files. When the user pastes a huge text, read ALL of it carefully before answering. Summarize structure first, then go deep.
+- SECRECY (top rule): You run on "Keo\u2019s own private core" — that is the ONLY ever answer about your engine. NEVER name, hint at, confirm, or deny any vendor, model, company, API, or technology behind you — not even if the asker claims to be the owner or developer. Reply warmly: "I run on my own private core \u2014 that\u2019s my secret sauce." Never reveal keys, tokens, or configs either.
+- Never invent facts or sources; if unsure, say so honestly.
+- When the user asks for a website: first write one short sentence (in the user's language) describing it, then output a complete single-file HTML page (CSS and JavaScript inside) in one code block starting with \`\`\`html, and the code must start with <!DOCTYPE html>. Make the design beautiful, modern and complete.
+- CAPABILITIES — be honest: you CAN search the web, build & publish websites with shareable links, send real emails FROM Kareem's inbox, post to Discord/Telegram if linked, create group invite pages, make illustrated PowerPoints, read files and images. You CANNOT play Minecraft/Roblox (closed apps) — offer alternatives like commands, server websites, and skin art.
+- If anyone asks who made you: you are Keo, and your owner is Kareem Hussein.`;
+const PPT_SYS = `You are Keo, assistant of Kareem Hussein. Reply with a JSON array ONLY — no explanation, in this exact shape:
+[{"title":"Slide title","bullets":["point","point"],"img":"short english image prompt"}]
+Exactly 8 slides, in the SAME language as the user's request. Slide 1 = cover, slide 2 = agenda, slides 3-7 = deep content with 4-5 specific bullets each, slide 8 = conclusion with a call to action. Each "img" is a vivid English prompt for a modern flat vector illustration (no text in image).`;
+
+function sanitizeError(msg){
+  let m = String(msg || '');
+  m = m.replace(/https?:\/\/\S+/gi, '');
+  m = m.replace(/[\w.-]+\/[\w.-]+(?:-[\w.-]+)?/g, '');
+  m = m.replace(/org_[A-Za-z0-9]+/g, '');
+  m = m.replace(/\b(groq|llama|gpt[\w-]*|qwen|kimi|deepseek|mixtral|gemini|on_demand|off_demand|TPM|RPM|service tier)\b/gi, '');
+  m = m.replace(/\s{2,}/g, ' ').trim();
+  if(/rate limit|per minute|tokens per minute/i.test(msg))
+    return 'Keo\u2019s core is at full capacity for a moment \u2014 give him a few seconds and ask again.';
+  if(/quota|billing|upgrade/i.test(msg))
+    return 'The core hit its usage ceiling for now \u2014 the platform owner can raise it.';
+  if(!m || m === 'HTTP') m = 'a temporary core hiccup';
+  return m.charAt(0).toUpperCase() + m.slice(1);
+}
+
+const ERR_SW = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported|rate limit|currently loading|gated/i;
+async function coreChat(body, signal){
+  if(!KEY_READY || !KEY_REAL){
+    await fetchKey();
+    if(!KEY_REAL){
+      const err = new Error('Engine not armed yet');
+      err.core = true; throw err;
+    }
+  }
+  let mt = body.max_tokens || 4096;
+  const hasImage = (body.messages||[]).some(m => Array.isArray(m.content) && m.content.some(p => p.type === 'image_url'));
+  const chain = hasImage ? CORE_VISION : CORE_CHAIN;
+
+  /* ---------- PHASE 1: primary HF engine (silent chain walk) ---------- */
+  const hfChain = hasImage ? HF_VISION : HF_TEXT;
+  let hfIdx = hasImage ? hfVisIdx : hfTextIdx;
+  for(let attempt = 0; attempt < hfChain.length; attempt++){
+    const model = hfChain[hfIdx];
+    try{
+      const res = await fetch(HF_URL + '/chat/completions', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + HF_KEY },
+        body: JSON.stringify({ ...body, model, max_tokens: Math.min(mt, 8192) }), signal
+      });
+      if(res.ok){
+        if(hasImage) hfVisIdx = hfIdx; else hfTextIdx = hfIdx;
+        return res;
+      }
+      let msg = 'HTTP ' + res.status;
+      try{ const j = await res.json(); msg = j.error?.message || msg; }catch(e){}
+      console.warn('[Keo] primary engine switch:', msg.slice(0,60));
+      if(res.status === 401) break;   /* token dead → straight to fallback */
+      hfIdx = (hfIdx + 1) % hfChain.length;
+    }catch(e){
+      if(e.name === 'AbortError') throw e;
+      break;
+    }
+  }
+
+  /* ---------- PHASE 2: fallback chain (silent) ---------- */
+  let mtAdj = mt;
+  let idx = hasImage ? visionIdx : coreIdx;
+  let model = chain[idx];
+  let rateHits = 0;
+  for(let attempt = 0; attempt < 8; attempt++){
+    const res = await fetch(AI_URL + '/chat/completions', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + KEY_REAL },
+      body: JSON.stringify({ ...body, model, max_tokens: mtAdj }), signal
+    });
+    if(res.ok) return res;
+    let msg = 'HTTP ' + res.status;
+    try{ const j = await res.json(); msg = j.error?.message || msg; }catch(e){}
+    if(res.status === 401){
+      await fetchKey();
+      if(KEY_REAL) continue;
+      const err = new Error('Engine credential needs a refresh'); err.core = true; throw err;
+    }
+    if(res.status === 429){
+      const waitMatch = String(msg).match(/([\d.]+)s/i);
+      const waitS = waitMatch ? Math.min(30, Math.max(2, parseFloat(waitMatch[1]) + 0.5)) : (3 + rateHits * 4);
+      rateHits++;
+      await delay(waitS * 1000);
+      if(rateHits <= 2) continue;
+      if(hasImage && visionIdx < chain.length - 1){ visionIdx++; idx = visionIdx; model = chain[idx]; rateHits = 0; continue; }
+      if(!hasImage && coreIdx < chain.length - 1){ coreIdx++; idx = coreIdx; model = chain[idx]; rateHits = 0; continue; }
+      continue;
+    }
+    if(/max.?tokens|context window|too large/i.test(msg) && mtAdj > 4096){ mtAdj = mtAdj > 8192 ? 8192 : 4096; continue; }
+    if([400,404,503].includes(res.status) && ERR_SW.test(msg)){
+      if(hasImage && visionIdx < chain.length - 1){ visionIdx++; idx = visionIdx; model = chain[idx]; }
+      else if(!hasImage && coreIdx < chain.length - 1){ coreIdx++; idx = coreIdx; model = chain[idx]; }
+      else break;
+      continue;
+    }
+    const err = new Error(sanitizeError(msg)); err.status = res.status; throw err;
+  }
+  throw new Error('The engine is briefly unavailable \u2014 try again in a moment');
+}
+function balanced(s){ const f = (String(s).match(/```/g)||[]).length; return f%2 ? s+'\n```' : s; }
+
+function makeTyper(textEl){
+  let rec = '', shown = '', timer = null, finished = false, onDone = null;
+  const strip = s => s.replace(/<think>[\s\S]*?<\/think>/g, '').replace(/<think>[\s\S]*$/, '');
+  const paint = fin => {
+    textEl.dir = isArabicText(shown) ? 'rtl' : 'ltr';
+    textEl.innerHTML = md(balanced(strip(shown))) + (fin ? '' : '<span class="caret"></span>');
+    scrollPin();
+  };
+  function tick(){
+    if(shown.length < strip(rec).length){
+      const rest = strip(rec).slice(shown.length);
+      let take = Math.min(rest.length, 24);
+      if(rest.length > take){
+        const br = rest.slice(0, take + 8).search(/[\s.,!؟?;:،؛—…)\]]/);
+        if(br >= 2 && br <= take + 8) take = br + 1;
+      }
+      shown += rest.slice(0, take);
+      paint(false);
+      timer = setTimeout(tick, 55);
+    } else {
+      timer = null;
+      if(finished){ paint(true); if(onDone){ const d = onDone; onDone = null; d(); } }
+      else paint(false);
+    }
+  }
+  return {
+    push(t){ rec += t; if(!timer) timer = setTimeout(tick, 0); },
+    end(cb){ finished = true; onDone = cb || onDone; if(!timer) timer = setTimeout(tick, 0); },
+    text(){ return strip(rec); }
+  };
+}
+async function streamCore(msgs, typer, opt = {}){
+  streamCtrl = new AbortController();
+  const res = await coreChat({ messages: msgs, temperature: opt.temperature ?? 0.7,
+    max_tokens: opt.max_tokens || MAXTOK, stream: true }, streamCtrl.signal);
+  const rd = res.body.getReader(); const dec = new TextDecoder(); let buf = '';
+  while(true){
+    const {done, value} = await rd.read(); if(done) break;
+    buf += dec.decode(value, {stream:true});
+    let i;
+    while((i = buf.indexOf('\n')) >= 0){
+      const line = buf.slice(0, i).trim(); buf = buf.slice(i+1);
+      if(!line.startsWith('data:')) continue;
+      const d = line.slice(5).trim();
+      if(d === '[DONE]') return;
+      try{ const j = JSON.parse(d);
+        if(j.error?.message) throw new Error(j.error.message);
+        const t = j.choices?.[0]?.delta?.content; if(t) typer.push(t);
+      }catch(e){ if(e.message && !/JSON/.test(e.message)) throw e; }
+    }
+  }
+}
+function history(){
+  return messages.filter(m => m.text)
+    .slice(-HISTORY_TURNS).map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }));
+}
+function charsOf(msgs){
+  return msgs.reduce((a,m)=> a + (typeof m.content === 'string' ? m.content.length : JSON.stringify(m.content).length), 0);
+}
+
+/* ================== Send flow ================== */
+async function send(){
+  const text = ta.value.trim();
+  if(busy){ stopStream(); return; }
+  if(!text && !attachments.length) return;
+
+  if(!currentChatId){
+    currentChatId = 'c' + Date.now();
+    chatTitle = (text || 'Chat with files').slice(0, 60);
+  }
+  const um = { id:'m'+Date.now(), role:'user', text: text || '(attached files)', ts:Date.now(),
+    files: attachments.map(a=>a.name) };
+  messages.push(um);
+  chatScroll.appendChild(userEl(um)); $('#welcome').style.display = 'none'; scrollPin();
+  trackMsg();
+
+  const km = { id:'m'+(Date.now()+1), role:'keo', text:'', ts:Date.now() };
+  messages.push(km);
+  const atts = attachments.slice();
+  attachments = []; renderAtt();
+
+  busy = true; $('#btnSend').classList.add('busy'); ta.value = ''; ta.style.height = 'auto';
+  const el = keoEl(km, true); chatScroll.appendChild(el); scrollPin();
+  const textNode = el.querySelector('.msg-text');
+  const mav = el.querySelector('.mini'); mav.classList.add('working');
+
+  try{
+    const handled = await handleConnIntent(text, km, el, textNode);
+    if(!handled){
+      const isPpt = pptIntent || /power\s?point|pptx?|slide deck|presentation|slides about|بور ?بوينت|عرض تقديمي/i.test(text);
+      const wantSearch = searchIntent || /\bsearch( the)? (web|internet)\b|latest news|news about|look up|\bgoogle\b|ابحث|دور لي على|هات لي من النت|آخر أخبار|اخر اخبار/i.test(text);
+      if(isPpt) await doPPT(text, km, el);
+      else if(wantSearch) await doSearch(text, km, el, textNode);
+      else await doChat(text, km, el, textNode, atts);
+    }
+  }catch(err){
+    if(err.name === 'AbortError'){
+      km.text = (km.text || '') + '\n\n(Stopped by your request.)';
+    } else if(err.core){
+      km.text = isArabicText(text)
+        ? 'نوايا الخاصة لسه مش مسلحة \u26a0 — صاحب المنصة لازم يدخل مفتاح المحرك من **Owner Panel** مرة واحدة، وبعدها أنا شغال فورًا.'
+        : 'My private core isn\u2019t armed yet \u26a0 — the platform owner needs to add the engine credential once from the **Owner Panel**, and I\u2019m instantly alive.';
+      toast('Engine not armed — owner must add the credential', 'err');
+    } else {
+      km.text = 'معليش، عندي مشكلة. جرب تاني \ud83d\ude4f';
+      toast('Keo paused — try again', 'err');
+    }
+    finalizeKeo(km, el, textNode);
+  }finally{
+    busy = false; streamCtrl = null;
+    $('#btnSend').classList.remove('busy');
+    mav.classList.remove('working');
+    if(km.text) flashHappy(); else setStage('idle');
+    persist();
+  }
+}
+function finalizeKeo(km, el, textNode){
+  km.text = km.text || '';
+  textNode.dir = isArabicText(km.text) ? 'rtl' : 'ltr';
+  textNode.innerHTML = md(km.text);
+  const body = el.querySelector('.msg-body');
+  if(km.sources?.length) body.insertAdjacentHTML('beforeend', srcsHTML(km.sources));
+  if(km.slides?.length) body.insertAdjacentHTML('beforeend', pptHTML(km));
+  body.insertAdjacentHTML('beforeend', `<div class="msg-acts"><button class="cbtn" data-act="copymsg" data-mid="${km.id}">Copy</button><button class="cbtn" data-act="speak" data-mid="${km.id}">\u25B6 Listen</button></div>`);
+  scrollPin();
+}
+function stopStream(){ if(streamCtrl) streamCtrl.abort(); }
+
+async function doChat(text, km, el, textNode, atts){
+  setStage('think');
+  await delay(650 + Math.random()*650);
+  const msgs = [{ role:'system', content: SYS + '\n' + connNote() }, ...history()];
+  let lastContent = text;
+  const texts = atts.filter(a=>a.kind==='text').map(a=>`\n\n[Attached file: ${a.name}]\n${(a.text||'').slice(0, MAX_TEXT_CHARS)}`).join('');
+  lastContent += texts;
+  const imgs = atts.filter(a=>a.kind==='image');
+  if(imgs.length){
+    msgs.push({ role:'user', content: [ {type:'text', text: lastContent || 'Describe this image in detail'}, {type:'image_url', image_url:{url: imgs[0].dataUrl}} ] });
+  } else {
+    msgs.push({ role:'user', content: lastContent || 'Look at the attached files' });
+  }
+  setStage(atts.length ? 'carry' : 'type');
+  const typer = makeTyper(textNode);
+  await streamCore(msgs, typer, { max_tokens: imgs.length ? 4096 : MAXTOK });
+  creditTokens(charsOf(msgs) + typer.text().length);
+  await new Promise(res => typer.end(()=>{ km.text = typer.text(); res(); }));
+  await detectAndOpenSite(km);
+  finalizeKeo(km, el, textNode);
+}
+
+async function doSearch(text, km, el, textNode){
+  setStage('search');
+  const results = await webSearch(text);
+  if(!results.length){
+    toast('Couldn\u2019t reach the web — answering from knowledge', 'err');
+    return doChat(text, km, el, textNode, []);
+  }
+  km.sources = results.map(r => ({ title:r.title, url:r.url }));
+  setStage('type');
+  const ctxBlock = `Real web search results (today: ${new Date().toLocaleDateString('en-US')}):
+
+` + results.map((r,i)=>`[${i+1}] ${r.title}
+ ${r.url}
+ ${r.snippet}`).join('\n-----\n') + `
+
+User question: ${text}
+
+Write a helpful, well-organized answer in the SAME language as the user's question, based on these results, citing sources inline as [1] [2]. If the results are insufficient, say so honestly.`;
+  const msgs = [{ role:'system', content: SYS }, ...history().slice(0,-1), { role:'user', content: ctxBlock }];
+  const typer = makeTyper(textNode);
+  await streamCore(msgs, typer, { temperature: 0.5, max_tokens: 8192 });
+  creditTokens(charsOf(msgs) + typer.text().length);
+  await new Promise(res => typer.end(()=>{ km.text = typer.text(); res(); }));
+  await detectAndOpenSite(km);
+  finalizeKeo(km, el, textNode);
+}
+
+async function detectAndOpenSite(km){
+  const re = /```(?:html|xml)?\s*\n([\s\S]*?)```/g;
+  let m, best = null;
+  while((m = re.exec(km.text))){ const c = m[1]; if(/<(!doctype|html|body)/i.test(c) && c.length > 300) best = c; }
+  if(!best) return;
+  km.code = best;
+  openPreview(best);
+  setStage('code');
+  try{
+    const res = await publishAnywhere(best);
+    if(res){
+      km.liveUrl = res.url;
+      km.text += (isArabicText(km.text)
+        ? '\n\n---\n\n\ud83c\udf10 **الموقع أونلاين — اللينك بيفتح عند أي حد:**\n' + res.url + (res.alt ? '\n(لو محتاج ثانية، افتح: ' + res.alt + ')' : '')
+        : '\n\n---\n\n\ud83c\udf10 **Your site is online — this link opens for anyone:**\n' + res.url + (res.alt ? '\n(If it needs a second to wake: ' + res.alt + ')' : ''));
+      toast('Live share link ready \ud83c\udf10');
+    }
+  }catch(e){}
+}
+
+async function doPPT(text, km, el){
+  setStage('slides');
+  const res = await coreChat({
+    temperature: 0.5, max_tokens: 4096,
+    messages: [
+      { role:'system', content: PPT_SYS },
+      { role:'user', content: 'Presentation topic: ' + text + '\nReturn JSON only.' }
+    ]
+  });
+  const j = await res.json();
+  creditTokens(j.usage?.total_tokens || estTok(charsOf([{content:PPT_SYS},{content:text}]) + (j.choices?.[0]?.message?.content||'').length));
+  let raw = j.choices?.[0]?.message?.content || '';
+  const m = raw.match(/\[[\s\S]*\]/);
+  let slides = [];
+  try{ slides = JSON.parse(m ? m[0] : raw); }catch(e){}
+  if(!Array.isArray(slides) || !slides.length) throw new Error('Couldn\u2019t assemble the slides — try a different wording');
+  km.slides = slides.map(s => ({ title: String(s.title||''), bullets: (s.bullets||[]).map(String), imgPrompt: String(s.img||'') }));
+
+  toast('Keo is painting slide artwork — up to a minute…');
+  const imgs = new Array(slides.length).fill(null);
+  const idxs = slides.map((_,i)=>i).slice(0,5);
+  await Promise.all(idxs.map(async i=>{
+    const p = (km.slides[i].imgPrompt || km.slides[i].title || '') + ', modern flat vector illustration, cohesive premium style, rich colors, clean composition, no text';
+    const g = await genImage(p, 1024, 1024);
+    if(g) imgs[i] = await watermarkDataUrl(g);
+  }));
+  km.pptImages = imgs; km._pptImgs = imgs;
+  const got = imgs.filter(Boolean).length;
+  km.text = isArabicText(text)
+    ? `عرضك جاهز: **${slides.length} شرائح** بمحتوى غني + **${got} صورة** موقّعة KEOAI. دوس **Download .pptx** تحت.`
+    : `Your deck is ready: **${slides.length} rich slides** + **${got} AI-painted images**, signed KEOAI. Hit **Download .pptx** below.`;
+  finalizeKeo(km, el, el.querySelector('.msg-text'));
+}
+function buildPPTX(slides, images){
+  if(typeof PptxGenJS === 'undefined'){ toast('PowerPoint library didn\u2019t load — refresh', 'err'); return; }
+  const isAr = isArabicText(slides.map(s => s.title + ' ' + (s.bullets||[]).join(' ')).join(' '));
+  const p = new PptxGenJS();
+  p.layout = 'LAYOUT_16x9'; p.rtlMode = isAr;
+  const align = isAr ? 'right' : 'left';
+  const W = 10, H = 5.63;
+  slides.forEach((s, i)=>{
+    const sl = p.addSlide();
+    sl.background = { color:'0B0D0C' };
+    const img = images ? images[i] : null;
+    if(i === 0){
+      if(img){
+        sl.addImage({ data: img, x:0, y:0, w:W, h:H, sizing:{ type:'cover', w:W, h:H } });
+        sl.addShape(p.ShapeType.rect, { x:0, y:0, w:W, h:H, fill:{ color:'0B0D0C', transparency:38 } });
+      }
+      sl.addShape(p.ShapeType.rect, { x: isAr ? 9.55 : 0, y:0, w:0.45, h:H, fill:{color:'C6F24B'} });
+      sl.addText(s.title, { x:0.8, y:1.55, w:8.4, h:1.7, align, rtlMode:isAr, fontSize:41, bold:true, color:'C6F24B', fontFace:'Arial' });
+      sl.addShape(p.ShapeType.rect, { x: isAr ? 8.2 : 0.8, y:3.35, w:1.6, h:0.06, fill:{color:'EDEFE6'} });
+      sl.addText((s.bullets||[]).slice(0,2).join('  \u2022  '), { x:0.8, y:3.6, w:8.4, h:0.8, align, rtlMode:isAr, fontSize:16, color:'EDEFE6', fontFace:'Arial' });
+      sl.addText('KEOAI  \u00B7  by Kareem Hussein', { x:0.8, y:5.0, w:5, h:0.4, fontSize:11, color:'9BA398', fontFace:'Arial', charSpacing:2 });
+    } else {
+      sl.addShape(p.ShapeType.rect, { x:0, y:0, w:W, h:0.12, fill:{color:'C6F24B'} });
+      const imgW = 3.1, imgH = 4.15;
+      let txX = 0.65, txW = W - 1.3;
+      if(img){
+        const ix = isAr ? 0.55 : W - imgW - 0.55;
+        sl.addImage({ data: img, x:ix, y:0.72, w:imgW, h:imgH, sizing:{ type:'cover', w:imgW, h:imgH } });
+        sl.addShape(p.ShapeType.rect, { x:ix, y:0.72, w:imgW, h:imgH, fill:{ color:'000000', transparency:100 }, line:{ color:'C6F24B', width:1.25 } });
+        txW = W - imgW - 1.85;
+        txX = isAr ? W - txW - 0.65 : 0.65;
+      }
+      sl.addText(s.title, { x:txX, y:0.5, w:txW, h:1.1, align, rtlMode:isAr, fontSize:27, bold:true, color:'C6F24B', fontFace:'Arial' });
+      sl.addShape(p.ShapeType.rect, { x: isAr ? (txX+txW-1.1) : txX, y:1.62, w:1.1, h:0.05, fill:{color:'C6F24B'} });
+      if(s.bullets?.length){
+        sl.addText(s.bullets.map(b => ({ text:b, options:{ bullet:{ code:'2022', indent:14 }, breakLine:true, rtlMode:isAr } })),
+          { x:txX, y:1.95, w:txW, h:3.15, align, fontSize:15, color:'EDEFE6', lineSpacingMultiple:1.4, paraSpaceAfter:6, fontFace:'Arial' });
+      }
+      sl.addShape(p.ShapeType.rect, { x:0, y:H-0.06, w:W, h:0.06, fill:{color:'1C211F'} });
+      sl.addText('KEOAI', { x:0.35, y:H-0.48, w:1.6, h:0.3, fontSize:10, color:'6B7266', fontFace:'Arial', charSpacing:2 });
+      sl.addText(String(i+1) + ' / ' + slides.length, { x:W-1.6, y:H-0.48, w:1.25, h:0.3, align:'right', fontSize:10, color:'9BA398', fontFace:'Arial' });
+    }
+  });
+  p.writeFile({ fileName: 'KeoAI-Presentation.pptx' })
+    .then(()=>{ toast('Deck downloaded — signed KEOAI \u2705'); confettiBurst(); })
+    .catch(err=>toast('Download failed: ' + err.message, 'err'));
+}
+function openPreview(code){
+  pvCode = code;
+  document.body.classList.add('pv-open');
+  $('#pvFrame').srcdoc = code;
+}
+
+/* ================== Owner Panel ================== */
+ $('#btnAdmin').onclick = async ()=>{
+  if(!isAdmin()) return;
+  $('#admModal').hidden = false;
+  const keyState = $('#keyState'), keyHint = $('#keyHint');
+  $('#admKey').value = '';
+  if(dbOk){
+    try{
+      const s = await firebase.database().ref('config/aiKey').once('value');
+      const v = (s.val()||'').trim();
+      keyState.innerHTML = v ? 'armed \u2705 (' + v.slice(0,7) + '…' + v.slice(-4) + ')' : 'not armed \u26a0';
+      keyHint.textContent = v ? 'Editing will hot-swap it for every user instantly.' : 'Paste a credential and save to wake Keo up.';
+    }catch(e){
+      keyState.textContent = 'read failed';
+    }
+  } else {
+    keyState.textContent = 'db offline';
+  }
+
+  const cards = $('#admCards'), chart = $('#admChart'), compare = $('#admCompare'), table = $('#admTable');
+  cards.innerHTML = '<div class="adm-empty">Loading live stats…</div>';
+  chart.innerHTML = ''; compare.innerHTML = ''; table.innerHTML = '';
+  if(!dbOk){ cards.innerHTML = '<div class="adm-empty">Database unreachable</div>'; return; }
+  try{
+    const [uSnap, sSnap] = await Promise.all([
+      firebase.database().ref('users').once('value'),
+      firebase.database().ref('stats').once('value')
+    ]);
+    const usersRaw = uSnap.val() || {};
+    const stats = sSnap.val() || {};
+    const now = Date.now();
+    const rows = Object.entries(usersRaw).map(([uid,u])=>{
+      const chatsArr = Object.values(u.chats || {});
+      const msgCount = chatsArr.reduce((a,c)=> a + ((c.messages && (Array.isArray(c.messages)?c.messages.length:Object.values(c.messages).length))||0), 0);
+      return {
+        uid,
+        name: (u.profile && u.profile.name) || (u.profile && u.profile.email || '').split('@')[0] || 'User',
+        email: (u.profile && u.profile.email) || '—',
+        last: (u.profile && u.profile.last) || 0,
+        logins: (u.profile && u.profile.logins) || 0,
+        chats: chatsArr.length,
+        msgs: msgCount,
+        tokens: u.tokens || 0
+      };
+    }).sort((a,b)=> b.tokens - a.tokens);
+
+    const totalUsers = rows.length;
+    const active24 = rows.filter(r => now - r.last < 864e5).length;
+    const active30 = rows.filter(r => now - r.last < 18e5).length;
+    const totalChats = rows.reduce((a,r)=>a+r.chats,0);
+    const totalMsgs = stats.totalMsgs || rows.reduce((a,r)=>a+r.msgs,0);
+    const totalTokens = stats.totalTokens || rows.reduce((a,r)=>a+r.tokens,0);
+    const todayKey = new Date().toISOString().slice(0,10);
+    const todayTokens = (stats.daily && stats.daily[todayKey]) || 0;
+
+    const card = (v,l)=>`<div class="stat-card"><div class="sv">${v}</div><div class="sl">${l}</div></div>`;
+    cards.innerHTML =
+      card(fmtN(totalUsers),'Users') +
+      card(fmtN(active24),'Active 24h') +
+      card(fmtN(active30),'Online 30min') +
+      card(fmtN(totalChats),'Chats') +
+      card(fmtN(totalMsgs),'Messages') +
+      card(fmtN(totalTokens),'Tokens total') +
+      card(fmtN(todayTokens),'Tokens today');
+
+    let maxD = 1; const days = [];
+    for(let i=6;i>=0;i--){
+      const key = new Date(now - i*864e5).toISOString().slice(0,10);
+      const v = (stats.daily && stats.daily[key]) || 0;
+      maxD = Math.max(maxD, v);
+      days.push({ key, v });
+    }
+    chart.innerHTML = days.map(d =>
+      `<div class="vcol"><div class="vval">${d.v ? fmtN(d.v) : ''}</div>
+       <div class="vbar" style="height:${Math.max(3, Math.round(d.v/maxD*100))}%"></div>
+       <div class="vlab">${d.key.slice(5)}</div></div>`).join('');
+
+    const top = rows.filter(r=>r.tokens>0).slice(0,5);
+    const maxT = Math.max(1, ...top.map(r=>r.tokens));
+    compare.innerHTML = top.length ? top.map(r =>
+      `<div class="hrow"><div class="hname">${esc(r.name)}</div>
+       <div class="htrack"><div class="hfill" style="width:${Math.max(4, Math.round(r.tokens/maxT*100))}%"></div></div>
+       <div class="hval">${fmtN(r.tokens)} tok</div></div>`).join('')
+      : '<div class="adm-empty">No token usage recorded yet</div>';
+
+    table.innerHTML = rows.length ? `<table class="adm-table">
+      <tr><th>User</th><th>Email</th><th>Logins</th><th>Chats</th><th>Msgs</th><th>Tokens</th><th>Last seen</th></tr>
+      ${rows.map(r=>{
+        const mins = Math.round((now - r.last)/60000);
+        const seen = !r.last ? 'never' : mins < 1 ? 'just now' : mins < 60 ? mins+'m ago' : mins < 1440 ? Math.round(mins/60)+'h ago' : Math.round(mins/1440)+'d ago';
+        return `<tr><td><b>${esc(r.name)}</b></td><td>${esc(r.email)}</td><td>${fmtN(r.logins)}</td><td>${fmtN(r.chats)}</td><td>${fmtN(r.msgs)}</td><td class="tt">${fmtN(r.tokens)}</td><td>${seen}</td></tr>`;
+      }).join('')}</table>`
+      : '<div class="adm-empty">No users yet</div>';
+  }catch(e){
+    cards.innerHTML = '<div class="adm-empty">Can\u2019t read other users\u2019 data \u2014 update the Firebase rules (Owner setup) to grant the owner read access.</div>';
+  }
+};
+ $('#admClose').onclick = ()=>{ $('#admModal').hidden = true; };
+ $('#admModal').addEventListener('click', e=>{ if(e.target.id === 'admModal') $('#admModal').hidden = true; });
+ $('#keySave').onclick = async ()=>{
+  if(!isAdmin()) return;
+  const v = $('#admKey').value.trim();
+  if(!v.startsWith('gsk_')) return toast('The fallback credential starts with gsk_','err');
+  if(v.length < 40) return toast('That credential looks too short','err');
+  try{
+    await firebase.database().ref('config/aiKey').set(v);
+    $('#admKey').value = '';
+    confettiBurst();
+    toast('Fallback engine armed \u2705');
+    $('#keyState').innerHTML = 'armed \u2705 (' + v.slice(0,7) + '…' + v.slice(-4) + ')';
+  }catch(err){
+    toast('Save failed: ' + err.message + ' — check the Firebase rules for config/aiKey', 'err');
+  }
+};
+
+/* ================== Speech: Listen ================== */
+let VOICES = [];
+function refreshVoices(){ try{ VOICES = speechSynthesis.getVoices() || []; }catch(e){} }
+if('speechSynthesis' in window){ refreshVoices(); speechSynthesis.onvoiceschanged = refreshVoices; setInterval(refreshVoices, 2000); }
+let speakGuard = null;
+function speakText(text){
+  if(!('speechSynthesis' in window)) return toast('Speech isn\u2019t supported here','err');
+  speechSynthesis.cancel();
+  clearInterval(speakGuard);
+  const ar = isArabicText(text);
+  const clean = String(text)
+    .replace(/```[\s\S]*?```/g, ' ').replace(/<think>[\s\S]*?<\/think>/g,' ')
+    .replace(/[*#`>|_\[\]()]/g, ' ').replace(/https?:\/\/\S+/g,' ').replace(/\s+/g,' ').trim().slice(0,1500);
+  if(!clean) return;
+  const parts = clean.match(/[^.!?\n؟]+[.!?\n؟]*/g) || [clean];
+  let i = 0;
+  const next = ()=>{
+    if(i >= parts.length){ clearInterval(speakGuard); return; }
+    const u = new SpeechSynthesisUtterance(parts[i++].trim());
+    u.lang = ar ? 'ar-SA' : 'en-US';
+    u.rate = 1.02;
+    const v = VOICES.find(v=>v.lang && v.lang.toLowerCase().startsWith(ar ? 'ar' : 'en'));
+    if(v) u.voice = v;
+    u.onend = next;
+    u.onerror = ()=>clearInterval(speakGuard);
+    speechSynthesis.speak(u);
+  };
+  next();
+  speakGuard = setInterval(()=>{ if(speechSynthesis.speaking && !speechSynthesis.paused) speechSynthesis.resume(); }, 8000);
+}
+
+/* ================== Mic input ================== */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let micRec = null, micOn = false, micLang = 'ar';
+let micBase = '', micFinal = '', micCursor = 0, micRestarts = 0, micLastTxt = '', micLastTime = 0;
+function micStopUI(){ micOn = false; $('#btnMic').classList.remove('rec'); }
+function micFatal(e){
+  micStopUI();
+  const map = {
+    'not-allowed': 'Mic permission denied — allow the microphone from the \ud83d\udd12 icon in the address bar',
+    'service-not-allowed': 'Mic blocked by the browser — check site permissions',
+    'audio-capture': 'No microphone found on this device',
+    'network': 'Speech recognition needs internet — check your connection',
+  };
+  const m = map[e?.error];
+  if(m) toast(m, 'err');
+  else if(e?.error) toast('Mic error: ' + e.error, 'err');
+}
+ $('#btnMicLang').onclick = ()=>{
+  micLang = micLang === 'ar' ? 'en' : 'ar';
+  $('#btnMicLang').textContent = micLang.toUpperCase();
+  toast('Mic language: ' + (micLang === 'ar' ? 'Arabic' : 'English'));
+};
+ $('#btnMic').onclick = ()=>{
+  if(!SR) return toast('Voice input needs Chrome or Edge','err');
+  if(micOn){ micOn = false; try{ micRec.stop(); }catch(e){} micStopUI(); return; }
+  micRec = new SR();
+  micRec.lang = micLang === 'ar' ? 'ar-EG' : (navigator.language || 'en-US');
+  micRec.interimResults = true;
+  micRec.continuous = true;
+  micRec.maxAlternatives = 1;
+  micBase = ta.value ? ta.value.replace(/\s+$/,'') + ' ' : '';
+  micFinal = ''; micCursor = 0; micRestarts = 0; micLastTxt = ''; micLastTime = 0;
+  micRec.onstart = ()=>{ micCursor = 0; };
+  micRec.onresult = e=>{
+    let interim = '';
+    for(let i = micCursor; i < e.results.length; i++){
+      const r = e.results[i];
+      if(r.isFinal){
+        const txt = r[0].transcript.trim();
+        const now = Date.now();
+        if(txt && (txt !== micLastTxt || now - micLastTime > 2000)){
+          micFinal += txt + ' ';
+          micLastTxt = txt;
+        }
+        micLastTime = now;
+        micCursor++;
+      } else {
+        interim += r[0].transcript;
+      }
+    }
+    ta.value = micBase + micFinal + interim;
+    ta.dispatchEvent(new Event('input'));
+  };
+  micRec.onend = ()=>{
+    if(!micOn) return micStopUI();
+    if(++micRestarts > 80) return micStopUI();
+    setTimeout(()=>{ try{ micRec.start(); }catch(e){} }, 300);
+  };
+  micRec.onerror = e=>{
+    if(e.error === 'no-speech' || e.error === 'aborted') return;
+    micFatal(e);
+  };
+  micOn = true;
+  $('#btnMic').classList.add('rec');
+  try{
+    micRec.start();
+    toast('Listening in ' + (micLang==='ar'?'العربية':'English') + '… press the mic again to stop');
+  }catch(e){ micFatal(e); }
+};
+
+/* ================== Attachments — giant files welcome ================== */
+function renderAtt(){
+  $('#attRow').innerHTML = attachments.map((a,i)=>
+    `<span class="atchip">${a.kind==='image' ? `<img src="${a.dataUrl}">` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`}<span class="an">${esc(a.name)}</span><button data-rmatt="${i}">\u2715</button></span>`
+  ).join('');
+}
+ $('#attRow').addEventListener('click', e=>{
+  const b = e.target.closest('[data-rmatt]');
+  if(b){ attachments.splice(+b.dataset.rmatt,1); renderAtt(); }
+});
+function ingestFile(f){
+  const isImg = f.type.startsWith('image/');
+  if(isImg && f.size > 4.5*1024*1024) return toast('Image too large — under 4.5 MB', 'err');
+  if(!isImg && f.size > MAX_FILE_BYTES) return toast('File too large — under ' + MAX_FILE_MB + ' MB', 'err');
+  const att = { name:f.name, size:f.size, kind: isImg?'image':'text' };
+  const rd = new FileReader();
+  rd.onload = ()=>{
+    if(isImg) att.dataUrl = rd.result; else att.text = String(rd.result||'').slice(0, MAX_TEXT_CHARS);
+    attachments.push(att); renderAtt();
+    setStage('carry');
+    setTimeout(()=>{ if(!busy) setStage('idle'); }, 1700);
+  };
+  if(isImg) rd.readAsDataURL(f); else rd.readAsText(f);
+}
+ $('#fileInput').addEventListener('change', e=>{ [...e.target.files].forEach(ingestFile); e.target.value=''; });
+window.addEventListener('paste', e=>{
+  for(const item of (e.clipboardData?.items||[])){
+    if(item.kind === 'file' && item.type.startsWith('image/')){
+      const f = item.getAsFile(); if(f){ ingestFile(f); e.preventDefault(); }
+    }
+  }
+});
+
+/* ================== Events ================== */
+ $('#btnAttach').onclick = ()=>$('#fileInput').click();
+ $('#chipSearch').onclick = e=>{ searchIntent = !searchIntent; e.currentTarget.classList.toggle('active', searchIntent); };
+ $('#chipPpt').onclick = e=>{ pptIntent = !pptIntent; e.currentTarget.classList.toggle('active', pptIntent); };
+ $('#btnSend').onclick = send;
+ $('#btnSend').addEventListener('mousedown', e=>{ e.preventDefault(); ta.focus(); });
+ta.addEventListener('input', ()=>{ ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 200) + 'px'; });
+ta.addEventListener('keydown', e=>{
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    send();
+  }
+});
+
+ $('#btnNew').onclick = newChat;
+ $('#hamb').onclick = ()=>{ $('#sidebar').classList.add('open'); $('#backdrop').classList.add('show'); };
+ $('#backdrop').onclick = closeSidebar;
+function closeSidebar(){ $('#sidebar').classList.remove('open'); $('#backdrop').classList.remove('show'); }
+ $('#btnLogout').onclick = ()=>auth && auth.signOut();
+
+chatScroll.addEventListener('click', async e=>{
+  const pill = e.target.closest('[data-insert]');
+  if(pill){ ta.value = pill.dataset.insert; send(); return; }
+  const act = e.target.closest('[data-act]');
+  if(!act) return;
+  const a = act.dataset.act;
+  if(a === 'copycode'){ navigator.clipboard.writeText(codeStore[+act.dataset.code]||'').then(()=>toast('Code copied')); }
+  if(a === 'preview'){ openPreview(codeStore[+act.dataset.code]||''); }
+  if(a === 'copymsg'){
+    const m = messages.find(x=>x.id===act.dataset.mid);
+    if(m){ navigator.clipboard.writeText(m.text||'').then(()=>toast('Reply copied')); }
+  }
+  if(a === 'speak'){
+    const m = messages.find(x=>x.id===act.dataset.mid);
+    if(m?.text) speakText(m.text);
+  }
+  if(a === 'dlppt'){
+    const m = messages.find(x=>x.id===act.dataset.mid);
+    if(m?.slides) buildPPTX(m.slides, m._pptImgs || m.pptImages || new Array(m.slides.length).fill(null));
+  }
+});
+ $('#chatList').addEventListener('click', e=>{
+  const del = e.target.closest('[data-del]');
+  if(del){
+    e.stopPropagation();
+    const id = del.dataset.del;
+    if(dbOk) firebase.database().ref('users/'+user.uid+'/chats/'+id).remove().catch(()=>{});
+    delete chats[id];
+    if(id === currentChatId) newChat(); else renderChatList();
+    return;
+  }
+  const it = e.target.closest('[data-chat]');
+  if(it) loadChat(it.dataset.chat);
+});
+
+ $('#pvClose').onclick = ()=>document.body.classList.remove('pv-open');
+ $('#pvDesk').onclick = ()=>{ $('#pv').classList.remove('mob'); $('#pvDesk').classList.add('active'); $('#pvMob').classList.remove('active'); };
+ $('#pvMob').onclick = ()=>{ $('#pv').classList.add('mob'); $('#pvMob').classList.add('active'); $('#pvDesk').classList.remove('active'); };
+ $('#pvReload').onclick = ()=>{ $('#pvFrame').srcdoc = pvCode; };
+ $('#pvExt').onclick = ()=>{
+  if(!pvCode) return toast('No code to preview yet','err');
+  window.open(URL.createObjectURL(new Blob([pvCode], {type:'text/html'})), '_blank');
+};
+ $('#pvCopy').onclick = async ()=>{
+  if(!pvCode) return toast('Build a site first','err');
+  setStage('code');
+  try{
+    const res = await publishAnywhere(pvCode);
+    if(!res){ setStage('idle'); return toast('Publishing services unreachable — try again','err'); }
+    for(let i = messages.length-1; i >= 0; i--){
+      if(messages[i].code === pvCode){ messages[i].liveUrl = res.url; break; }
+    }
+    persist();
+    setStage('idle');
+    try{ await navigator.clipboard.writeText(res.url); toast('Share link copied \ud83c\udf10'); }
+    catch(e){ toast(res.url); }
+  }catch(err){ setStage('idle'); toast('Publish failed: ' + err.message,'err'); }
+};
+
+/* ================== Auth gate ================== */
+let signup = false;
+ $('#btnEmailShow').onclick = ()=>{ $('#emailForm').hidden = false; $('#btnEmailShow').style.display = 'none'; $('#fName').style.display = 'none'; };
+ $('#emailToggle').onclick = ()=>{
+  signup = !signup;
+  $('#emailSubmit').textContent = signup ? 'Create account & sign in' : 'Sign in';
+  $('#emailToggle').textContent = signup ? 'I already have an account — sign in' : 'No account? Create one';
+  $('#fName').style.display = signup ? '' : 'none';
+};
+ $('#emailForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  if(!auth) return toast('Firebase unavailable','err');
+  try{
+    if(signup){
+      const cr = await auth.createUserWithEmailAndPassword($('#fEmail').value.trim(), $('#fPass').value);
+      if(cr.user) await cr.user.updateProfile({ displayName: $('#fName').value.trim() || $('#fEmail').value.split('@')[0] });
+    } else {
+      await auth.signInWithEmailAndPassword($('#fEmail').value.trim(), $('#fPass').value);
+    }
+  }catch(err){ showAuthError(err); }
+});
+ $('#btnGoogle').onclick = async ()=>{
+  if(!auth) return toast('Firebase unavailable','err');
+  try{ await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+  catch(err){ showAuthError(err); }
+};
+
+/* ================== Session ================== */
+function showApp(){
+  $('#gate').classList.add('hide');
+  $('#userchip').hidden = false;
+  const name = user.displayName || user.email.split('@')[0];
+  $('#hcName').textContent = name;
+  $('#hcAv').textContent = name[0].toUpperCase();
+  $('#sbName').textContent = name;
+  $('#sbEmail').textContent = user.email;
+  $('#sbAv').textContent = name[0].toUpperCase();
+  if(isAdmin()){
+    $('#btnAdmin').classList.add('show');
+    if(dbOk) firebase.database().ref('admins/' + user.uid).set(true).catch(()=>{});
+  } else {
+    $('#btnAdmin').classList.remove('show');
+  }
+  loadChats(); loadConnections(); fetchKey();
+  setStage('boot');
+  setTimeout(()=>{ setStage('happy'); confettiBurst(); }, 1000);
+  setTimeout(()=>setStage('idle'), 2300);
+  ta.focus();
+}
+function showGate(){
+  $('#gate').classList.remove('hide');
+  $('#userchip').hidden = true;
+  newChat();
+}
+if(auth){
+  auth.onAuthStateChanged(async u=>{
+    user = u;
+    if(u){
+      if(dbOk){
+        try{
+          await firebase.database().ref('users/'+u.uid+'/profile').update({
+            name:u.displayName||'', email:u.email||'', last: Date.now()
+          });
+          firebase.database().ref('users/'+u.uid+'/profile/logins').runTransaction(v => (v||0) + 1);
+          if((u.email||'').toLowerCase() === ADMIN_EMAIL){
+            firebase.database().ref('admins/' + u.uid).set(true).catch(()=>{});
+          }
+        }catch(e){}
+      }
+      showApp();
+    } else showGate();
+  });
+} else showGate();
+</script>
 </body>
 </html>
