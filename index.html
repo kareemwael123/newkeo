@@ -101,7 +101,7 @@ main{display:flex;height:calc(100vh - 58px)}
 .msg-keo .mav{width:38px;height:38px;flex-shrink:0;border-radius:12px;background:var(--panel);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
 .msg-keo .mav svg{width:27px;height:27px}
 .msg-body{flex:1;min-width:0;padding-top:4px}
-.msg-text{font-size:15px;line-height:1.8;writing-mode:horizontal-tb;text-orientation:mixed;}
+.msg-text{font-size:15px;line-height:1.8}
 .msg-text p{margin-bottom:8px}
 .msg-text h3.mdh{font-size:17px;margin:14px 0 8px;color:var(--acc)}
 .msg-text .mdli{position:relative;padding-left:18px;margin:5px 0}
@@ -368,6 +368,9 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
   #chatScroll{padding:18px 14px 6px}
   #composer{padding:8px 12px 12px}
   .welcome h2{font-size:30px}.welcome h2 span{font-size:17px}
+  writing-mode: horizontal-tb !important;
+  word-break: normal !important;
+  word-wrap: normal !important;
 }
 </style>
 </head>
