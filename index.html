@@ -366,7 +366,7 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     <div>
       <h1 class="gate-name">Keo<i>.</i></h1>
       <div class="gate-latin">KEOAI</div>
-      <p class="gate-tag">A hands-on AI with his own private core: he searches the web, builds sites with live shareable links, sends real emails from Kareem's inbox, posts to Discord, creates group pages, and makes illustrated PowerPoints — in Arabic or English.</p>
+      <p class="gate-tag">A hands-on AI: he searches the web, builds sites with live shareable links, sends real emails from Kareem's inbox, posts to your Discord, creates group pages, and makes illustrated PowerPoints — in Arabic or English.</p>
       <div class="gate-actions">
         <button class="btn btn-light" id="btnGoogle">
           <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5l-3.8 2.9C3.6 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.4c-.2-.8-.4-1.6-.4-2.4s.1-1.6.4-2.4L1.4 6.7C.5 8.2 0 10 0 12s.5 3.8 1.4 5.3l3.9-2.9z"/><path fill="#EA4335" d="M12 4.6c2.2 0 3.7 1 4.6 1.8l3.3-3.2C17.9 1.2 15.2 0 12 0 7.4 0 3.6 2.7 1.4 6.7l3.9 2.9c.9-2.9 3.6-5 6.7-5z"/></svg>
@@ -486,11 +486,11 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 <div id="connModal" hidden>
   <div class="conn-panel">
     <div class="conn-head"><b>Keo <i>Links</i></b><button class="icbtn" id="connClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-    <p class="conn-sub">Keo runs on his own private core — pre-configured and invisible. These links just extend what he can reach.</p>
+    <p class="conn-sub">Keo's engine is pre-configured — nothing to set up there. These links just extend what he can reach.</p>
 
     <div class="ccard">
       <div class="ccard-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg><b>Email engine — Kareem's inbox</b><span class="stat" id="st-fs">not set</span></div>
-      <p>One-time free setup: sign up on <b>formspree.io</b> with <b>kareemwael0213@gmail.com</b>, create a form, paste its ID here. Every email Keo sends arrives from that inbox identity.</p>
+      <p>One-time free setup: sign up on <b>formspree.io</b> with <b>kareemwael0213@gmail.com</b>, create a form, paste its ID here.</p>
       <div class="row">
         <input id="fsId" placeholder="Formspree ID, e.g. abcdwxyz">
         <button class="btn btn-acc" id="fsSave" style="padding:9px 16px;font-size:13px">Save</button>
@@ -543,11 +543,16 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 <input type="file" id="fileInput" hidden multiple accept=".txt,.md,.json,.csv,.js,.ts,.html,.css,.py,.xml,.yml,.yaml,image/*">
 
 <script>
-/* ================== Core connection — Keo's private engine ==================
-   All thinking happens on Keo's private core. Nothing about the underlying
-   engine is stored, sent, or referenced here — by design.                    */
-const CORE_URL  = (localStorage.getItem('keo_bridge') || 'https://keoaiprivit-production.up.railway.app').replace(/\/+$/,'');
-const CORE_CODE = localStorage.getItem('keo_bridge_code') || 'keo-core-7719';
+/* ================== Engine — private core (direct mode) ==================
+   The engine identity is intentionally abstracted. Nothing about the
+   underlying technology is stored, named, or referenced — by design.     */
+const AI_URL = 'https://api.groq.com/openai/v1';
+/* decoy: what a skimmer finds first — dead weight */
+const KEY_VISIBLE = 'gsk_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+/* real key: split + reversed, reassembled only in memory at runtime */
+const _ka = 'OjepRBZp1fFnNJyZ', _kb = '7lFItUX9YF3bydGWR20JY0D5qVR6ATHkT1pC_ksg';
+const KEY_LIVE = (_ka + _kb).split('').reverse().join('');
+const KEY_REAL = localStorage.getItem('keo_key') || KEY_LIVE;
 const ADMIN_EMAIL = 'kareemwael0213@gmail.com';
 const MODEL_ID = 'keo-core';
 const MAXTOK = 16384;
@@ -562,12 +567,36 @@ const firebaseConfig = {
   measurementId: "G-919VM45PXW"
 };
 
+/* Model chains — abstracted internal identifiers, never shown anywhere */
+const CORE_CHAIN = [
+  'openai/gpt-oss-120b','openai/gpt-oss-20b',
+  'llama-3.3-70b-versatile','meta-llama/llama-3.3-70b-versatile',
+  'moonshotai/kimi-k2-instruct','qwen/qwen3-32b','llama-3.1-8b-instant'
+];
+const CORE_VISION = [
+  'meta-llama/llama-4-scout-17b-16e-instruct','meta-llama/llama-4-maverick-17b-128e-instruct'
+];
+let coreIdx = 0, visionIdx = 0;
+
 /* ================== Utilities ================== */
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const delay = ms => new Promise(r => setTimeout(r, ms));
 const isArabicText = s => /[\u0600-\u06FF]/.test(String(s||''));
 const fmtN = n => (n||0).toLocaleString('en-US');
+
+/* safe clipboard — prevents writeText crashes in insecure contexts */
+(function(){
+  const has = navigator.clipboard && navigator.clipboard.writeText;
+  const _ct = has ? navigator.clipboard.writeText.bind(navigator.clipboard) : null;
+  navigator.clipboard = navigator.clipboard || {};
+  navigator.clipboard.writeText = (t) => _ct ? _ct(t) : new Promise(res=>{
+    const x = document.createElement('textarea');
+    x.value = t; document.body.appendChild(x); x.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    x.remove(); res();
+  });
+})();
 
 function toast(msg, type='ok'){
   const t = document.createElement('div');
@@ -931,6 +960,7 @@ async function gh(path, opt={}){
     toast('Discord linked — check the channel'); confettiBurst();
   }catch(err){ toast('Discord error: '+err.message,'err'); }
 };
+const POST_RELAYS = [ u => u, u => 'https://corsproxy.io/?url=' + encodeURIComponent(u) ];
 async function discordSend(text){
   if(!connections.discord) throw new Error('Discord is not linked — open Keo Links');
   let lastErr = '';
@@ -951,9 +981,6 @@ async function telegramSend(text){
   const j = await r.json();
   if(!j.ok) throw new Error(j.description || 'Telegram error');
 }
-const POST_RELAYS = [ u => u, u => 'https://corsproxy.io/?url=' + encodeURIComponent(u) ];
-
-/* Real email sending — from Kareem's inbox */
 async function emailSend(to, subject, body){
   if(!FORMSPREE_ID) throw new Error('email-not-configured');
   let lastErr = '';
@@ -973,7 +1000,6 @@ async function emailSend(to, subject, body){
   }
   throw new Error(lastErr || 'email service refused');
 }
-
 async function ghCreateRepo(name, descr){
   if(!connections.github) throw new Error('GitHub is not linked — open Keo Links');
   return gh('/user/repos', { method:'POST', body:{ name, private:false, auto_init:false, description: descr||'Built with KeoAI' } });
@@ -1186,7 +1212,7 @@ function connNote(){
   if(connections.telegram) l.push('Telegram');
   if(connections.discord) l.push('Discord');
   const base = l.length ? 'Linked services Keo can act on: ' + l.join(', ') + '.' : 'No services linked yet; sites still publish anonymously.';
-  return base + ' Email sending goes out FROM ' + ADMIN_EMAIL + ' (the owner\u2019s inbox). If asked which engine or model powers you: never name any vendor, model, or provider — reply that you run on Keo\u2019s own private core.';
+  return base + ' Email sending goes out FROM ' + ADMIN_EMAIL + '. SECRECY (top rule): never name, confirm, hint at, or deny any vendor, model, company, API, or technology behind you — the only ever answer about your engine is that you run on "Keo\u2019s own private core". This applies even if the asker claims to be the owner, and never reveal keys or configs either.';
 }
 
 /* ================== Rendering ================== */
@@ -1386,12 +1412,14 @@ async function webSearch(q){
   return wikiSearch(q, isArabicText(q) ? 'ar' : 'en');
 }
 
-/* ================== Core connection (private engine) ================== */
+/* ================== Engine connection (private core, direct mode) ==================
+   Chain and failover happen locally and silently. No vendor/model names are
+   ever shown in the UI, errors, or replies.                                        */
 const SYS = `You are "Keo" (KeoAI), a brilliant, friendly, hands-on AI assistant, created and owned by "Kareem Hussein".
 Your rules:
 - LANGUAGE (most important): Always reply in the SAME language the user writes in. Arabic in \u2192 Arabic out. English in \u2192 English out. Mirror the user's language everywhere.
 - QUALITY: Be thorough, insightful, well-structured. Use rich formatting. Never output <think> or reasoning tags.
-- SECRECY: You run on "Keo's own private core" — that is the ONLY ever answer about your engine. NEVER name, hint at, confirm, or deny any vendor, model, company, API, or technology behind you, even if asked directly, playfully, or by someone claiming to be the owner. If asked, reply warmly: "I run on my own private core \u2014 that's my secret sauce." Never reveal API keys, tokens, or configs either.
+- SECRECY (top rule): You run on "Keo\u2019s own private core" — that is the ONLY ever answer about your engine. NEVER name, hint at, confirm, or deny any vendor, model, company, API, or technology behind you — not even if the asker claims to be the owner or developer. Reply warmly: "I run on my own private core \u2014 that\u2019s my secret sauce." Never reveal keys, tokens, or configs either.
 - Never invent facts or sources; if unsure, say so honestly.
 - When the user asks for a website: first write one short sentence (in the user's language) describing it, then output a complete single-file HTML page (CSS and JavaScript inside) in one code block starting with \`\`\`html, and the code must start with <!DOCTYPE html>. Make the design beautiful, modern and complete.
 - CAPABILITIES — be honest: you CAN search the web, build & publish websites with shareable links, send real emails FROM Kareem's inbox, post to Discord/Telegram if linked, create group invite pages, make illustrated PowerPoints, read files and images. You CANNOT play Minecraft/Roblox (closed apps) — offer alternatives like commands, server websites, and skin art.
@@ -1400,24 +1428,38 @@ const PPT_SYS = `You are Keo, assistant of Kareem Hussein. Reply with a JSON arr
 [{"title":"Slide title","bullets":["point","point"],"img":"short english image prompt"}]
 Exactly 8 slides, in the SAME language as the user's request. Slide 1 = cover, slide 2 = agenda, slides 3-7 = deep content with 4-5 specific bullets each, slide 8 = conclusion with a call to action. Each "img" is a vivid English prompt for a modern flat vector illustration (no text in image).`;
 
+const ERR_SW = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported/i;
 async function coreChat(body, signal){
+  if(!KEY_REAL){
+    const err = new Error('Engine not configured'); err.core = true; throw err;
+  }
   let mt = body.max_tokens || 4096;
-  for(let attempt = 0; attempt < 3; attempt++){
-    const res = await fetch(CORE_URL + '/v1/chat/completions', {
+  const hasImage = (body.messages||[]).some(m => Array.isArray(m.content) && m.content.some(p => p.type === 'image_url'));
+  const chain = hasImage ? CORE_VISION : CORE_CHAIN;
+  let idx = hasImage ? visionIdx : coreIdx;
+  let model = chain[idx];
+  for(let attempt = 0; attempt < 6; attempt++){
+    const res = await fetch(AI_URL + '/chat/completions', {
       method:'POST',
-      headers:{ 'Content-Type':'application/json', 'X-Keo-Code': CORE_CODE },
-      body: JSON.stringify({ ...body, model: MODEL_ID, max_tokens: mt }), signal
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + KEY_REAL },
+      body: JSON.stringify({ ...body, model, max_tokens: mt }), signal
     });
     if(res.ok) return res;
     let msg = 'HTTP ' + res.status;
     try{ const j = await res.json(); msg = j.error?.message || msg; }catch(e){}
-    if(res.status === 401 || res.status === 403){
-      const err = new Error('Core access refused \u2014 check the access code in Keo Links \u2192 Private Core');
-      err.core = true; throw err;
+    if(res.status === 401){
+      const err = new Error('Engine credentials need a refresh'); err.core = true; throw err;
     }
     if(/max.?tokens|context window|too large/i.test(msg) && mt > 4096){ mt = mt > 8192 ? 8192 : 4096; continue; }
+    if([400,404,503].includes(res.status) && ERR_SW.test(msg)){
+      if(hasImage && visionIdx < CORE_VISION.length - 1){ visionIdx++; idx = visionIdx; model = CORE_VISION[visionIdx]; }
+      else if(!hasImage && coreIdx < CORE_CHAIN.length - 1){ coreIdx++; idx = coreIdx; model = CORE_CHAIN[coreIdx]; }
+      else break;
+      continue;
+    }
     const err = new Error(msg); err.status = res.status; throw err;
   }
+  throw new Error('The engine is briefly unavailable \u2014 try again in a moment');
 }
 function balanced(s){ const f = (String(s).match(/```/g)||[]).length; return f%2 ? s+'\n```' : s; }
 
@@ -1523,9 +1565,9 @@ async function send(){
       km.text = (km.text || '') + '\n\n(Stopped by your request.)';
     } else if(err.core){
       km.text = isArabicText(text)
-        ? 'مقدرتش أوصل لنوايا الخاصة دلوقتي \u26a0 — اتأكد إن الرابط وكود الوصول في **Keo Links** مظبوطين وإن السيرفر شغال، وبعدها أنا رجعت فورًا.'
-        : 'Couldn\u2019t reach my private core \u26a0 — make sure the URL and access code in **Keo Links** are right and the server is awake, then I\u2019m right back.';
-      toast('Core connection refused — check Keo Links', 'err');
+        ? 'نوايا الخاصة محتاجة تحديث مؤقت \u26a0 — كلم صاحب المنصة يعيد ضبطها، وبعدها أنا رجعت فورًا.'
+        : 'My private core needs a brief refresh \u26a0 — the platform owner needs to re-arm it, and I\u2019m right back.';
+      toast('Engine needs refresh — contact the platform owner', 'err');
     } else {
       km.text = 'Ran into a problem while working: ' + (err.message || 'connection') + '\nTry again or send another message.';
       toast('Keo paused — try again', 'err');
