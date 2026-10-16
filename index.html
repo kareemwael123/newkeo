@@ -12,42 +12,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 <script src="config.js"></script>
-<script>
-/* ================== DIAGNOSTIC CHECK ==================
-   If config.js fails to load (file:// protocol, missing file, typo),
-   this will show a clear red banner so you know what's wrong.
-   =================================================================== */
-(function(){
-  function showDiagBanner(msg, ok){
-    var b = document.createElement('div');
-    b.textContent = msg;
-    b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;padding:14px 20px;font-family:monospace;font-size:13px;color:' + (ok?'#0a0':'#fff') + ';background:' + (ok?'#c6f24b':'#e5484d') + ';border-bottom:2px solid ' + (ok?'#0a0':'#800') + ';box-shadow:0 4px 12px rgba(0,0,0,.3)';
-    document.body ? document.body.appendChild(b) : document.documentElement.appendChild(b);
-    if(ok) setTimeout(function(){ b.style.opacity='0'; b.style.transition='opacity .5s'; setTimeout(function(){ b.remove(); }, 600); }, 4000);
-  }
-  function runCheck(){
-    if(typeof window.KEO_CONFIG === 'undefined'){
-      showDiagBanner('⚠ config.js failed to load. Place config.js next to index.html in the SAME folder. If you opened index.html via file:// directly, try running: python -m http.server then visit http://localhost:8000', false);
-      return;
-    }
-    var missing = [];
-    ['HF_KEY','ELEVEN_KEY','HF_URL','ELEVEN_URL','ADMIN_EMAIL','FIREBASE','HF_TEXT','HF_VISION'].forEach(function(k){
-      if(!window.KEO_CONFIG[k]) missing.push(k);
-    });
-    if(missing.length){
-      showDiagBanner('⚠ config.js loaded but missing keys: ' + missing.join(', ') + '. Open config.js and fill them in.', false);
-    } else {
-      showDiagBanner('✓ config.js loaded with ' + Object.keys(window.KEO_CONFIG).length + ' keys. KeoAI ready.', true);
-    }
-  }
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', runCheck);
-  } else {
-    runCheck();
-  }
-  window.__keoDiag = runCheck;
-})();
-</script>
 <style>
 /* ================== BASE (same identity) ================== */
 :root{
@@ -443,6 +407,41 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 .call-btn.end svg{transform:rotate(135deg)}
 .call-btn.end:hover{background:#f06065}
 .call-lang{margin-top:2px}
+
+/* ============================================================================
+   MINIMAL UI — hide all text/captions but keep the same shape.
+   The bot avatar, dot indicators, equalizer bars, and buttons stay visible.
+   Speech recognition + TTS still work internally — just no on-screen text.
+   ============================================================================ */
+/* Hide the stage caption text (bottom-right of screen) — keep the dot + bot */
+#capText{display:none}
+#stageCap{padding:6px 10px;min-height:24px}
+#stageCap .capDot{margin:0 auto;display:block}
+
+/* Hide the call-status text — keep the pulsing dot */
+#callStatus{display:none}
+.call-status{justify-content:center}
+.call-status .capDot{margin:0 auto;display:block}
+
+/* Hide the call-name "Keo." text — keep the avatar shape */
+.call-name{display:none}
+
+/* Hide the call transcript entirely — no "You:" / "Keo:" logs above the bot */
+.call-transcript{display:none !important}
+
+/* Hide the live interim "..." text that mirrors what the user is saying */
+#callLive{display:none !important}
+
+/* Hide the language button text — keep the button shape */
+#callLangBtn{font-size:0;padding:8px 12px}
+#callLangBtn::after{content:"🌐";font-size:13px}
+
+/* Hide the call-actions button titles text — keep the icons */
+.call-btn{position:relative}
+.call-btn[title]::after{display:none}
+
+/* Hide the equalizer bars text labels (none currently, but future-proof) */
+.call-eq{justify-content:center}
 </style>
 </head>
   <script>
