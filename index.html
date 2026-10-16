@@ -533,61 +533,51 @@ function stopSpeaking(){
   try{ speechSynthesis.cancel(); }catch(e){}
 }
 
-/* keoSpeak(text, isCall, force)
-   - isCall=true  : inside the live Call overlay (manages mic + UI)
-   - force=true   : speak even if elevenOn is off (used by the "Listen" button) */
+/* keoSpeak(text, isCall, force) — uses ONLY the browser's built-in voice.
+   ElevenLabs was removed entirely per request — no external voice API.
+   The mic is stopped before speaking and only restarted AFTER a short
+   cooldown to prevent the mic from picking up Keo's TTS audio (which
+   was causing the "mic keeps repeating" feedback loop). */
 async function keoSpeak(text, isCall, force){
   if(!text) return;
   if(!force && !elevenOn && !isCall) return;
   if(isCall){ Call.speaking=true; stopRecognition(); }
   stopSpeaking();
-  elevenStopFlag = false; /* reset for this new utterance */
+  elevenStopFlag = false;
 
   const chunks = chunkForSpeech(text);
-  let elevenFailed = false; /* once ElevenLabs errors out, stop trying it for this utterance */
 
   for(let i=0; i<chunks.length; i++){
     if(elevenStopFlag) break;
     if(isCall && !Call.active) return;
-    if(isCall) setCallUI('talking','Keo is talking…');
-
-    /* --- ElevenLabs path --- */
-    if(!elevenFailed){
-      try{
-        const blob = await elevenFetch(chunks[i]);
-        if(elevenStopFlag) break;
-        await new Promise(res=>{
-          elevenAudio = new Audio(URL.createObjectURL(blob));
-          elevenAudio.onended = res;
-          elevenAudio.onerror = res;
-          /* Some browsers block autoplay until a user gesture — catch the rejection
-             and fall through to browser TTS for this chunk. */
-          elevenAudio.play().catch(()=>{ res(); });
-        });
-        continue;
-      }catch(e){
-        console.warn('[Keo] ElevenLabs failed, falling back to browser TTS:', e.message);
-        elevenFailed = true;
-        /* only show the warning toast once per session */
-        if(!keoSpeak._warned){ keoSpeak._warned = true;
-          toast('Voice engine unreachable — using browser voice','err');
-        }
-      }
-    }
-    /* --- Browser TTS fallback (per chunk) --- */
+    if(isCall) setCallUI('talking','');  /* text hidden, just sets the state class */
     if(elevenStopFlag) break;
+    /* --- Browser TTS only --- */
     await new Promise(res=>browserSpeak(chunks[i], res));
+    /* small gap between chunks to let the audio fully drain */
+    await new Promise(res=>setTimeout(res, 80));
   }
 
   if(isCall){
     Call.speaking=false;
-    if(Call.active && !Call.muted){ setCallUI('listening','Listening… speak to Keo'); startRecognition(); }
-    else if(Call.active){ setCallUI(null,'Mic muted'); }
+    /* Set a cooldown so the mic doesn't immediately pick up TTS echo */
+    Call.cooldownUntil = Date.now() + 700;
+    if(Call.active && !Call.muted){
+      /* Cooldown: wait 700ms before re-arming the mic so any TTS audio
+         echoing in the room has time to dissipate. This is the fix for
+         the "mic keeps repeating Keo's words" feedback loop. */
+      setTimeout(()=>{
+        if(Call.active && !Call.muted && !Call.speaking){
+          setCallUI('listening','');
+          startRecognition();
+        }
+      }, 700);
+    } else if(Call.active){ setCallUI(null,''); }
   }
 }
 
 /* ================== CALL CONTROLLER ================== */
-const Call = { active:false, rec:null, recActive:false, muted:false, speaking:false, finalBuf:'', silence:null };
+const Call = { active:false, rec:null, recActive:false, muted:false, speaking:false, finalBuf:'', silence:null, cooldownUntil:0 };
 
 function callLang(){
   const b=document.getElementById('btnMicLang');
@@ -618,11 +608,14 @@ function stopRecognition(){
 }
 function startRecognition(){
   const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){ toast('Voice recognition is not supported in this browser','err'); return; }
+  if(!SR){ return; }  /* silent — no toast */
+  /* Cooldown: don't restart recognition too soon after Keo stopped speaking.
+     This prevents the mic from picking up the trailing echo of Keo's TTS. */
+  if(Date.now() < Call.cooldownUntil) return;
   stopRecognition();
   const rec = new SR();
   rec.continuous=true; rec.interimResults=true; rec.lang=callLang();
-  rec.onstart=()=>{ Call.recActive=true; if(Call.active && !Call.muted && !Call.speaking) setCallUI('listening','Listening… speak to Keo'); };
+  rec.onstart=()=>{ Call.recActive=true; if(Call.active && !Call.muted && !Call.speaking) setCallUI('listening',''); };
   rec.onresult=(e)=>{
     if(!Call.active || Call.muted || Call.speaking) return;
     let interim='', fin='';
@@ -631,19 +624,28 @@ function startRecognition(){
       if(r.isFinal) fin+=r[0].transcript; else interim+=r[0].transcript;
     }
     if(fin) Call.finalBuf+=fin;
-    let prev=document.getElementById('callLive');
-    const t=document.getElementById('callTranscript');
-    if(!prev && t){ prev=document.createElement('div'); prev.id='callLive'; prev.className='you'; t.appendChild(prev); }
-    if(prev) prev.textContent='… '+(Call.finalBuf+interim).trim();
+    /* NOTE: no live interim text shown — the "..." echo bubble was the
+       source of the "mic keeps repeating" feeling. Just collect silently
+       and commit on silence. */
     clearTimeout(Call.silence);
-    if((Call.finalBuf+interim).trim().length) Call.silence=setTimeout(commitCallSpeech, fin?900:1700);
+    const totalText=(Call.finalBuf+interim).trim();
+    if(totalText.length){
+      /* longer silence timeout + only commit when at least 2 chars captured,
+         so brief Keo-TTS echo doesn't trigger a new user message */
+      Call.silence=setTimeout(commitCallSpeech, fin?1100:2000);
+    }
   };
   rec.onerror=(e)=>{
     if(e.error==='not-allowed'||e.error==='service-not-allowed'){ toast('Microphone permission denied','err'); endCall(); }
+    /* no-speech is normal — don't show anything, just let onend restart */
   };
   rec.onend=()=>{
     Call.recActive=false;
-    if(Call.active && Call.rec===rec && !Call.muted && !Call.speaking){ try{ rec.start(); }catch(_){}}
+    /* only auto-restart if still active AND not in cooldown AND not speaking */
+    if(Call.active && Call.rec===rec && !Call.muted && !Call.speaking
+        && Date.now() >= Call.cooldownUntil){
+      try{ rec.start(); }catch(_){}
+    }
   };
   Call.rec=rec;
   try{ rec.start(); }catch(_){}
@@ -651,10 +653,16 @@ function startRecognition(){
 function commitCallSpeech(){
   const text=(Call.finalBuf||'').trim();
   Call.finalBuf='';
-  const live=document.getElementById('callLive'); if(live) live.remove();
   if(!text || !Call.active) return;
+  /* Minimum length filter — ignore accidental captures shorter than 2 chars.
+     This kills the mic feedback loop where Keo's TTS audio gets captured. */
+  if(text.length < 2) return;
+  /* Anti-repeat: don't commit if the same text was just sent recently */
+  if(Call._lastSent === text && (Date.now() - (Call._lastSentTs||0)) < 5000) return;
+  Call._lastSent = text;
+  Call._lastSentTs = Date.now();
   callLog('you',text);
-  setCallUI('thinking','Keo is thinking…');
+  setCallUI('thinking','');
   callSend(text);
 }
 function openCall(){
@@ -705,30 +713,10 @@ function setupReplyWatcher(){
   if(cs) replyWatcher.observe(cs,{childList:true,subtree:true,characterData:true});
 }
 
-/* ================== voice selector (small dropdown) ================== */
-function buildVoiceSelector(){
-  let sel = document.getElementById('keoVoiceSel');
-  if(sel) return;
-  const chipSpeak = document.getElementById('chipSpeak');
-  if(!chipSpeak) return;
-  sel = document.createElement('select');
-  sel.id = 'keoVoiceSel';
-  sel.title = 'Pick a voice';
-  sel.style.cssText = 'background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:11px;color:var(--text);font-family:inherit;outline:none;cursor:pointer;max-width:140px;';
-  ELEVEN_VOICES.forEach(v=>{
-    const o = document.createElement('option');
-    o.value = v.id; o.textContent = v.name;
-    if(v.id===ELEVEN_VOICE) o.selected = true;
-    sel.appendChild(o);
-  });
-  sel.addEventListener('change', ()=>{
-    ELEVEN_VOICE = sel.value;
-    localStorage.setItem('keo_eleven_voice', ELEVEN_VOICE);
-    stopSpeaking();
-    toast('Voice changed — next reply will use ' + (ELEVEN_VOICES.find(v=>v.id===ELEVEN_VOICE)||{}).name);
-  });
-  chipSpeak.parentNode.insertBefore(sel, chipSpeak.nextSibling);
-}
+/* ================== voice settings — single fixed voice (no selector) ================== */
+/* The voice is locked to one default (Rachel) — no dropdown, no picking. */
+function buildVoiceSelector(){ /* intentionally empty — no UI selector anymore */ }
+
 
 /* ================== hook up all the Call/Voice buttons (after DOM ready) ================== */
 function initElevenUI(){
@@ -1069,11 +1057,11 @@ let KEY_READY = false;
 const ADMIN_EMAIL = (window.KEO_CONFIG && KEO_CONFIG.ADMIN_EMAIL) || 'kareemwael0213@gmail.com';
 const OWNER_EMAIL = (window.KEO_CONFIG && KEO_CONFIG.OWNER_EMAIL) || ADMIN_EMAIL;
 const MODEL_ID    = (window.KEO_CONFIG && KEO_CONFIG.MODEL_ID)    || 'keo-core';
-const MAXTOK      = (window.KEO_CONFIG && KEO_CONFIG.MAXTOK)       || 16384;
+const MAXTOK      = (window.KEO_CONFIG && KEO_CONFIG.MAXTOK)       || 65536;
 const HISTORY_TURNS = (window.KEO_CONFIG && KEO_CONFIG.HISTORY_TURNS) || 30;
 const MAX_FILE_MB = (window.KEO_CONFIG && KEO_CONFIG.MAX_FILE_MB) || 10;
 const MAX_FILE_BYTES = MAX_FILE_MB * 1024 * 1024;
-const MAX_TEXT_CHARS = (window.KEO_CONFIG && KEO_CONFIG.MAX_TEXT_CHARS) || 300000;
+const MAX_TEXT_CHARS = (window.KEO_CONFIG && KEO_CONFIG.MAX_TEXT_CHARS) || 1000000;
 const firebaseConfig = (window.KEO_CONFIG && KEO_CONFIG.FIREBASE) || {
   apiKey: "AIzaSyC0lwVRTBPA3yxnZ3wuqvyfQJbJP-AVNJo",
   authDomain: "kareem-8ed77.firebaseapp.com",
@@ -1852,7 +1840,7 @@ async function coreChat(body, signal){
       const res = await fetch(HF_URL + '/chat/completions', {
         method:'POST',
         headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + HF_KEY },
-        body: JSON.stringify({ ...body, model, max_tokens: Math.min(mt, 8192) }), signal
+        body: JSON.stringify({ ...body, model, max_tokens: mt }), signal
       });
       if(res.ok){
         if(hasImage) hfVisIdx = hfIdx; else hfTextIdx = hfIdx;
@@ -2108,7 +2096,7 @@ User question: ${text}
 Write a helpful, well-organized answer in the SAME language as the user's question, based on these results, citing sources inline as [1] [2]. If the results are insufficient, say so honestly.`;
   const msgs = [{ role:'system', content: SYS + personaSys() }, ...history().slice(0,-1), { role:'user', content: ctxBlock }];
   const typer = makeTyper(textNode);
-  await streamCore(msgs, typer, { temperature: 0.5, max_tokens: 8192 });
+  await streamCore(msgs, typer, { temperature: 0.5, max_tokens: MAXTOK });
   creditTokens(charsOf(msgs) + typer.text().length);
   await new Promise(res => typer.end(()=>{ km.text = typer.text(); res(); }));
   await detectAndOpenSite(km);
