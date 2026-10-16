@@ -368,8 +368,246 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
   #composer{padding:8px 12px 12px}
   .welcome h2{font-size:30px}.welcome h2 span{font-size:17px}
 }
+  /* ================== CALL MODE + ELEVENLABS VOICE (added) ================== */
+#callOverlay{position:fixed;inset:0;z-index:88;display:flex;align-items:center;justify-content:center;background:rgba(5,7,6,.85);backdrop-filter:blur(16px)}
+#callOverlay[hidden]{display:none}
+.call-core{display:flex;flex-direction:column;align-items:center;gap:10px;max-width:560px;width:100%;padding:20px;text-align:center;animation:up .4s ease}
+.call-ava{position:relative;width:250px;height:235px;display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+#callBot{width:250px;position:relative;z-index:2}
+.call-rings{position:absolute;inset:0;z-index:1}
+.call-rings i{position:absolute;left:50%;top:55%;width:140px;height:140px;margin:-70px 0 0 -70px;border-radius:50%;border:2px solid var(--acc);opacity:0}
+#callOverlay.listening .call-rings i{animation:cring 2.2s ease-out infinite}
+#callOverlay.listening .call-rings i:nth-child(2){animation-delay:.7s}
+#callOverlay.listening .call-rings i:nth-child(3){animation-delay:1.4s}
+@keyframes cring{0%{transform:scale(.55);opacity:.55}100%{transform:scale(1.75);opacity:0}}
+.call-name{font-family:var(--fd);font-weight:900;font-size:34px}
+.call-name i{font-style:normal;color:var(--acc)}
+.call-status{font-size:14px;color:var(--mut);min-height:22px;display:flex;align-items:center;gap:8px}
+.call-status .capDot{display:inline-block}
+.call-transcript{min-height:76px;max-height:150px;overflow-y:auto;font-size:14.5px;line-height:1.8;color:#d7dcc9;background:rgba(16,19,18,.75);border:1px solid var(--line);border-radius:14px;padding:12px 16px;width:100%;text-align:left;direction:ltr}
+.call-transcript b{color:var(--acc)}
+.call-transcript .you{color:#cfd4c6}
+.call-eq{display:flex;align-items:flex-end;gap:3px;height:26px;min-height:26px}
+.call-eq i{width:4px;height:6px;border-radius:3px;background:var(--acc);opacity:.2;transition:height .12s}
+#callOverlay.talking .call-eq i{opacity:1;animation:eq .7s ease-in-out infinite}
+.call-eq i:nth-child(2){animation-delay:.08s}
+.call-eq i:nth-child(3){animation-delay:.16s}
+.call-eq i:nth-child(4){animation-delay:.24s}
+.call-eq i:nth-child(5){animation-delay:.32s}
+.call-eq i:nth-child(6){animation-delay:.4s}
+.call-eq i:nth-child(7){animation-delay:.48s}
+@keyframes eq{0%,100%{height:6px}50%{height:24px}}
+.call-actions{display:flex;gap:16px;margin-top:8px;align-items:center}
+.call-btn{width:58px;height:58px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--text);transition:.2s}
+.call-btn:hover{background:#232823}
+.call-btn svg{width:24px;height:24px}
+.call-btn.off{color:var(--err);border-color:rgba(255,107,87,.4);background:rgba(255,107,87,.08)}
+.call-btn.end{background:#E5484D;border-color:#E5484D;color:#fff}
+.call-btn.end svg{transform:rotate(135deg)}
+.call-btn.end:hover{background:#f06065}
+.call-lang{margin-top:2px}
 </style>
 </head>
+  <script>
+/* ================== ELEVENLABS VOICE + LIVE CALL WITH KEO (added) ================== */
+const ELEVEN_KEY   = 'sk_8ceab238830888efd7da5e323d7450db60715759280b8e5a';
+const ELEVEN_URL   = 'https://api.elevenlabs.io/v1';
+const ELEVEN_VOICE = '21m00Tcm4TlvDq8ikWAM'; /* Rachel — multilingual (Arabic+English). بدائل: 'pNInz6obpgDQGcFmaJgB' Adam / 'ErXwobaYiN019PkySvjV' Antoni */
+const ELEVEN_MODEL = 'eleven_multilingual_v2';
+let elevenAudio = null, elevenOn = true;
+try{ speechSynthesis.getVoices(); }catch(e){}
+
+function cleanForSpeech(raw){
+  const d = document.createElement('div'); d.innerHTML = raw;
+  d.querySelectorAll('.codeblk,.srcs,.msg-acts,.pptstrip,.miniapp,.genimg,.caret,.ppt-dl').forEach(n=>n.remove());
+  return (d.textContent||'').replace(/\s+/g,' ').replace(/[*_`#>]/g,'').trim().slice(0,1200);
+}
+function chunkForSpeech(t){
+  const parts = t.match(/[^.!?؟\n]+[.!?؟]*\s*/g) || [t];
+  const out=[]; let cur='';
+  for(const p of parts){ if((cur+p).length>260){ if(cur.trim()) out.push(cur.trim()); cur=p; } else cur+=p; }
+  if(cur.trim()) out.push(cur.trim());
+  return out.length?out:[t];
+}
+async function elevenFetch(text){
+  const res = await fetch(ELEVEN_URL+'/text-to-speech/'+ELEVEN_VOICE,{
+    method:'POST',
+    headers:{'xi-api-key':ELEVEN_KEY,'Content-Type':'application/json','accept':'audio/mpeg'},
+    body:JSON.stringify({text,model_id:ELEVEN_MODEL,voice_settings:{stability:0.45,similarity_boost:0.8,style:0.15,use_speaker_boost:true}})
+  });
+  if(!res.ok) throw new Error('eleven '+res.status);
+  return await res.blob();
+}
+function browserSpeak(text,onend){
+  try{
+    const lang = callLang()==='en-US'?'en-US':'ar-SA';
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang=lang; u.rate=1.02; u.pitch=1.03;
+    const vs = speechSynthesis.getVoices().filter(v=>v.lang && v.lang.indexOf(lang.slice(0,2))===0);
+    if(vs.length) u.voice = vs[0];
+    u.onend = onend||null; u.onerror = onend||null;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }catch(e){ if(onend) onend(); }
+}
+function stopSpeaking(){
+  if(elevenAudio){ try{elevenAudio.pause(); elevenAudio.currentTime=0;}catch(e){} elevenAudio=null; }
+  try{ speechSynthesis.cancel(); }catch(e){}
+}
+async function keoSpeak(text, isCall){
+  if(!text || (!elevenOn && !isCall)) return;
+  if(isCall){ Call.speaking=true; stopRecognition(); }
+  stopSpeaking();
+  try{
+    for(const ch of chunkForSpeech(text)){
+      if(isCall && !Call.active) return;
+      if(isCall) setCallUI('talking','Keo is talking…');
+      try{
+        const blob = await elevenFetch(ch);
+        await new Promise(res=>{
+          elevenAudio = new Audio(URL.createObjectURL(blob));
+          elevenAudio.onended=res; elevenAudio.onerror=res;
+          elevenAudio.play().catch(res);
+        });
+      }catch(e){ await new Promise(res=>browserSpeak(ch,res)); }
+    }
+  } finally {
+    if(isCall){
+      Call.speaking=false;
+      if(Call.active && !Call.muted){ setCallUI('listening','Listening… speak to Keo'); startRecognition(); }
+      else if(Call.active){ setCallUI(null,'Mic muted'); }
+    }
+  }
+}
+/* ---- auto-catch finished Keo replies (works without touching the engine) ---- */
+const spokenSet = new WeakSet();
+let speakTimer = null, pendingSpeakNode = null;
+const replyWatcher = new MutationObserver(()=>{
+  const last = document.querySelector('#chatScroll .msg-keo:last-of-type .msg-text');
+  if(!last || spokenSet.has(last)) return;
+  pendingSpeakNode = last;
+  clearTimeout(speakTimer);
+  speakTimer = setTimeout(()=>{
+    const node = pendingSpeakNode; pendingSpeakNode=null;
+    if(!node || spokenSet.has(node)) return;
+    const txt = cleanForSpeech(node.innerHTML);
+    if(txt.length<2) return;
+    spokenSet.add(node);
+    keoSpeak(txt, Call.active);
+  }, 1600);
+});
+replyWatcher.observe(document.getElementById('chatScroll'),{childList:true,subtree:true,characterData:true});
+document.querySelectorAll('#chatScroll .msg-keo .msg-text').forEach(n=>spokenSet.add(n));
+
+/* ================== CALL CONTROLLER ================== */
+const Call = { active:false, rec:null, recActive:false, muted:false, speaking:false, finalBuf:'', silence:null };
+function callLang(){ const b=document.getElementById('btnMicLang'); return (b && b.textContent.trim().toUpperCase()==='EN')?'en-US':'ar-SA'; }
+function setCallUI(state,msg){
+  const ov=document.getElementById('callOverlay'); if(!ov) return;
+  ov.classList.remove('listening','talking','thinking');
+  if(state) ov.classList.add(state);
+  const s=document.getElementById('callStatus'); if(s) s.textContent = msg||'';
+}
+function callLog(who,text){
+  const t=document.getElementById('callTranscript'); if(!t) return;
+  const d=document.createElement('div'); if(who==='you') d.className='you';
+  const b=document.createElement('b'); b.textContent = who==='you'?'You: ':'Keo: ';
+  d.appendChild(b); d.appendChild(document.createTextNode(text));
+  t.appendChild(d); t.scrollTop=t.scrollHeight;
+}
+function callSend(text){
+  const ta=document.getElementById('ta'); if(!ta) return;
+  ta.value=text;
+  ta.dispatchEvent(new Event('input',{bubbles:true}));
+  const btn=document.getElementById('btnSend'); if(btn) btn.click();
+}
+function stopRecognition(){
+  if(Call.rec){ try{ Call.rec.onend=null; Call.rec.stop(); }catch(e){} Call.rec=null; }
+  Call.recActive=false;
+}
+function startRecognition(){
+  const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){ toast('Voice recognition is not supported in this browser','err'); return; }
+  stopRecognition();
+  const rec = new SR();
+  rec.continuous=true; rec.interimResults=true; rec.lang=callLang();
+  rec.onstart=()=>{ Call.recActive=true; if(Call.active && !Call.muted && !Call.speaking) setCallUI('listening','Listening… speak to Keo'); };
+  rec.onresult=(e)=>{
+    if(!Call.active || Call.muted || Call.speaking) return;
+    let interim='', fin='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const r=e.results[i];
+      if(r.isFinal) fin+=r[0].transcript; else interim+=r[0].transcript;
+    }
+    if(fin) Call.finalBuf+=fin;
+    let prev=document.getElementById('callLive');
+    const t=document.getElementById('callTranscript');
+    if(!prev && t){ prev=document.createElement('div'); prev.id='callLive'; prev.className='you'; t.appendChild(prev); }
+    if(prev) prev.textContent='… '+(Call.finalBuf+interim).trim();
+    clearTimeout(Call.silence);
+    if((Call.finalBuf+interim).trim().length) Call.silence=setTimeout(commitCallSpeech, fin?900:1700);
+  };
+  rec.onerror=(e)=>{
+    if(e.error==='not-allowed'||e.error==='service-not-allowed'){ toast('Microphone permission denied','err'); endCall(); }
+  };
+  rec.onend=()=>{
+    Call.recActive=false;
+    if(Call.active && Call.rec===rec && !Call.muted && !Call.speaking){ try{ rec.start(); }catch(_){}}
+  };
+  Call.rec=rec;
+  try{ rec.start(); }catch(_){}
+}
+function commitCallSpeech(){
+  const text=(Call.finalBuf||'').trim();
+  Call.finalBuf='';
+  const live=document.getElementById('callLive'); if(live) live.remove();
+  if(!text || !Call.active) return;
+  callLog('you',text);
+  setCallUI('thinking','Keo is thinking…');
+  callSend(text);
+}
+function openCall(){
+  if(Call.active) return;
+  Call.active=true; Call.finalBuf=''; Call.muted=false;
+  const mb=document.getElementById('callMute'); if(mb) mb.classList.remove('off');
+  const cb=document.getElementById('callBot'), sb=document.getElementById('stageBot');
+  if(cb) cb.innerHTML = sb ? sb.innerHTML : '';
+  const tr=document.getElementById('callTranscript'); if(tr) tr.innerHTML='';
+  const cl=document.getElementById('callLangBtn'), ml=document.getElementById('btnMicLang');
+  if(cl && ml) cl.textContent = ml.textContent.trim().toUpperCase()==='EN'?'EN':'AR';
+  const ov=document.getElementById('callOverlay'); if(ov) ov.hidden=false;
+  setCallUI('listening','Connecting…');
+  startRecognition();
+}
+function endCall(){
+  if(!Call.active) return;
+  Call.active=false;
+  clearTimeout(Call.silence);
+  stopRecognition(); stopSpeaking();
+  const ov=document.getElementById('callOverlay'); if(ov) ov.hidden=true;
+  setCallUI(null,'');
+}
+document.getElementById('chipCall').addEventListener('click',openCall);
+document.getElementById('callEnd').addEventListener('click',endCall);
+document.getElementById('callMute').addEventListener('click',function(){
+  Call.muted=!Call.muted;
+  this.classList.toggle('off',Call.muted);
+  if(Call.muted){ stopRecognition(); setCallUI(null,'Mic muted — tap to unmute'); }
+  else if(Call.active && !Call.speaking){ setCallUI('listening','Listening…'); startRecognition(); }
+});
+document.getElementById('callLangBtn').addEventListener('click',function(){
+  const b=document.getElementById('btnMicLang'); if(!b) return;
+  const next=(b.textContent.trim().toUpperCase()==='AR')?'EN':'AR';
+  b.textContent=next; this.textContent=next;
+  if(Call.active && !Call.muted && !Call.speaking) startRecognition();
+});
+document.getElementById('chipSpeak').addEventListener('click',function(){
+  elevenOn=!elevenOn;
+  this.classList.toggle('active',elevenOn);
+  if(!elevenOn) stopSpeaking();
+  toast(elevenOn?'Keo voice ON — ElevenLabs 🔊':'Keo voice muted 🔇');
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && Call.active) endCall(); });
+</script>
 <body>
 
 <div id="gate">
@@ -467,6 +705,12 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
             <button class="icbtn" id="btnAttach" title="Attach files / images (OCR)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
             <button class="icbtn" id="btnMic" title="Voice input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg></button>
             <button class="chip" id="btnMicLang" title="Speech recognition language">AR</button>
+            <button class="chip active" id="chipSpeak" title="Keo replies with ElevenLabs voice">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>
+            Voice</button>
+            <button class="chip" id="chipCall" title="Live voice call with Keo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              Call</button>
             <button class="chip" id="chipSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9z"/></svg>Web</button>
             <button class="chip" id="chipPpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h20M4 3v11h16V3M12 14v4M8 21l4-3 4 3"/></svg>Slides</button>
           </div>
@@ -595,7 +839,27 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
     </div>
   </div>
 </div>
-
+<div id="callOverlay" hidden>
+  <div class="call-core">
+    <div class="call-ava">
+      <div class="call-rings"><i></i><i></i><i></i></div>
+      <div id="callBot" class="bot"></div>
+    </div>
+    <div class="call-name">Keo<i>.</i></div>
+    <div class="call-status"><span class="capDot" id="callDot"></span><span id="callStatus">Connecting…</span></div>
+    <div class="call-transcript" id="callTranscript"></div>
+    <div class="call-eq" id="callEq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="call-actions">
+      <button class="call-btn" id="callMute" title="Mute / unmute mic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg>
+      </button>
+      <button class="call-btn end" id="callEnd" title="End call">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </button>
+    </div>
+    <div class="call-lang"><button class="cbtn" id="callLangBtn" title="Call language">AR</button></div>
+  </div>
+</div>
 <div id="toasts"></div>
 <input type="file" id="fileInput" hidden multiple accept=".txt,.md,.json,.csv,.js,.ts,.html,.css,.py,.xml,.yml,.yaml,.log,image/*">
 
