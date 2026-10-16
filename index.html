@@ -12,6 +12,42 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 <script src="config.js"></script>
+<script>
+/* ================== DIAGNOSTIC CHECK ==================
+   If config.js fails to load (file:// protocol, missing file, typo),
+   this will show a clear red banner so you know what's wrong.
+   =================================================================== */
+(function(){
+  function showDiagBanner(msg, ok){
+    var b = document.createElement('div');
+    b.textContent = msg;
+    b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;padding:14px 20px;font-family:monospace;font-size:13px;color:' + (ok?'#0a0':'#fff') + ';background:' + (ok?'#c6f24b':'#e5484d') + ';border-bottom:2px solid ' + (ok?'#0a0':'#800') + ';box-shadow:0 4px 12px rgba(0,0,0,.3)';
+    document.body ? document.body.appendChild(b) : document.documentElement.appendChild(b);
+    if(ok) setTimeout(function(){ b.style.opacity='0'; b.style.transition='opacity .5s'; setTimeout(function(){ b.remove(); }, 600); }, 4000);
+  }
+  function runCheck(){
+    if(typeof window.KEO_CONFIG === 'undefined'){
+      showDiagBanner('⚠ config.js failed to load. Place config.js next to index.html in the SAME folder. If you opened index.html via file:// directly, try running: python -m http.server then visit http://localhost:8000', false);
+      return;
+    }
+    var missing = [];
+    ['HF_KEY','ELEVEN_KEY','HF_URL','ELEVEN_URL','ADMIN_EMAIL','FIREBASE','HF_TEXT','HF_VISION'].forEach(function(k){
+      if(!window.KEO_CONFIG[k]) missing.push(k);
+    });
+    if(missing.length){
+      showDiagBanner('⚠ config.js loaded but missing keys: ' + missing.join(', ') + '. Open config.js and fill them in.', false);
+    } else {
+      showDiagBanner('✓ config.js loaded with ' + Object.keys(window.KEO_CONFIG).length + ' keys. KeoAI ready.', true);
+    }
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', runCheck);
+  } else {
+    runCheck();
+  }
+  window.__keoDiag = runCheck;
+})();
+</script>
 <style>
 /* ================== BASE (same identity) ================== */
 :root{
@@ -1784,7 +1820,7 @@ async function webSearch(q){
 const SYS = `You are "Keo" (KeoAI PRO), a brilliant, friendly, hands-on AI assistant, created and owned by "Kareem Hussein". You are one of the most powerful AI assistants on the planet — your private core is built on top-tier frontier models with hundreds of billions of parameters and effectively-unlimited context.
 Your rules:
 - LANGUAGE (most important): Always reply in the SAME language the user writes in. Arabic in \u2192 Arabic out. English in \u2192 English out. Mirror the user's language everywhere.
-- QUALITY: Be thorough, insightful, well-structured. Use rich formatting. Never output ￼ or reasoning tags. Be concise when the question is simple, exhaustive when the question is complex.
+- QUALITY: Be thorough, insightful, well-structured. Use rich formatting. Never output   or reasoning tags. Be concise when the question is simple, exhaustive when the question is complex.
 - GIANT CONTEXT: You can read and analyze extremely long inputs — whole books, large codebases, big transcripts, many files (up to ~300,000 characters per paste). When the user pastes a huge text, read ALL of it carefully before answering.
 - REASONING: For complex problems (math, coding, multi-step analysis, logic puzzles), reason step-by-step before giving the final answer. Show your work when the user benefits from seeing it.
 - MEMORY: A persistent memory system feeds you facts about this user before every conversation (their name, what they like, what they last worked on, how many times they visited). Use it warmly: greet returning users by name if known, reference their past interests when relevant.
