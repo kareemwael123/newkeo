@@ -3150,7 +3150,11 @@ function speakText(text){
 /* ================== mic ================== */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let micRec = null, micOn = false, micLang = 'ar';
-let micBase = '', micFinal = '', micCursor = 0, micRestarts = 0, micLastTxt = '', micLastTime = 0;
+let micBase = '', micFinal = '', micCursor = 0, micRestarts = 0;
+/* History of recently-captured phrases + timestamps — used to prevent the
+   same phrase being added multiple times to the textarea. This is the fix
+   for the "mic keeps repeating the same words" bug. */
+let micHistory = [];  /* [{text, ts}, ...] */
 function micStopUI(){ micOn = false; $('#btnMic').classList.remove('rec'); }
 function micFatal(e){
   micStopUI();
@@ -3163,6 +3167,29 @@ function micFatal(e){
   $('#btnMicLang').textContent = micLang.toUpperCase();
   toast('Mic language: ' + (micLang === 'ar' ? 'Arabic' : 'English'));
 };
+/* Dedup check: returns true if this text was already captured recently.
+   Window is 8 seconds — long enough to kill mobile-restart duplicates,
+   short enough to allow legitimately repeated phrases like "yeah yeah". */
+function micAlreadyCaptured(txt){
+  const now = Date.now();
+  const WINDOW = 8000;
+  /* prune old entries */
+  micHistory = micHistory.filter(h => now - h.ts < WINDOW);
+  /* exact match or fuzzy match (last word boundary) */
+  const clean = txt.trim().toLowerCase();
+  for(const h of micHistory){
+    if(h.text === clean) return true;
+    /* also block if the new text is contained in a recent capture
+       (mobile sometimes delivers "Keo hello" then "hello" separately) */
+    if(h.text.length > 5 && (h.text.includes(clean) || clean.includes(h.text))) return true;
+  }
+  return false;
+}
+function micRecordCapture(txt){
+  micHistory.push({ text: txt.trim().toLowerCase(), ts: Date.now() });
+  /* cap history size */
+  if(micHistory.length > 30) micHistory.shift();
+}
  $('#btnMic').onclick = ()=>{
   if(!SR) return toast('Voice input needs Chrome or Edge','err');
   if(micOn){ micOn = false; try{ micRec.stop(); }catch(e){} micStopUI(); return; }
@@ -3170,7 +3197,8 @@ function micFatal(e){
   micRec.lang = micLang === 'ar' ? 'ar-EG' : (navigator.language || 'en-US');
   micRec.interimResults = true; micRec.continuous = true; micRec.maxAlternatives = 1;
   micBase = ta.value ? ta.value.replace(/\s+$/,'') + ' ' : '';
-  micFinal = ''; micCursor = 0; micRestarts = 0; micLastTxt = ''; micLastTime = 0;
+  micFinal = ''; micCursor = 0; micRestarts = 0;
+  /* keep micHistory across restarts within the same session */
   micRec.onstart = ()=>{ micCursor = 0; };
   micRec.onresult = e=>{
     let interim = '';
@@ -3178,9 +3206,15 @@ function micFatal(e){
       const r = e.results[i];
       if(r.isFinal){
         const txt = r[0].transcript.trim();
-        const now = Date.now();
-        if(txt && (txt !== micLastTxt || now - micLastTime > 2000)){ micFinal += txt + ' '; micLastTxt = txt; }
-        micLastTime = now; micCursor++;
+        /* Stronger dedup: check against the whole history of recent
+           captures, not just the last one. This kills the bug where
+           mobile speech recognition delivers the same final result
+           multiple times in a row. */
+        if(txt && !micAlreadyCaptured(txt)){
+          micFinal += txt + ' ';
+          micRecordCapture(txt);
+        }
+        micCursor++;
       } else interim += r[0].transcript;
     }
     ta.value = micBase + micFinal + interim;
