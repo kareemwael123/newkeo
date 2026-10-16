@@ -692,8 +692,9 @@ function trackMsg(){
   }catch(e){}
 }
 /* ================== silent artwork ================== */
-function imgURL(prompt, w=1024, h=768, model){
-  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&nologo=true&enhance=true&seed=${Math.floor(Math.random()*1e9)}${model?'&model='+model:''}`;
+function imgURL(prompt, w=1024, h=1024, model='flux-realism'){
+  const cleanPrompt = encodeURIComponent(prompt + ", hyper-realistic, 8k, detailed, masterpiece");
+  return `https://image.pollinations.ai/prompt/${cleanPrompt}?width=${w}&height=${h}&model=${model}&nologo=true&enhance=true&seed=${Math.floor(Math.random()*1e9)}`;
 }
 function blobToDataURL(b){
   return new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>res(null); fr.readAsDataURL(b); });
