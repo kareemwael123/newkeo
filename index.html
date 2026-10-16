@@ -3195,10 +3195,14 @@ function micRecordCapture(txt){
   if(micOn){ micOn = false; try{ micRec.stop(); }catch(e){} micStopUI(); return; }
   micRec = new SR();
   micRec.lang = micLang === 'ar' ? 'ar-EG' : (navigator.language || 'en-US');
-  micRec.interimResults = true; micRec.continuous = true; micRec.maxAlternatives = 1;
+  /* continuous = false : each session captures ONE phrase, then ends.
+     This kills the "interim text keeps repeating the same words" bug on
+     mobile — with continuous=true, the recognition builds one long
+     session and re-delivers the same partial words over and over in the
+     interim. With continuous=false, each phrase is a clean fresh session. */
+  micRec.interimResults = true; micRec.continuous = false; micRec.maxAlternatives = 1;
   micBase = ta.value ? ta.value.replace(/\s+$/,'') + ' ' : '';
   micFinal = ''; micCursor = 0; micRestarts = 0;
-  /* keep micHistory across restarts within the same session */
   micRec.onstart = ()=>{ micCursor = 0; };
   micRec.onresult = e=>{
     let interim = '';
@@ -3206,10 +3210,7 @@ function micRecordCapture(txt){
       const r = e.results[i];
       if(r.isFinal){
         const txt = r[0].transcript.trim();
-        /* Stronger dedup: check against the whole history of recent
-           captures, not just the last one. This kills the bug where
-           mobile speech recognition delivers the same final result
-           multiple times in a row. */
+        /* Dedup: block exact duplicates within 4 seconds. */
         if(txt && !micAlreadyCaptured(txt)){
           micFinal += txt + ' ';
           micRecordCapture(txt);
@@ -3223,7 +3224,9 @@ function micRecordCapture(txt){
   micRec.onend = ()=>{
     if(!micOn) return micStopUI();
     if(++micRestarts > 80) return micStopUI();
-    setTimeout(()=>{ try{ micRec.start(); }catch(e){} }, 300);
+    /* wait 500ms before restarting so any trailing audio dissipates.
+       This is the second part of the anti-repeat fix. */
+    setTimeout(()=>{ try{ micRec.start(); }catch(e){} }, 500);
   };
   micRec.onerror = e=>{
     if(e.error === 'no-speech' || e.error === 'aborted') return;
