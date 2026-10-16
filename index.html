@@ -3167,21 +3167,21 @@ function micFatal(e){
   $('#btnMicLang').textContent = micLang.toUpperCase();
   toast('Mic language: ' + (micLang === 'ar' ? 'Arabic' : 'English'));
 };
-/* Dedup check: returns true if this text was already captured recently.
-   Window is 8 seconds — long enough to kill mobile-restart duplicates,
-   short enough to allow legitimately repeated phrases like "yeah yeah". */
+/* Dedup check: returns true if this EXACT text was already captured recently.
+   Window is 4 seconds — long enough to kill mobile-restart duplicates,
+   short enough to allow legitimately repeated phrases.
+   NOTE: only EXACT match (case-insensitive, trimmed). No substring matching —
+   substring matching was breaking normal speech because the recognition delivers
+   partial finals first ("hello") then the full phrase ("hello world"), and the
+   substring check would block the full phrase. */
 function micAlreadyCaptured(txt){
   const now = Date.now();
-  const WINDOW = 8000;
+  const WINDOW = 4000;
   /* prune old entries */
   micHistory = micHistory.filter(h => now - h.ts < WINDOW);
-  /* exact match or fuzzy match (last word boundary) */
   const clean = txt.trim().toLowerCase();
   for(const h of micHistory){
     if(h.text === clean) return true;
-    /* also block if the new text is contained in a recent capture
-       (mobile sometimes delivers "Keo hello" then "hello" separately) */
-    if(h.text.length > 5 && (h.text.includes(clean) || clean.includes(h.text))) return true;
   }
   return false;
 }
