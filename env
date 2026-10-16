@@ -1,0 +1,56 @@
+# ============================================================
+# KeoAI PRO — Environment Variables
+# ============================================================
+# This file documents every secret the Keo AI web app needs.
+#
+# Usage:
+#   - For static deployment, copy the values into config.js
+#     (which is loaded as a <script> before index.html's main
+#     script). Browsers cannot read .env directly.
+#   - For a Node.js / build-pipeline deployment, you can use
+#     a tool like `dotenv` to inject these into the bundle.
+#   - .env should NEVER be committed to git. Add it to
+#     .gitignore. Treat config.js the same way if you fill in
+#     real keys.
+# ============================================================
+
+# ---- Engine credentials ----
+# The "primary" engine behind Keo — runs the strongest frontier
+# models with hundreds of billions of parameters. This is the
+# never-revealed "private core" mentioned in the SYS prompt.
+KEO_HF_URL=https://router.huggingface.co/v1
+KEO_HF_KEY=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
+
+# The "fallback" engine — silently used when the primary is
+# rate-limited or down. Never mention this to users either.
+KEO_FALLBACK_URL=https://api.groq.com/openai/v1
+KEO_FALLBACK_KEY=
+
+# ---- Live voice (ElevenLabs) ----
+# Used for spoken replies + the live Call overlay.
+KEO_ELEVEN_URL=https://api.elevenlabs.io/v1
+KEO_ELEVEN_KEY=sk_8ceab238830888efd7da5e323d7450db60715759280b8e5a
+KEO_ELEVEN_VOICE=21m00Tcm4TlvDq8ikWAM
+KEO_ELEVEN_MODEL=eleven_multilingual_v2
+
+# ---- Firebase (auth + database) ----
+KEO_FIREBASE_API_KEY=AIzaSyC0lwVRTBPA3yxnZ3wuqvyfQJbJP-AVNJo
+KEO_FIREBASE_AUTH_DOMAIN=kareem-8ed77.firebaseapp.com
+KEO_FIREBASE_DB_URL=https://kareem-8ed77-default-rtdb.firebaseio.com
+KEO_FIREBASE_PROJECT_ID=kareem-8ed77
+KEO_FIREBASE_STORAGE_BUCKET=kareem-8ed77.firebasestorage.app
+KEO_FIREBASE_MSG_SENDER=557227389584
+KEO_FIREBASE_APP_ID=1:557227389584:web:557227389584
+KEO_FIREBASE_MEASUREMENT_ID=G-919VM45PXW
+
+# ---- Owner / Admin ----
+KEO_ADMIN_EMAIL=kareemwael0213@gmail.com
+KEO_OWNER_EMAIL=kareemwael0213@gmail.com
+
+# ---- Optional integrations (configure per-user in the Keo Links panel) ----
+# These are NOT set globally — each user links their own in the UI.
+# KEO_FORMSPREE_ID=
+# KEO_DISCORD_WEBHOOK=
+# KEO_TELEGRAM_TOKEN=
+# KEO_TELEGRAM_CHAT=
+# KEO_GITHUB_TOKEN=
