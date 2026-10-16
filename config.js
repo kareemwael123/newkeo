@@ -99,8 +99,8 @@ window.KEO_CONFIG = {
 
   /* ===== Engine tuning ===== */
   MODEL_ID: 'keo-core',
-  MAXTOK: 16384,
+  MAXTOK: 65536,        /* big enough for large multi-file code dumps */
   HISTORY_TURNS: 30,
   MAX_FILE_MB: 10,
-  MAX_TEXT_CHARS: 300000
+  MAX_TEXT_CHARS: 1000000   /* raised — paste up to 1 million characters */
 };
