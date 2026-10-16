@@ -608,16 +608,11 @@ function stopRecognition(){
 }
 function startRecognition(){
   const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){ return; }  /* silent — no toast */
-  /* Cooldown: don't restart recognition too soon after Keo stopped speaking.
-     This prevents the mic from picking up the trailing echo of Keo's TTS. */
+  if(!SR){ return; }
   if(Date.now() < Call.cooldownUntil) return;
   stopRecognition();
   const rec = new SR();
-  /* continuous = false : each session captures ONE phrase, then ends.
-     Same fix as the regular mic button — kills the "interim keeps repeating
-     the same words" bug on mobile, where the recognition builds one long
-     session and re-delivers the same partial words over and over. */
+  /* continuous = false : one phrase per session. */
   rec.continuous=false; rec.interimResults=true; rec.lang=callLang();
   rec.onstart=()=>{ Call.recActive=true; if(Call.active && !Call.muted && !Call.speaking) setCallUI('listening',''); };
   rec.onresult=(e)=>{
@@ -628,35 +623,44 @@ function startRecognition(){
       if(r.isFinal) fin+=r[0].transcript; else interim+=r[0].transcript;
     }
     if(fin){
-      /* Anti-repeat: same exact final text in last 4s = ignore (kills the
-         mobile-restart duplicate bug). */
       const cleanFin = fin.trim();
-      if(Call._lastFin === cleanFin && (Date.now() - (Call._lastFinTs||0)) < 4000) {
-        /* duplicate — don't add to finalBuf */
+      /* Stronger anti-repeat: 10 second window for exact duplicates */
+      if(Call._lastFin === cleanFin && (Date.now() - (Call._lastFinTs||0)) < 10000) {
+        /* duplicate - ignore completely */
       } else {
         Call.finalBuf += fin;
         Call._lastFin = cleanFin;
         Call._lastFinTs = Date.now();
+        /* IMMEDIATELY commit on final - don't wait for silence.
+           This is the key fix: each final triggers an instant commit
+           + session restart, so there's no way for the same final
+           to be added twice. */
+        clearTimeout(Call.silence);
+        Call.silence = setTimeout(commitCallSpeech, 200);
+        /* stop the current session right now - the new session will
+           start fresh after the cooldown */
+        try{ rec.stop(); }catch(_){}
+        return;
       }
     }
-    /* No live interim text shown — just collect silently and commit on silence */
+    /* If only interim (no final yet), just wait */
     clearTimeout(Call.silence);
     const totalText=(Call.finalBuf+interim).trim();
     if(totalText.length){
-      Call.silence=setTimeout(commitCallSpeech, fin?1100:2000);
+      Call.silence=setTimeout(commitCallSpeech, 2000);
     }
   };
   rec.onerror=(e)=>{
     if(e.error==='not-allowed'||e.error==='service-not-allowed'){ toast('Microphone permission denied','err'); endCall(); }
-    /* no-speech is normal — don't show anything, just let onend restart */
   };
   rec.onend=()=>{
     Call.recActive=false;
-    /* only auto-restart if still active AND not in cooldown AND not speaking.
-       Wait 500ms before restart so any trailing audio dissipates. */
+    /* only auto-restart if still active AND in cooldown-clear AND not speaking.
+       Wait 1000ms before restart - long enough for any trailing audio
+       from the previous session to fully dissipate. */
     if(Call.active && Call.rec===rec && !Call.muted && !Call.speaking
         && Date.now() >= Call.cooldownUntil){
-      setTimeout(()=>{ try{ rec.start(); }catch(_){} }, 500);
+      setTimeout(()=>{ try{ rec.start(); }catch(_){} }, 1000);
     }
   };
   Call.rec=rec;
@@ -666,11 +670,9 @@ function commitCallSpeech(){
   const text=(Call.finalBuf||'').trim();
   Call.finalBuf='';
   if(!text || !Call.active) return;
-  /* Minimum length filter — ignore accidental captures shorter than 2 chars.
-     This kills the mic feedback loop where Keo's TTS audio gets captured. */
   if(text.length < 2) return;
-  /* Anti-repeat: don't commit if the same text was just sent recently */
-  if(Call._lastSent === text && (Date.now() - (Call._lastSentTs||0)) < 5000) return;
+  /* Anti-repeat at the SEND level - 8 second window */
+  if(Call._lastSent === text && (Date.now() - (Call._lastSentTs||0)) < 8000) return;
   Call._lastSent = text;
   Call._lastSentTs = Date.now();
   callLog('you',text);
