@@ -1181,8 +1181,7 @@ if(document.readyState === 'loading'){
         </div>
         <div class="wf-prev-body" id="wfPrevBody"><iframe id="wfFrame" sandbox="allow-scripts allow-forms allow-modals allow-popups allow-same-origin"></iframe></div>
         <div class="wf-footnote">
-          <label><input type="checkbox" id="wfFoot" checked> Inject <b style="color:var(--acc);font-weight:600">powered by keoai</b> footer on publish &amp; preview</label>
-          <span style="margin-left:auto;font-size:10.5px;color:#5f675c">updates as you type · 600ms debounce</span>
+          <span style="margin-left:auto;font-size:10.5px;color:#5f675c">updates as you type · 600ms debounce · <b style="color:var(--acc);font-weight:600">powered by keo</b> badge injected on every publish</span>
         </div>
       </div>
     </div>
@@ -3645,12 +3644,14 @@ if(auth){
     codeId: null,        // message code id (if linked)
   };
 
-  /* ---- footer HTML injected before </body> on preview/publish ---- */
+  /* ---- "powered by keo" badge — always injected before </body> on preview
+     AND publish, so anyone who opens the published site sees it at the bottom.
+     This is non-negotiable per the user's explicit request. ---- */
   const FOOTER_HTML = `
 <style>
 .keo-badge{position:fixed;right:14px;bottom:12px;z-index:99999;
   font-family:-apple-system,Segoe UI,Roboto,sans-serif;font-size:11.5px;font-weight:600;
-  color:#0B0D0C;background:#C6F24B;padding:5px 11px 5px 9px;border-radius:999px;
+  color:#0B0D0C;background:#C6F24B;padding:5px 12px 5px 9px;border-radius:999px;
   display:inline-flex;align-items:center;gap:6px;text-decoration:none;
   box-shadow:0 4px 18px rgba(0,0,0,.25);transition:.2s;letter-spacing:.2px;
   border:1px solid rgba(11,13,12,.12)}
@@ -3659,20 +3660,19 @@ if(auth){
   display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .keo-badge .keo-logo::before{content:'';width:7px;height:7px;border-radius:50%;background:#C6F24B}
 .keo-badge b{font-weight:800}
-.keo-badge i{font-style:normal;opacity:.85}
 @media(max-width:540px){.keo-badge{font-size:10.5px;padding:4px 9px 4px 7px}}
 </style>
-<a class="keo-badge" href="https://keoai.app" target="_blank" rel="noopener" title="Built with KeoAI">
-  <span class="keo-logo"></span>powered by <b>keo</b><i>ai</i>
+<a class="keo-badge" href="https://keoai.app" target="_blank" rel="noopener" title="Built with Keo">
+  <span class="keo-logo"></span>powered by <b>keo</b>
 </a>
 <script>
 (function(){
-  // ensure only one badge exists
   var e=document.querySelector('.keo-badge'); if(e) return;
-  var d=document.createElement('div'); d.innerHTML=\`__FOOTER_INNER__\`;
-  var n=d.firstChild; if(n) document.body.appendChild(n);
-  // also ensure body has min-height so footer sits at bottom of short pages
+  var d=document.createElement('div'); d.innerHTML='<a class="keo-badge" href="https://keoai.app" target="_blank" rel="noopener"><span class="keo-logo"></span>powered by <b>keo</b></a>';
+  var s=document.createElement('style'); s.textContent='.keo-badge{position:fixed;right:14px;bottom:12px;z-index:99999;font-family:-apple-system,Segoe UI,Roboto,sans-serif;font-size:11.5px;font-weight:600;color:#0B0D0C;background:#C6F24B;padding:5px 12px 5px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;text-decoration:none;box-shadow:0 4px 18px rgba(0,0,0,.25);transition:.2s;letter-spacing:.2px;border:1px solid rgba(11,13,12,.12)}.keo-badge:hover{filter:brightness(1.08);transform:translateY(-1px)}.keo-badge .keo-logo{width:14px;height:14px;border-radius:4px;background:#0B0D0C;display:flex;align-items:center;justify-content:center;flex-shrink:0}.keo-badge .keo-logo::before{content:\\'\\';width:7px;height:7px;border-radius:50%;background:#C6F24B}.keo-badge b{font-weight:800}@media(max-width:540px){.keo-badge{font-size:10.5px;padding:4px 9px 4px 7px}}';
   try{ if(document.body && !document.body.style.minHeight) document.body.style.minHeight='100vh'; }catch(_){}
+  if(document.head){ document.head.appendChild(s); }
+  if(document.body){ document.body.appendChild(d.firstChild); }
 })();
 <\/script>`;
 
@@ -3711,8 +3711,10 @@ if(auth){
     return files;
   }
 
-  /* ---- combine files into a single HTML string for preview/publish ---- */
-  function combineFiles(injectFooter){
+  /* ---- combine files into a single HTML string for preview/publish.
+     ALWAYS injects the "powered by keo" badge before </body> so anyone
+     who opens the published site sees it at the bottom. ---- */
+  function combineFiles(){
     let html = '', css = '', js = '';
     WF.files.forEach(f => {
       const n = f.name.toLowerCase();
@@ -3739,13 +3741,11 @@ if(auth){
         html += '\n<script>\n' + js + '\n<\/script>';
       }
     }
-    if(injectFooter){
-      const footer = FOOTER_HTML.replace(/__FOOTER_INNER__/g, '');
-      if(/<\/body>/i.test(html)){
-        html = html.replace(/<\/body>/i, footer + '\n</body>');
-      } else {
-        html += '\n' + footer;
-      }
+    /* --- ALWAYS inject the "powered by keo" badge before </body> --- */
+    if(/<\/body>/i.test(html)){
+      html = html.replace(/<\/body>/i, FOOTER_HTML + '\n</body>');
+    } else {
+      html += '\n' + FOOTER_HTML;
     }
     return html;
   }
@@ -3826,10 +3826,9 @@ if(auth){
     clearTimeout(WF.debounceTimer);
     WF.debounceTimer = setTimeout(()=>{
       try{
-        const inject = $('#wfFoot').checked;
-        const code = combineFiles(inject);
+        const code = combineFiles();
         $('#wfFrame').srcdoc = code;
-        $('#wfUrl').textContent = 'keo://workflow/preview' + (inject ? '?footer=on' : '');
+        $('#wfUrl').textContent = 'keo://workflow/preview (powered by keo)';
       }catch(e){}
     }, 600);
   }
@@ -3897,7 +3896,7 @@ if(auth){
 
   /* ---- download the workflow as a single .html file ---- */
   async function downloadWorkflow(){
-    const code = combineFiles($('#wfFoot').checked);
+    const code = combineFiles();
     try{
       const blob = new Blob([code], { type:'text/html' });
       const url = URL.createObjectURL(blob);
@@ -3916,7 +3915,7 @@ if(auth){
     btn.disabled = true;
     setStage('code');
     try{
-      const code = combineFiles($('#wfFoot').checked);
+      const code = combineFiles();
       const res = await publishAnywhere(code);
       if(!res){
         toast('Publishing service unreachable — try again', 'err');
@@ -3925,7 +3924,7 @@ if(auth){
       WF.liveUrl = res.url;
       $('#wfUrl').textContent = res.url;
       try{ await navigator.clipboard.writeText(res.url); }catch(e){}
-      toast('Published! 🌐 Link copied — powered by keoai footer embedded');
+      toast('Published! 🌐 Link copied — site shows "powered by keo" badge');
       confettiBurst();
       setStage('happy');
       setTimeout(()=>{ if(!busy) setStage('idle'); }, 1800);
@@ -3973,7 +3972,7 @@ if(auth){
         markDirty();
       }
     });
-    $('#wfFoot').addEventListener('change', schedulePreview);
+    $('#wfFoot') && $('#wfFoot').addEventListener('change', schedulePreview);
     $('#wfReload').onclick = ()=>{
       // force a hard refresh of the iframe
       const f = $('#wfFrame');
