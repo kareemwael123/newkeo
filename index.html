@@ -3645,34 +3645,72 @@ if(auth){
   };
 
   /* ---- "powered by keo" badge — always injected before </body> on preview
-     AND publish, so anyone who opens the published site sees it at the bottom.
-     This is non-negotiable per the user's explicit request. ---- */
+     AND publish, so anyone who opens the published site sees it.
+     Positioned bottom-LEFT to avoid colliding with CodeSandbox's "Open Sandbox"
+     button on the bottom-right of *.csb.app previews. ---- */
   const FOOTER_HTML = `
 <style>
-.keo-badge{position:fixed;right:14px;bottom:12px;z-index:99999;
-  font-family:-apple-system,Segoe UI,Roboto,sans-serif;font-size:11.5px;font-weight:600;
-  color:#0B0D0C;background:#C6F24B;padding:5px 12px 5px 9px;border-radius:999px;
-  display:inline-flex;align-items:center;gap:6px;text-decoration:none;
-  box-shadow:0 4px 18px rgba(0,0,0,.25);transition:.2s;letter-spacing:.2px;
-  border:1px solid rgba(11,13,12,.12)}
-.keo-badge:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.keo-badge{position:fixed!important;left:14px!important;right:auto!important;
+  bottom:12px!important;top:auto!important;z-index:2147483647!important;
+  font-family:-apple-system,Segoe UI,Roboto,sans-serif!important;font-size:12px!important;
+  font-weight:700!important;color:#0B0D0C!important;background:#C6F24B!important;
+  padding:6px 14px 6px 10px!important;border-radius:999px!important;
+  display:inline-flex!important;align-items:center!important;gap:7px!important;
+  text-decoration:none!important;line-height:1!important;
+  box-shadow:0 4px 18px rgba(0,0,0,.35)!important;transition:transform .2s,filter .2s!important;
+  letter-spacing:.3px!important;border:2px solid #0B0D0C!important;
+  opacity:1!important;visibility:visible!important;pointer-events:auto!important;
+  min-height:24px!important;box-sizing:border-box!important}
+.keo-badge:hover{filter:brightness(1.08)!important;transform:translateY(-1px)!important}
 .keo-badge .keo-logo{width:14px;height:14px;border-radius:4px;background:#0B0D0C;
   display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .keo-badge .keo-logo::before{content:'';width:7px;height:7px;border-radius:50%;background:#C6F24B}
 .keo-badge b{font-weight:800}
-@media(max-width:540px){.keo-badge{font-size:10.5px;padding:4px 9px 4px 7px}}
+@media(max-width:540px){.keo-badge{font-size:10.5px!important;padding:4px 10px 4px 8px!important}}
 </style>
 <a class="keo-badge" href="https://keoai.app" target="_blank" rel="noopener" title="Built with Keo">
   <span class="keo-logo"></span>powered by <b>keo</b>
 </a>
 <script>
 (function(){
-  var e=document.querySelector('.keo-badge'); if(e) return;
-  var d=document.createElement('div'); d.innerHTML='<a class="keo-badge" href="https://keoai.app" target="_blank" rel="noopener"><span class="keo-logo"></span>powered by <b>keo</b></a>';
-  var s=document.createElement('style'); s.textContent='.keo-badge{position:fixed;right:14px;bottom:12px;z-index:99999;font-family:-apple-system,Segoe UI,Roboto,sans-serif;font-size:11.5px;font-weight:600;color:#0B0D0C;background:#C6F24B;padding:5px 12px 5px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;text-decoration:none;box-shadow:0 4px 18px rgba(0,0,0,.25);transition:.2s;letter-spacing:.2px;border:1px solid rgba(11,13,12,.12)}.keo-badge:hover{filter:brightness(1.08);transform:translateY(-1px)}.keo-badge .keo-logo{width:14px;height:14px;border-radius:4px;background:#0B0D0C;display:flex;align-items:center;justify-content:center;flex-shrink:0}.keo-badge .keo-logo::before{content:\\'\\';width:7px;height:7px;border-radius:50%;background:#C6F24B}.keo-badge b{font-weight:800}@media(max-width:540px){.keo-badge{font-size:10.5px;padding:4px 9px 4px 7px}}';
-  try{ if(document.body && !document.body.style.minHeight) document.body.style.minHeight='100vh'; }catch(_){}
-  if(document.head){ document.head.appendChild(s); }
-  if(document.body){ document.body.appendChild(d.firstChild); }
+  function makeBadge(){
+    var a=document.createElement('a');
+    a.className='keo-badge';
+    a.href='https://keoai.app';
+    a.target='_blank';
+    a.rel='noopener';
+    a.title='Built with Keo';
+    var logo=document.createElement('span');
+    logo.className='keo-logo';
+    a.appendChild(logo);
+    a.appendChild(document.createTextNode('powered by '));
+    var b=document.createElement('b');
+    b.textContent='keo';
+    a.appendChild(b);
+    return a;
+  }
+  function injectStyle(){
+    if(document.getElementById('keo-badge-style')) return;
+    var s=document.createElement('style');
+    s.id='keo-badge-style';
+    s.textContent='.keo-badge{position:fixed!important;left:14px!important;right:auto!important;bottom:12px!important;top:auto!important;z-index:2147483647!important;font-family:-apple-system,Segoe UI,Roboto,sans-serif!important;font-size:12px!important;font-weight:700!important;color:#0B0D0C!important;background:#C6F24B!important;padding:6px 14px 6px 10px!important;border-radius:999px!important;display:inline-flex!important;align-items:center!important;gap:7px!important;text-decoration:none!important;line-height:1!important;box-shadow:0 4px 18px rgba(0,0,0,.35)!important;transition:transform .2s,filter .2s!important;letter-spacing:.3px!important;border:2px solid #0B0D0C!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;min-height:24px!important;box-sizing:border-box!important}.keo-badge:hover{filter:brightness(1.08)!important;transform:translateY(-1px)!important}.keo-badge .keo-logo{width:14px;height:14px;border-radius:4px;background:#0B0D0C;display:flex;align-items:center;justify-content:center;flex-shrink:0}.keo-badge .keo-logo::before{content:\\'\\';width:7px;height:7px;border-radius:50%;background:#C6F24B}.keo-badge b{font-weight:800}@media(max-width:540px){.keo-badge{font-size:10.5px!important;padding:4px 10px 4px 8px!important}}';
+    if(document.head){ document.head.appendChild(s); }
+    else if(document.documentElement){ document.documentElement.appendChild(s); }
+  }
+  function ensureBadge(){
+    var ex=document.querySelector('.keo-badge');
+    if(ex && ex.parentNode){ return; }
+    if(!document.body){ return; }
+    injectStyle();
+    var b=makeBadge();
+    document.body.appendChild(b);
+  }
+  ensureBadge();
+  // re-inject every 800ms if missing (handles any removal by host site code)
+  setInterval(ensureBadge, 800);
+  // also catch DOMContentLoaded and load in case body wasn't ready at script run
+  document.addEventListener('DOMContentLoaded', ensureBadge);
+  window.addEventListener('load', ensureBadge);
 })();
 <\/script>`;
 
