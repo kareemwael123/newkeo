@@ -442,6 +442,100 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 
 /* Hide the equalizer bars text labels (none currently, but future-proof) */
 .call-eq{justify-content:center}
+
+/* ============================================================================
+   CODE WORKFLOW — multi-file editor + live preview (added per request)
+   Same dark identity, no change to existing UI. Opens automatically when Keo
+   delivers a single-file HTML/CSS/JS site, and lets the user edit files,
+   add new files, see a live preview, and publish with a "powered by keoai"
+   footer injected into the page. Nothing existing is touched.
+   ============================================================================ */
+#wfModal{position:fixed;inset:0;z-index:86;background:rgba(5,7,6,.78);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;padding:18px}
+#wfModal[hidden]{display:none}
+.wf-panel{width:min(1280px,96vw);height:min(88vh,820px);background:var(--bg);
+  border:1px solid var(--line);border-radius:18px;display:flex;flex-direction:column;
+  overflow:hidden;animation:up .28s ease;box-shadow:0 18px 60px rgba(0,0,0,.55)}
+.wf-head{height:52px;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:0 14px;
+  border-bottom:1px solid var(--line);background:rgba(16,19,18,.6)}
+.wf-head .wf-title{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600}
+.wf-head .wf-title svg{width:17px;height:17px;color:var(--acc)}
+.wf-head .wf-sub{font-size:11.5px;color:var(--mut);letter-spacing:.5px}
+.wf-head .wf-tools{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.wf-head .wf-tools .btn{padding:8px 14px;font-size:12.5px;border-radius:9px}
+.wf-head .icbtn{width:32px;height:32px}
+.wf-body{flex:1;display:flex;min-height:0}
+.wf-side{width:200px;flex-shrink:0;border-right:1px solid var(--line);
+  display:flex;flex-direction:column;background:rgba(16,19,18,.35)}
+.wf-side-head{padding:10px 12px 6px;display:flex;align-items:center;justify-content:space-between}
+.wf-side-head span{font-size:10.5px;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase}
+.wf-side-head button{font-size:18px;color:var(--acc);width:22px;height:22px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;transition:.15s}
+.wf-side-head button:hover{background:var(--panel2)}
+.wf-files{flex:1;overflow-y:auto;padding:4px 6px}
+.wf-file{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;
+  font-size:12.5px;color:#cfd4c6;cursor:pointer;transition:.15s;position:relative}
+.wf-file:hover{background:var(--panel2)}
+.wf-file.on{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+.wf-file .wf-fn{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--f)}
+.wf-file .wf-ic{width:14px;height:14px;color:var(--acc);flex-shrink:0}
+.wf-file .wf-x{opacity:0;color:var(--mut);width:18px;height:18px;border-radius:5px;
+  display:flex;align-items:center;justify-content:center;font-size:13px}
+.wf-file:hover .wf-x{opacity:1}
+.wf-file .wf-x:hover{color:var(--err);background:rgba(255,107,87,.1)}
+.wf-editor{flex:1;display:flex;flex-direction:column;min-width:0;border-right:1px solid var(--line)}
+.wf-tabbar{height:34px;flex-shrink:0;display:flex;align-items:center;border-bottom:1px solid var(--line);
+  background:rgba(16,19,18,.5);padding:0 6px;gap:2px;overflow-x:auto}
+.wf-tab{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px 7px 0 0;
+  font-size:11.5px;color:var(--mut);cursor:pointer;white-space:nowrap;transition:.15s}
+.wf-tab.on{background:var(--panel2);color:var(--text)}
+.wf-tab .wf-tdot{width:6px;height:6px;border-radius:50%;background:var(--mut)}
+.wf-tab.on .wf-tdot{background:var(--acc)}
+.wf-tab .wf-tx{opacity:0;margin-left:4px;color:var(--err)}
+.wf-tab:hover .wf-tx{opacity:.7}
+.wf-textarea{flex:1;width:100%;background:#0D100F;border:0;outline:none;resize:none;
+  color:#d7dcc9;font-family:'Sarasa Mono SC',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12.7px;line-height:1.7;padding:14px 16px;white-space:pre;overflow:auto;
+  tab-size:2;direction:ltr;text-align:left}
+.wf-textarea::placeholder{color:#5f675c}
+.wf-status{height:24px;flex-shrink:0;border-top:1px solid var(--line);background:rgba(16,19,18,.5);
+  display:flex;align-items:center;padding:0 14px;font-size:11px;color:var(--mut);gap:14px}
+.wf-status .wf-st{display:flex;align-items:center;gap:5px}
+.wf-status .wf-dot{width:6px;height:6px;border-radius:50%;background:var(--acc)}
+.wf-status .wf-dot.dirty{background:#ffb13a;animation:dotp 1.2s infinite}
+.wf-preview{flex:1;display:flex;flex-direction:column;min-width:0;background:#070908}
+.wf-prev-head{height:34px;flex-shrink:0;display:flex;align-items:center;gap:8px;
+  padding:0 12px;border-bottom:1px solid var(--line);background:rgba(16,19,18,.5)}
+.wf-prev-head .wf-pt{font-size:11px;color:var(--mut);letter-spacing:1px;text-transform:uppercase}
+.wf-prev-head .wf-url{flex:1;font-size:11.5px;color:#c3c9ba;font-family:monospace;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wf-prev-tools{display:flex;gap:2px}
+.wf-prev-tools .icbtn{width:28px;height:28px}
+.wf-prev-tools .icbtn svg{width:15px;height:15px}
+.wf-prev-tools .icbtn.active{color:var(--acc);background:var(--panel2)}
+.wf-prev-body{flex:1;min-height:0;display:flex;justify-content:center;background:#070908}
+#wfFrame{width:100%;height:100%;border:0;background:#fff}
+.wf-prev-body.mob #wfFrame{width:390px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.wf-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;color:var(--mut);font-size:13px;padding:30px;text-align:center}
+.wf-empty svg{width:46px;height:46px;color:var(--acc);opacity:.55}
+.wf-footnote{padding:9px 14px;border-top:1px solid var(--line);background:rgba(16,19,18,.6);
+  font-size:11px;color:var(--mut);display:flex;align-items:center;gap:8px}
+.wf-footnote label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.wf-footnote input[type="checkbox"]{accent-color:var(--acc);width:14px;height:14px}
+.wf-toast-inline{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--acc);
+  border-radius:10px;padding:8px 16px;font-size:12.5px;z-index:5;animation:up .25s ease;
+  box-shadow:0 6px 24px rgba(0,0,0,.4)}
+@media(max-width:900px){
+  .wf-panel{height:94vh;border-radius:0}
+  .wf-side{width:130px}
+  .wf-body{flex-direction:column}
+  .wf-editor{border-right:0;border-bottom:1px solid var(--line);min-height:42%}
+  .wf-preview{min-height:42%}
+  .wf-head .wf-sub{display:none}
+  .wf-head .wf-tools .btn{padding:7px 10px;font-size:11.5px}
+}
 </style>
 </head>
   <script>
@@ -1032,6 +1126,68 @@ if(document.readyState === 'loading'){
 </div>
 <div id="toasts"></div>
 <input type="file" id="fileInput" hidden multiple accept=".txt,.md,.json,.csv,.js,.ts,.html,.css,.py,.xml,.yml,.yaml,.log,image/*">
+
+<!-- ============================================================================
+     CODE WORKFLOW MODAL — multi-file editor + live preview (added per request)
+     Opens automatically when Keo writes website code. The user can edit files,
+     add new files, see live preview, and publish with "powered by keoai" footer.
+     ============================================================================ -->
+<div id="wfModal" hidden>
+  <div class="wf-panel">
+    <div class="wf-head">
+      <span class="wf-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>
+        Keo <i style="font-style:normal;color:var(--acc)">Workflow</i>
+      </span>
+      <span class="wf-sub">edit · preview · publish</span>
+      <div class="wf-tools">
+        <button class="btn btn-line" id="wfDownload" title="Download all files as a single .html">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M6 11l6 6 6-6M5 21h14"/></svg>
+          Download
+        </button>
+        <button class="btn btn-acc" id="wfPublish" title="Publish this site online with a shareable link — powered by keoai footer is added">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          Publish
+        </button>
+        <button class="icbtn" id="wfClose" title="Close workflow (Esc)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+    </div>
+    <div class="wf-body">
+      <aside class="wf-side">
+        <div class="wf-side-head">
+          <span>Files</span>
+          <button id="wfNewFile" title="Add a new file">+</button>
+        </div>
+        <div class="wf-files" id="wfFiles"></div>
+      </aside>
+      <div class="wf-editor">
+        <div class="wf-tabbar" id="wfTabs"></div>
+        <textarea class="wf-textarea" id="wfText" spellcheck="false" placeholder="// Start typing or pick a file from the left"></textarea>
+        <div class="wf-status">
+          <div class="wf-st"><span class="wf-dot" id="wfDirty"></span><span id="wfStTxt">saved</span></div>
+          <div class="wf-st"><span id="wfLn">0</span> lines · <span id="wfCh">0</span> chars</div>
+          <div class="wf-st" style="margin-left:auto"><span id="wfLang">text</span></div>
+        </div>
+      </div>
+      <div class="wf-preview">
+        <div class="wf-prev-head">
+          <span class="wf-pt">Live preview</span>
+          <span class="wf-url" id="wfUrl">about:preview</span>
+          <div class="wf-prev-tools">
+            <button class="icbtn active" id="wfDesk" title="Desktop view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
+            <button class="icbtn" id="wfMob" title="Mobile view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></button>
+            <button class="icbtn" id="wfReload" title="Reload preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg></button>
+          </div>
+        </div>
+        <div class="wf-prev-body" id="wfPrevBody"><iframe id="wfFrame" sandbox="allow-scripts allow-forms allow-modals allow-popups allow-same-origin"></iframe></div>
+        <div class="wf-footnote">
+          <label><input type="checkbox" id="wfFoot" checked> Inject <b style="color:var(--acc);font-weight:600">powered by keoai</b> footer on publish &amp; preview</label>
+          <span style="margin-left:auto;font-size:10.5px;color:#5f675c">updates as you type · 600ms debounce</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ================== ENGINE — primary (strongest models), silent fallback ==================
@@ -3465,6 +3621,455 @@ if(auth){
     } else showGate();
   });
 } else showGate();
+
+/* ============================================================================
+   CODE WORKFLOW — multi-file editor + live preview (added per request)
+   ----------------------------------------------------------------------------
+   HOOK: this attaches to chatScroll clicks. When the user clicks "Workflow"
+   on a code block that contains a website (HTML), the modal opens with the
+   code split into index.html / styles.css / script.js files — the user can
+   edit each, add new files, see a live preview that updates as they type,
+   and publish with a "powered by keoai" footer injected before </body>.
+
+   The hook does NOT touch the existing "Preview" button on code blocks — it
+   sits next to it. So everything that worked before still works exactly the
+   same way.
+   ============================================================================ */
+(function WorkflowApp(){
+  const WF = {
+    files: [],           // [{name, content, dirty}]
+    activeIdx: 0,
+    liveUrl: null,
+    debounceTimer: null,
+    openCode: null,      // original code when opened
+    codeId: null,        // message code id (if linked)
+  };
+
+  /* ---- footer HTML injected before </body> on preview/publish ---- */
+  const FOOTER_HTML = `
+<style>
+.keo-badge{position:fixed;right:14px;bottom:12px;z-index:99999;
+  font-family:-apple-system,Segoe UI,Roboto,sans-serif;font-size:11.5px;font-weight:600;
+  color:#0B0D0C;background:#C6F24B;padding:5px 11px 5px 9px;border-radius:999px;
+  display:inline-flex;align-items:center;gap:6px;text-decoration:none;
+  box-shadow:0 4px 18px rgba(0,0,0,.25);transition:.2s;letter-spacing:.2px;
+  border:1px solid rgba(11,13,12,.12)}
+.keo-badge:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.keo-badge .keo-logo{width:14px;height:14px;border-radius:4px;background:#0B0D0C;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.keo-badge .keo-logo::before{content:'';width:7px;height:7px;border-radius:50%;background:#C6F24B}
+.keo-badge b{font-weight:800}
+.keo-badge i{font-style:normal;opacity:.85}
+@media(max-width:540px){.keo-badge{font-size:10.5px;padding:4px 9px 4px 7px}}
+</style>
+<a class="keo-badge" href="https://keoai.app" target="_blank" rel="noopener" title="Built with KeoAI">
+  <span class="keo-logo"></span>powered by <b>keo</b><i>ai</i>
+</a>
+<script>
+(function(){
+  // ensure only one badge exists
+  var e=document.querySelector('.keo-badge'); if(e) return;
+  var d=document.createElement('div'); d.innerHTML=\`__FOOTER_INNER__\`;
+  var n=d.firstChild; if(n) document.body.appendChild(n);
+  // also ensure body has min-height so footer sits at bottom of short pages
+  try{ if(document.body && !document.body.style.minHeight) document.body.style.minHeight='100vh'; }catch(_){}
+})();
+<\/script>`;
+
+  /* ---- split a single-file HTML into separate files ---- */
+  function splitHTML(code){
+    const files = [];
+    let html = code;
+    const htmlMatch = html.match(/<!DOCTYPE[\s\S]*?<\/html>/i) || html.match(/<html[\s\S]*?<\/html>/i);
+    let indexHTML = html;
+    let css = '', js = '';
+    // pull out <style> blocks
+    const styleBlocks = [];
+    indexHTML = indexHTML.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, (m, inner) => {
+      styleBlocks.push(inner);
+      return '<link rel="stylesheet" href="styles.css">';
+    });
+    if(styleBlocks.length) css = styleBlocks.join('\n\n');
+    // pull out <script> blocks (without src)
+    const scriptBlocks = [];
+    indexHTML = indexHTML.replace(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi, (m, inner) => {
+      scriptBlocks.push(inner);
+      return '<script src="script.js"><\/script>';
+    });
+    if(scriptBlocks.length){
+      // strip empty trailing newlines
+      js = scriptBlocks.join('\n\n');
+    }
+    files.push({ name:'index.html', content: indexHTML, dirty:false });
+    if(css) files.push({ name:'styles.css', content: css, dirty:false });
+    if(js)  files.push({ name:'script.js',  content: js,  dirty:false });
+    // if no doctype/html found (raw fragment) wrap it
+    if(!htmlMatch){
+      files.length = 0;
+      files.push({ name:'index.html', content: code, dirty:false });
+    }
+    return files;
+  }
+
+  /* ---- combine files into a single HTML string for preview/publish ---- */
+  function combineFiles(injectFooter){
+    let html = '', css = '', js = '';
+    WF.files.forEach(f => {
+      const n = f.name.toLowerCase();
+      if(n.endsWith('.html') || n === 'index.html' || n.endsWith('.htm')) html = f.content;
+      else if(n.endsWith('.css')) css += (css ? '\n\n' : '') + f.content;
+      else if(n.endsWith('.js'))  js += (js ? '\n\n' : '') + f.content;
+    });
+    if(!html){
+      // raw fragment — wrap it
+      html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Preview</title></head><body>' +
+             WF.files.map(f => f.content).join('\n') + '</body></html>';
+    }
+    if(css){
+      if(/<style/i.test(html)){
+        html = html.replace(/<\/head>/i, '<style>\n' + css + '\n</style>\n</head>');
+      } else {
+        html = html.replace(/<\/head>/i, '<style>\n' + css + '\n</style>\n</head>');
+      }
+    }
+    if(js){
+      if(/<\/body>/i.test(html)){
+        html = html.replace(/<\/body>/i, '<script>\n' + js + '\n<\/script>\n</body>');
+      } else {
+        html += '\n<script>\n' + js + '\n<\/script>';
+      }
+    }
+    if(injectFooter){
+      const footer = FOOTER_HTML.replace(/__FOOTER_INNER__/g, '');
+      if(/<\/body>/i.test(html)){
+        html = html.replace(/<\/body>/i, footer + '\n</body>');
+      } else {
+        html += '\n' + footer;
+      }
+    }
+    return html;
+  }
+
+  /* ---- file icon by extension ---- */
+  function fileIcon(name){
+    const n = name.toLowerCase();
+    if(n.endsWith('.html') || n.endsWith('.htm')) return '🌐';
+    if(n.endsWith('.css')) return '🎨';
+    if(n.endsWith('.js'))  return '⚡';
+    if(n.endsWith('.json')) return '{ }';
+    if(n.endsWith('.md'))  return '📝';
+    if(n.endsWith('.svg'))  return '🖼';
+    if(n.endsWith('.png') || n.endsWith('.jpg') || n.endsWith('.jpeg')) return '🖼';
+    return '📄';
+  }
+
+  /* ---- detect language of active file for status bar ---- */
+  function detectLang(name){
+    const n = (name||'').toLowerCase();
+    if(n.endsWith('.html') || n.endsWith('.htm')) return 'html';
+    if(n.endsWith('.css'))  return 'css';
+    if(n.endsWith('.js'))   return 'javascript';
+    if(n.endsWith('.json')) return 'json';
+    if(n.endsWith('.md'))   return 'markdown';
+    if(n.endsWith('.xml') || n.endsWith('.svg')) return 'xml';
+    if(n.endsWith('.py'))   return 'python';
+    return 'text';
+  }
+
+  /* ---- render the file sidebar ---- */
+  function renderFiles(){
+    const list = $('#wfFiles');
+    list.innerHTML = WF.files.length
+      ? WF.files.map((f,i)=>`<div class="wf-file ${i===WF.activeIdx?'on':''}" data-idx="${i}">
+          <span class="wf-ic">${fileIcon(f.name)}</span>
+          <span class="wf-fn">${esc(f.name)}</span>
+          <button class="wf-x" data-del="${i}" title="Delete">×</button>
+        </div>`).join('')
+      : '<div style="color:var(--mut);font-size:12px;text-align:center;padding:18px 0">No files yet</div>';
+  }
+
+  /* ---- render the editor tab bar ---- */
+  function renderTabs(){
+    const tabs = $('#wfTabs');
+    tabs.innerHTML = WF.files.map((f,i)=>`<div class="wf-tab ${i===WF.activeIdx?'on':''}" data-tab="${i}">
+        <span class="wf-tdot"></span>${esc(f.name)}${f.dirty?' •':''}
+      </div>`).join('');
+  }
+
+  /* ---- load a file into the textarea ---- */
+  function loadFile(idx){
+    if(idx < 0 || idx >= WF.files.length) return;
+    WF.activeIdx = idx;
+    const f = WF.files[idx];
+    const ta = $('#wfText');
+    ta.value = f.content;
+    $('#wfLang').textContent = detectLang(f.name);
+    updateStatus();
+    renderFiles(); renderTabs();
+    ta.focus();
+  }
+
+  /* ---- update the status bar (lines, chars, dirty) ---- */
+  function updateStatus(){
+    const f = WF.files[WF.activeIdx];
+    if(!f){ $('#wfLn').textContent=0; $('#wfCh').textContent=0; return; }
+    const v = f.content;
+    const lines = v ? v.split('\n').length : 0;
+    $('#wfLn').textContent = lines;
+    $('#wfCh').textContent = v.length;
+    $('#wfDirty').classList.toggle('dirty', f.dirty);
+    $('#wfStTxt').textContent = f.dirty ? 'editing…' : 'saved';
+  }
+
+  /* ---- debounced live preview refresh ---- */
+  function schedulePreview(){
+    clearTimeout(WF.debounceTimer);
+    WF.debounceTimer = setTimeout(()=>{
+      try{
+        const inject = $('#wfFoot').checked;
+        const code = combineFiles(inject);
+        $('#wfFrame').srcdoc = code;
+        $('#wfUrl').textContent = 'keo://workflow/preview' + (inject ? '?footer=on' : '');
+      }catch(e){}
+    }, 600);
+  }
+
+  /* ---- mark the active file dirty and refresh preview ---- */
+  function markDirty(){
+    const f = WF.files[WF.activeIdx];
+    if(!f) return;
+    f.content = $('#wfText').value;
+    f.dirty = true;
+    updateStatus();
+    renderTabs();
+    schedulePreview();
+  }
+
+  /* ---- open the workflow with code ---- */
+  function openWorkflow(code, codeId){
+    if(!code || typeof code !== 'string') return;
+    WF.openCode = code;
+    WF.codeId = codeId || null;
+    WF.files = splitHTML(code);
+    if(!WF.files.length) WF.files.push({ name:'index.html', content: code, dirty:false });
+    WF.activeIdx = 0;
+    WF.liveUrl = null;
+    renderFiles();
+    loadFile(0);
+    $('#wfModal').hidden = false;
+    schedulePreview();
+    if(user && dbOk){
+      try{ firebase.database().ref('stats/wfOpens').runTransaction(v => (v||0)+1).catch(()=>{}); }catch(e){}
+    }
+  }
+
+  /* ---- close the workflow ---- */
+  function closeWorkflow(){
+    $('#wfModal').hidden = true;
+    clearTimeout(WF.debounceTimer);
+  }
+
+  /* ---- add a new file ---- */
+  function addNewFile(){
+    let name = prompt('File name (e.g. about.html, utils.js, theme.css):', 'new-file.html');
+    if(!name) return;
+    name = name.trim().replace(/^\.\//,'').replace(/[^\w.\-]/g,'-');
+    if(!name) return toast('Invalid file name','err');
+    if(WF.files.some(f => f.name.toLowerCase() === name.toLowerCase()))
+      return toast('A file with that name already exists','err');
+    WF.files.push({ name, content: '', dirty: true });
+    loadFile(WF.files.length - 1);
+    renderFiles();
+    toast('File added: ' + name);
+  }
+
+  /* ---- delete a file ---- */
+  function deleteFile(idx){
+    if(WF.files.length <= 1) return toast('Keep at least one file','err');
+    const f = WF.files[idx];
+    WF.files.splice(idx, 1);
+    if(WF.activeIdx >= WF.files.length) WF.activeIdx = WF.files.length - 1;
+    if(WF.activeIdx < 0) WF.activeIdx = 0;
+    renderFiles();
+    loadFile(WF.activeIdx);
+    toast('Deleted: ' + f.name);
+  }
+
+  /* ---- download the workflow as a single .html file ---- */
+  async function downloadWorkflow(){
+    const code = combineFiles($('#wfFoot').checked);
+    try{
+      const blob = new Blob([code], { type:'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'keo-site.html'; a.click();
+      setTimeout(()=>URL.revokeObjectURL(url), 1500);
+      toast('Downloaded as keo-site.html');
+    }catch(err){ toast('Download failed: '+err.message, 'err'); }
+  }
+
+  /* ---- publish the workflow online ---- */
+  async function publishWorkflow(){
+    const btn = $('#wfPublish');
+    const old = btn.innerHTML;
+    btn.innerHTML = '<span class="capDot" style="display:inline-block"></span> Publishing…';
+    btn.disabled = true;
+    setStage('code');
+    try{
+      const code = combineFiles($('#wfFoot').checked);
+      const res = await publishAnywhere(code);
+      if(!res){
+        toast('Publishing service unreachable — try again', 'err');
+        setStage('idle'); return;
+      }
+      WF.liveUrl = res.url;
+      $('#wfUrl').textContent = res.url;
+      try{ await navigator.clipboard.writeText(res.url); }catch(e){}
+      toast('Published! 🌐 Link copied — powered by keoai footer embedded');
+      confettiBurst();
+      setStage('happy');
+      setTimeout(()=>{ if(!busy) setStage('idle'); }, 1800);
+    }catch(err){
+      toast('Publish failed: ' + err.message, 'err');
+      setStage('idle');
+    }finally{
+      btn.innerHTML = old;
+      btn.disabled = false;
+    }
+  }
+
+  /* ---- wire up all workflow DOM events (idempotent) ---- */
+  function wireUp(){
+    if(WF._wired) return; WF._wired = true;
+    $('#wfClose').onclick = closeWorkflow;
+    $('#wfModal').addEventListener('click', e=>{ if(e.target.id === 'wfModal') closeWorkflow(); });
+    document.addEventListener('keydown', e=>{
+      if(e.key === 'Escape' && !$('#wfModal').hidden) closeWorkflow();
+      // Ctrl/Cmd+S inside the workflow = download (no browser save dialog)
+      if((e.ctrlKey||e.metaKey) && e.key === 's' && !$('#wfModal').hidden){
+        e.preventDefault(); downloadWorkflow();
+      }
+    });
+    $('#wfNewFile').onclick = addNewFile;
+    $('#wfFiles').addEventListener('click', e=>{
+      const del = e.target.closest('[data-del]');
+      const it = e.target.closest('[data-idx]');
+      if(del){ deleteFile(+del.dataset.del); return; }
+      if(it) loadFile(+it.dataset.idx);
+    });
+    $('#wfTabs').addEventListener('click', e=>{
+      const t = e.target.closest('[data-tab]');
+      if(t) loadFile(+t.dataset.tab);
+    });
+    const ta = $('#wfText');
+    ta.addEventListener('input', markDirty);
+    ta.addEventListener('keydown', e=>{
+      // Tab key inserts two spaces instead of moving focus
+      if(e.key === 'Tab'){
+        e.preventDefault();
+        const s = ta.selectionStart, en = ta.selectionEnd;
+        ta.value = ta.value.slice(0, s) + '  ' + ta.value.slice(en);
+        ta.selectionStart = ta.selectionEnd = s + 2;
+        markDirty();
+      }
+    });
+    $('#wfFoot').addEventListener('change', schedulePreview);
+    $('#wfReload').onclick = ()=>{
+      // force a hard refresh of the iframe
+      const f = $('#wfFrame');
+      const cur = f.srcdoc;
+      f.srcdoc = ''; setTimeout(()=>{ f.srcdoc = cur; }, 30);
+    };
+    $('#wfDesk').onclick = ()=>{
+      $('#wfPrevBody').classList.remove('mob');
+      $('#wfDesk').classList.add('active'); $('#wfMob').classList.remove('active');
+    };
+    $('#wfMob').onclick = ()=>{
+      $('#wfPrevBody').classList.add('mob');
+      $('#wfMob').classList.add('active'); $('#wfDesk').classList.remove('active');
+    };
+    $('#wfDownload').onclick = downloadWorkflow;
+    $('#wfPublish').onclick = publishWorkflow;
+  }
+
+  /* ---- public bootstrap: called by the chat code-block handler ---- */
+  window.__keoOpenWorkflow = function(code, codeId){
+    wireUp();
+    openWorkflow(code, codeId);
+  };
+
+  /* ---- auto-open when a website code block is detected in a Keo reply ----
+     This is the hook the user asked for: "if someone requests code, open a
+     workflow that lets them edit files and write to the site powered by keoai".
+     We attach a one-time MutationObserver on #chatScroll that watches for
+     new .codeblk elements containing a website (HTML with <body> / <html>),
+     and when one is finalized, we add a "Workflow" button next to its
+     existing Preview/Copy buttons. Clicking it opens the workflow modal.
+     NOTHING existing is changed — the existing Preview button still works. */
+  function isWebsiteCode(code){
+    if(!code || code.length < 200) return false;
+    return /<(!doctype|html|body|section|head)\b/i.test(code);
+  }
+
+  function injectWorkflowButton(codeblk, codeId){
+    if(!codeblk) return;
+    const head = codeblk.querySelector('.codehead > div');
+    if(!head) return;
+    if(head.querySelector('[data-act="workflow"]')) return; // already added
+    const code = codeStore[+codeId];
+    if(!isWebsiteCode(code)) return;
+    const btn = document.createElement('button');
+    btn.className = 'cbtn';
+    btn.dataset.act = 'workflow';
+    btn.dataset.code = codeId;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-2px;margin-right:3px"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>Workflow';
+    btn.style.background = 'rgba(198,242,75,.12)';
+    btn.style.color = 'var(--acc)';
+    btn.style.borderColor = 'rgba(198,242,75,.32)';
+    // insert at the start (before Copy / Preview)
+    head.insertBefore(btn, head.firstChild);
+  }
+
+  // watch chatScroll for new code blocks
+  function setupWorkflowWatcher(){
+    if(WF._watcher) return; WF._watcher = true;
+    const cs = document.getElementById('chatScroll');
+    if(!cs) return;
+    const mo = new MutationObserver(()=>{
+      cs.querySelectorAll('.codeblk').forEach(blk=>{
+        const head = blk.querySelector('.codehead > div');
+        if(!head) return;
+        // find the data-code attribute on a sibling button
+        const ex = head.querySelector('[data-code]');
+        const codeId = ex ? ex.dataset.code : null;
+        if(codeId !== null) injectWorkflowButton(blk, codeId);
+      });
+    });
+    mo.observe(cs, { childList:true, subtree:true });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', setupWorkflowWatcher);
+  } else {
+    setupWorkflowWatcher();
+  }
+
+  /* ---- extend the existing chat click handler so [data-act="workflow"]
+     actually opens the modal. We do this by listening on the same
+     chatScroll element for clicks (capture-phase, runs alongside the
+     existing handler without replacing it). ---- */
+  document.addEventListener('click', e=>{
+    const act = e.target.closest('[data-act="workflow"]');
+    if(!act) return;
+    const codeId = +act.dataset.code;
+    const code = codeStore[codeId];
+    if(code){
+      e.stopPropagation();
+      window.__keoOpenWorkflow(code, codeId);
+    }
+  }, true); // capture phase — runs before the existing [data-act] handler
+
+})();
 </script>
 </body>
 </html>
