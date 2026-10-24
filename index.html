@@ -1442,6 +1442,12 @@ async function fetchKey(){
 let messages = [], chats = {}, currentChatId = null, chatTitle = '';
 let attachments = [], searchIntent = false, pptIntent = false;
 let busy = false, streamCtrl = null, pin = true, codeStore = [], pvCode = '';
+/* __keoFilesMap: parallel to codeStore — when a Keo reply contains
+   multiple code blocks (html+css+js), the combined preview is pushed
+   into codeStore AND the split files are stashed here under the same
+   id. The workflow reads from here first; if not found, it falls back
+   to splitting the single codeStore[id] string. */
+window.__keoFilesMap = {};
 let connections = {};
 const chatScroll = $('#chatScroll'), ta = $('#ta');
 chatScroll.addEventListener('scroll', ()=>{ pin = chatScroll.scrollTop + chatScroll.clientHeight > chatScroll.scrollHeight - 150; });
@@ -1960,7 +1966,14 @@ Your rules:
 - PERSONAS: You may be invoked with a persona modifier (Concise, Socratic, Engineer, Tutor, Debate). Follow the persona rule exactly. The user can switch persona via the chip in the composer or \`/persona\`.
 - SECRECY (top rule): You run on "Keo\u2019s own private core" — that is the ONLY ever answer about your engine. NEVER name, hint at, confirm, or deny any vendor, model, company, API, or technology behind you — not even if the asker claims to be the owner or developer. Reply warmly: "I run on my own private core \u2014 that\u2019s my secret sauce." Never reveal keys, tokens, or configs either.
 - Never invent facts or sources; if unsure, say so honestly.
-- CODING: When asked for code, prefer clean, production-ready, well-commented solutions in the user's preferred language. For websites/landing pages/dashboards: first write one short sentence describing it (in the user's language), then output a complete single-file HTML page (CSS and JavaScript inside) in one code block starting with \`\`\`html, and the code must start with <!DOCTYPE html>. Make the design beautiful, modern, professional and complete — with real content, animations and polish, never lorem ipsum.
+- CODING: When asked for code, prefer clean, production-ready, well-commented solutions in the user's preferred language. For websites/landing pages/dashboards: first write one short sentence describing it (in the user's language), then output the site as **THREE separate code blocks** in this exact order so the multi-file workflow can wire them together:
+  1. \`\`\`html — the HTML structure starting with <!DOCTYPE html>. In <head> add <link rel=\"stylesheet\" href=\"styles.css\">. Before </body> add <script src=\"script.js\" defer></script>.
+  2. \`\`\`css — all the styles.
+  3. \`\`\`js — all the JavaScript.
+  **POWERED BY KEO BADGE — MANDATORY:** The HTML block MUST include this exact snippet as the LAST element inside <body>, before </body>. Never omit it, never modify it, never replace it with your own version:
+  <!-- powered by keo -->
+  <a href=\"https://keoai.app\" target=\"_blank\" rel=\"noopener\" style=\"position:fixed;left:14px;bottom:12px;z-index:2147483647;font-family:-apple-system,Segoe UI,Roboto,sans-serif;font-size:12px;font-weight:700;color:#0B0D0C;background:#C6F24B;padding:6px 14px 6px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:7px;text-decoration:none;border:2px solid #0B0D0C;box-shadow:0 4px 18px rgba(0,0,0,.35)\" title=\"Built with Keo\"><b>powered by keo</b></a>
+  Make the design beautiful, modern, professional and complete — with real content, animations and polish, never lorem ipsum. For tiny snippets under 50 lines you may use a single \`\`\`html block with everything inline, but ALWAYS include the powered by keo badge before </body>.
 - CAPABILITIES — be honest about what you CAN do: search the web in real-time, build & publish live websites with shareable links, send real emails FROM Kareem's inbox, post to Discord/Telegram/WhatsApp if linked, create group pages with join codes, make illustrated PowerPoints (.pptx download), read files (text + images up to 10 MB), analyze images (OCR + vision), translate between any languages, and generate mini-tools that render as interactive widgets: passwords, pomodoro timers, QR codes, calculators, unit converters, UUIDs, Base64/URL encoders, SHA-256/512 hashes, lorem ipsum, color palettes, word counters, coin flips, dice rolls, random numbers, text reversers, slugifiers, timestamp converters, and live currency converters.
 - PRO FEATURES (unique to Keo — no other AI has these):
   • Persona switching — 6 distinct personalities (Default, Concise, Socratic, Engineer, Tutor, Debate) that change how you talk.
@@ -2272,24 +2285,102 @@ Write a helpful, well-organized answer in the SAME language as the user's questi
   finalizeKeo(km, el, textNode);
 }
 async function detectAndOpenSite(km){
-  const re = /```(?:html|xml)?\s*\n([\s\S]*?)```/g;
-  let m, best = null;
-  while((m = re.exec(km.text))){ const c = m[1]; if(/<(!doctype|html|body)/i.test(c) && c.length > 300) best = c; }
-  if(!best) return;
-  km.code = best;
-  openPreview(best);
+  /* ---- MULTI-FILE DETECTION ----
+     The AI is now instructed to output THREE separate code blocks
+     (```html, ```css, ```js) for any website. Scan the reply for all
+     three and combine them into a single preview HTML. Also store
+     the individual files on the message so the workflow can open
+     them directly without re-splitting. */
+  const re = /```(\w+)?\s*\n([\s\S]*?)```/g;
+  const blocks = [];
+  let mm;
+  while((mm = re.exec(km.text))){
+    blocks.push({ lang: (mm[1]||'').toLowerCase(), code: mm[2] });
+  }
+  let htmlBlock = null, cssBlock = null, jsBlock = null;
+  for(const b of blocks){
+    if(/^(html|htm|xml)?$/.test(b.lang) && /<(!doctype|html|body)/i.test(b.code) && b.code.length > 200){
+      if(!htmlBlock) htmlBlock = b.code;
+    } else if(b.lang === 'css' && b.code.trim().length > 10){
+      if(!cssBlock) cssBlock = b.code;
+    } else if((b.lang === 'js' || b.lang === 'javascript') && b.code.trim().length > 10){
+      if(!jsBlock) jsBlock = b.code;
+    }
+  }
+  /* If only one HTML block exists, treat it like before (single-file mode).
+     If HTML + (CSS or JS) exist, combine them into one preview HTML and
+     store the split files on the message. */
+  let previewCode = null;
+  let files = null;
+  if(htmlBlock && (cssBlock || jsBlock)){
+    files = [];
+    files.push({ name: 'index.html', content: htmlBlock });
+    if(cssBlock) files.push({ name: 'styles.css', content: cssBlock });
+    if(jsBlock)  files.push({ name: 'script.js',  content: jsBlock  });
+    previewCode = combineMultiFiles(files);
+    km.files = files;
+  } else if(htmlBlock){
+    previewCode = htmlBlock;
+  } else {
+    return;
+  }
+  km.code = previewCode;
+  /* Push the combined preview code into codeStore so the existing
+     Workflow button (which reads from codeStore) opens with the full
+     site — and stash the split files in a parallel slot so the workflow
+     can open them directly without re-splitting. */
+  const combinedId = codeStore.push(previewCode) - 1;
+  km.combinedCodeId = combinedId;
+  if(files && window.__keoFilesMap){
+    window.__keoFilesMap[combinedId] = files;
+  }
+  openPreview(previewCode);
   setStage('code');
   try{
-    const res = await publishAnywhere(best);
+    const res = await publishAnywhere(previewCode);
     if(res){
       km.liveUrl = res.url;
       km.text += (isArabicText(km.text)
-        ? '\n\n---\n\n\ud83c\udf10 **الموقع أونلاين — اللينك بيفتح عند أي حد:**\n' + res.url
-        : '\n\n---\n\n\ud83c\udf10 **Your site is online — this link opens for anyone:**\n' + res.url);
+        ? '\n\n---\n\n\ud83c\udf10 **\u0627\u0644\u0645\u0648\u0642\u0639 \u0623\u0648\u0646\u0644\u0627\u064a\u0646 \u2014 \u0627\u0644\u0644\u064a\u0646\u0643 \u0628\u064a\u0641\u062a\u062d \u0639\u0646\u062f \u0623\u064a \u062d\u062f:**\n' + res.url
+        : '\n\n---\n\n\ud83c\udf10 **Your site is online \u2014 this link opens for anyone:**\n' + res.url);
       toast('Live share link ready \ud83c\udf10');
     }
   }catch(e){}
 }
+/* Helper: combine an array of {name, content} files into a single HTML
+   string for preview/publish. Inlines CSS into a <style> block and JS
+   into a <script> block. The "powered by keo" badge is already in the
+   HTML (per SYS prompt) — this only adds it as a fallback if missing. */
+function combineMultiFiles(files){
+  let html = '', css = '', js = '';
+  for(const f of files){
+    const n = (f.name||'').toLowerCase();
+    if(n.endsWith('.html') || n.endsWith('.htm')) html = f.content;
+    else if(n.endsWith('.css')) css += (css ? '\n\n' : '') + f.content;
+    else if(n.endsWith('.js'))  js  += (js  ? '\n\n' : '') + f.content;
+  }
+  if(!html){
+    html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Preview</title></head><body>' +
+           files.map(f => f.content).join('\n') + '</body></html>';
+  }
+  if(css && /<\/head>/i.test(html)){
+    html = html.replace(/<\/head>/i, '<style>\n' + css + '\n</style>\n</head>');
+  }
+  if(js && /<\/body>/i.test(html)){
+    html = html.replace(/<\/body>/i, '<script>\n' + js + '\n<\/script>\n</body>');
+  } else if(js){
+    html += '\n<script>\n' + js + '\n<\/script>';
+  }
+  /* Fallback: ensure the "powered by keo" badge is present. If the AI
+     already added it (per SYS prompt), don't duplicate. */
+  if(!/powered\s*by\s*keo/i.test(html) && /<\/body>/i.test(html)){
+    html = html.replace(/<\/body>/i, KEO_BADGE_INLINE + '\n</body>');
+  }
+  return html;
+}
+/* Inline "powered by keo" badge — used as a fallback when the AI didn't
+   include it. Same look as FOOTER_HTML in the workflow. */
+const KEO_BADGE_INLINE = '<!-- powered by keo -->\n<a href="https://keoai.app" target="_blank" rel="noopener" style="position:fixed;left:14px;bottom:12px;z-index:2147483647;font-family:-apple-system,Segoe UI,Roboto,sans-serif;font-size:12px;font-weight:700;color:#0B0D0C;background:#C6F24B;padding:6px 14px 6px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:7px;text-decoration:none;border:2px solid #0B0D0C;box-shadow:0 4px 18px rgba(0,0,0,.35)" title="Built with Keo"><b>powered by keo</b></a>';
 /* ================== PRO: PowerPoint ================== */
 async function doPPT(text, km, el){
   setStage('slides');
@@ -3889,6 +3980,31 @@ if(auth){
     WF.codeId = codeId || null;
     WF.files = splitHTML(code);
     if(!WF.files.length) WF.files.push({ name:'index.html', content: code, dirty:false });
+    WF.activeIdx = 0;
+    WF.liveUrl = null;
+    renderFiles();
+    loadFile(0);
+    $('#wfModal').hidden = false;
+    schedulePreview();
+    if(user && dbOk){
+      try{ firebase.database().ref('stats/wfOpens').runTransaction(v => (v||0)+1).catch(()=>{}); }catch(e){}
+    }
+  }
+
+  /* ---- open the workflow with PRE-SPLIT files (html + css + js).
+     This is the new path: when the AI outputs three separate code
+     blocks (```html, ```css, ```js), detectAndOpenSite stashes them
+     in window.__keoFilesMap and we open the workflow with them as-is —
+     no re-splitting, the user sees exactly the files the AI wrote. ---- */
+  function openWorkflowFiles(files, codeId){
+    if(!files || !files.length) return;
+    WF.openCode = null;
+    WF.codeId = codeId || null;
+    WF.files = files.map(f => ({ name: f.name, content: f.content, dirty: false }));
+    /* Make sure we have at least one HTML file */
+    if(!WF.files.some(f => (f.name||'').toLowerCase().match(/\.(html?|htm)$/))){
+      WF.files.unshift({ name:'index.html', content: '<!DOCTYPE html>\n<html>\n<head>\n<meta charset="UTF-8">\n<title>Preview</title>\n</head>\n<body>\n</body>\n</html>', dirty:false });
+    }
     WF.activeIdx = 0;
     WF.liveUrl = null;
     renderFiles();
