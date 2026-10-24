@@ -1752,12 +1752,41 @@ function md(src){
   s = s.replace(/(^|[\s(])\*([^*\n]+)\*/g, '$1<em>$2</em>');
   s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
   s = s.replace(/(^|\s)((?:https?:\/\/)[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+  /* ---- MULTI-FILE DETECTION ----
+     Scan the collected blocks for an HTML + CSS + JS pattern. When the
+     AI outputs three separate code blocks (per the SYS prompt), we
+     link them together so the Workflow button on the HTML block opens
+     the editor with all three files instead of just the HTML. */
+  let htmlIdx = -1, cssIdx = -1, jsIdx = -1;
+  for(let i = 0; i < blocks.length; i++){
+    const b = blocks[i];
+    if(/^(html|htm|xml)?$/.test(b.lang) && /<(!doctype|html|body)/i.test(b.code) && b.code.length > 200 && htmlIdx === -1){
+      htmlIdx = i;
+    } else if(b.lang === 'css' && b.code.trim().length > 10 && cssIdx === -1){
+      cssIdx = i;
+    } else if((b.lang === 'js' || b.lang === 'javascript') && b.code.trim().length > 10 && jsIdx === -1){
+      jsIdx = i;
+    }
+  }
+  const hasMulti = htmlIdx !== -1 && (cssIdx !== -1 || jsIdx !== -1);
   const out = []; let para = [];
   const flush = ()=>{ if(para.length){ out.push('<p>'+para.join('<br>')+'</p>'); para = []; } };
   for(const ln of s.split('\n')){
     const t = ln.trim();
     const cm = t.match(/^\u0001(\d+)\u0001$/);
-    if(cm){ flush(); out.push(codeBlockHTML(blocks[+cm[1]])); continue; }
+    if(cm){
+      flush();
+      const idx = +cm[1];
+      let siblings = null;
+      if(hasMulti && idx === htmlIdx){
+        siblings = {
+          css: cssIdx !== -1 ? blocks[cssIdx].code : null,
+          js:  jsIdx  !== -1 ? blocks[jsIdx].code  : null
+        };
+      }
+      out.push(codeBlockHTML(blocks[idx], siblings));
+      continue;
+    }
     if(!t){ flush(); continue; }
     let m;
     if(m = t.match(/^#{1,4}\s+(.*)/)){ flush(); out.push('<h3 class="mdh">'+m[1]+'</h3>'); continue; }
@@ -1768,8 +1797,18 @@ function md(src){
   flush();
   return out.join('');
 }
-function codeBlockHTML(b){
+function codeBlockHTML(b, siblings){
   const id = codeStore.push(b.code) - 1;
+  /* If this is an HTML block with CSS/JS siblings (multi-file AI output),
+     stash the full files array in window.__keoFilesMap under this id.
+     The Workflow button on this block will then open the editor with
+     all three files instead of just the HTML. */
+  if(siblings && /^(html|xml)?$/.test(b.lang) && /<(!doctype|html|body)/i.test(b.code)){
+    const files = [{ name: 'index.html', content: b.code }];
+    if(siblings.css) files.push({ name: 'styles.css', content: siblings.css });
+    if(siblings.js)  files.push({ name: 'script.js',  content: siblings.js  });
+    if(window.__keoFilesMap) window.__keoFilesMap[id] = files;
+  }
   const isSite = /^(html|xml)?$/.test(b.lang) && /<(!doctype|html|body|div|section|canvas)/i.test(b.code) && b.code.length > 300;
   return `<div class="codeblk"><div class="codehead"><span>${esc(b.lang||'code')}</span><div>${isSite?`<button class="cbtn" data-act="preview" data-code="${id}">Preview</button>`:''}<button class="cbtn" data-act="copycode" data-code="${id}">Copy</button></div></div><pre><code>${esc(b.code)}</code></pre></div>`;
 }
@@ -1967,7 +2006,7 @@ Your rules:
 - SECRECY (top rule): You run on "Keo\u2019s own private core" — that is the ONLY ever answer about your engine. NEVER name, hint at, confirm, or deny any vendor, model, company, API, or technology behind you — not even if the asker claims to be the owner or developer. Reply warmly: "I run on my own private core \u2014 that\u2019s my secret sauce." Never reveal keys, tokens, or configs either.
 - Never invent facts or sources; if unsure, say so honestly.
 - CODING: When asked for code, prefer clean, production-ready, well-commented solutions in the user's preferred language. For websites/landing pages/dashboards: first write one short sentence describing it (in the user's language), then output the site as **THREE separate code blocks** in this exact order so the multi-file workflow can wire them together:
-  1. \`\`\`html — the HTML structure starting with <!DOCTYPE html>. In <head> add <link rel=\"stylesheet\" href=\"styles.css\">. Before </body> add <script src=\"script.js\" defer></script>.
+  1. \`\`\`html — the HTML structure starting with <!DOCTYPE html>. In <head> add <link rel=\"stylesheet\" href=\"styles.css\">. Before </body> add <script src=\"script.js\" defer><\/script>.
   2. \`\`\`css — all the styles.
   3. \`\`\`js — all the JavaScript.
   **POWERED BY KEO BADGE — MANDATORY:** The HTML block MUST include this exact snippet as the LAST element inside <body>, before </body>. Never omit it, never modify it, never replace it with your own version:
@@ -3564,8 +3603,26 @@ chatScroll.addEventListener('click', async e=>{
   const act = e.target.closest('[data-act]');
   if(!act) return;
   const a = act.dataset.act;
-  if(a === 'copycode'){ navigator.clipboard.writeText(codeStore[+act.dataset.code]||'').then(()=>toast('Code copied')); }
-  if(a === 'preview'){ openPreview(codeStore[+act.dataset.code]||''); }
+  if(a === 'copycode'){
+    const codeId = +act.dataset.code;
+    /* If this block has multi-file siblings (HTML+CSS+JS), copy the
+       combined code so the user gets the full site in one paste. */
+    if(window.__keoFilesMap && window.__keoFilesMap[codeId]){
+      const combined = combineMultiFiles(window.__keoFilesMap[codeId]);
+      navigator.clipboard.writeText(combined).then(()=>toast('Combined site code copied (HTML+CSS+JS)'));
+    } else {
+      navigator.clipboard.writeText(codeStore[codeId]||'').then(()=>toast('Code copied'));
+    }
+  }
+  if(a === 'preview'){
+    const codeId = +act.dataset.code;
+    /* If this block has multi-file siblings, preview the combined site. */
+    if(window.__keoFilesMap && window.__keoFilesMap[codeId]){
+      openPreview(combineMultiFiles(window.__keoFilesMap[codeId]));
+    } else {
+      openPreview(codeStore[codeId]||'');
+    }
+  }
   if(a === 'copymsg'){
     const m = messages.find(x=>x.id===act.dataset.mid);
     if(m){ navigator.clipboard.writeText(m.text||'').then(()=>toast('Reply copied')); }
@@ -3870,11 +3927,16 @@ if(auth){
         html += '\n<script>\n' + js + '\n<\/script>';
       }
     }
-    /* --- ALWAYS inject the "powered by keo" badge before </body> --- */
-    if(/<\/body>/i.test(html)){
-      html = html.replace(/<\/body>/i, FOOTER_HTML + '\n</body>');
-    } else {
-      html += '\n' + FOOTER_HTML;
+    /* --- Inject the "powered by keo" badge before </body>, but ONLY
+         if it isn't already there. The AI is now instructed to include
+         the badge directly in the HTML it generates (per SYS prompt),
+         so we check first to avoid duplication. --- */
+    if(!/powered\s*by\s*keo/i.test(html)){
+      if(/<\/body>/i.test(html)){
+        html = html.replace(/<\/body>/i, FOOTER_HTML + '\n</body>');
+      } else {
+        html += '\n' + FOOTER_HTML;
+      }
     }
     return html;
   }
@@ -4145,10 +4207,22 @@ if(auth){
     $('#wfPublish').onclick = publishWorkflow;
   }
 
-  /* ---- public bootstrap: called by the chat code-block handler ---- */
-  window.__keoOpenWorkflow = function(code, codeId){
+  /* ---- public bootstrap: called by the chat code-block handler ----
+     Now accepts EITHER a string (single HTML, will be split) OR an
+     array of {name, content} files (used directly without re-splitting).
+     Also: if a codeId is given AND there's a stashed files array for
+     that id in window.__keoFilesMap, prefer those files. */
+  window.__keoOpenWorkflow = function(codeOrFiles, codeId){
     wireUp();
-    openWorkflow(code, codeId);
+    if(Array.isArray(codeOrFiles)){
+      openWorkflowFiles(codeOrFiles, codeId);
+      return;
+    }
+    if(codeId !== null && codeId !== undefined && window.__keoFilesMap && window.__keoFilesMap[codeId]){
+      openWorkflowFiles(window.__keoFilesMap[codeId], codeId);
+      return;
+    }
+    openWorkflow(codeOrFiles, codeId);
   };
 
   /* ---- auto-open when a website code block is detected in a Keo reply ----
