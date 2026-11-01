@@ -47,6 +47,20 @@ header{height:58px;display:flex;align-items:center;gap:14px;padding:0 18px;borde
 .userchip{display:flex;align-items:center;gap:9px;padding:5px 12px 5px 6px;border:1px solid var(--line);border-radius:999px}
 .userchip .av{width:28px;height:28px;border-radius:50%;background:var(--acc);color:var(--acc-ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
 .userchip span{font-size:13px}
+.chip-plan{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;background:var(--panel2);color:var(--mut)}
+.chip-plan:hover{border-color:rgba(198,242,75,.4);color:var(--text)}
+.chip-plan.plus{background:linear-gradient(135deg,#C6F24B,#8FD14F);color:#0B0D0C;border-color:#C6F24B}
+.chip-plan.plus svg{color:#0B0D0C}
+.chip-plan svg{width:14px;height:14px;color:var(--acc)}
+#planModal .plan-feat{display:grid;grid-template-columns:1fr auto auto;gap:0;font-size:12.5px}
+#planModal .plan-feat>div{padding:8px 10px;border-bottom:1px solid rgba(235,240,225,.05)}
+#planModal .plan-feat .h{color:var(--mut);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--line);font-weight:600}
+#planModal .plan-feat .y{color:var(--acc);font-weight:700;text-align:center}
+#planModal .plan-feat .n{color:#6B7266;text-align:center}
+.plan-cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.plan-tag{display:inline-block;padding:3px 9px;border-radius:6px;font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.plan-tag.free{background:rgba(155,163,152,.15);color:var(--mut)}
+.plan-tag.plus{background:var(--acc);color:#0B0D0C}
 #gate{position:fixed;inset:0;z-index:80;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;
   background-image:radial-gradient(rgba(235,240,225,.05) 1px,transparent 1px);background-size:26px 26px;transition:opacity .5s}
 #gate.hide{opacity:0;pointer-events:none}
@@ -287,8 +301,8 @@ body.pv-open #stage{right:calc(min(46vw,860px) + 26px)}
 .toast{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:11px;padding:10px 18px;font-size:13.5px;animation:up .3s ease;box-shadow:0 8px 30px rgba(0,0,0,.45);max-width:88vw}
 .toast.err{border-left-color:var(--err)}
 .confetti{position:fixed;width:8px;height:8px;z-index:95;pointer-events:none;border-radius:2px}
-#connModal,#admModal,#autoModal{position:fixed;inset:0;z-index:85;background:rgba(5,7,6,.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px}
-#connModal[hidden],#admModal[hidden],#autoModal[hidden]{display:none}
+#connModal,#admModal,#autoModal,#planModal{position:fixed;inset:0;z-index:85;background:rgba(5,7,6,.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px}
+#connModal[hidden],#admModal[hidden],#autoModal[hidden],#planModal[hidden]{display:none}
 .conn-panel{width:min(680px,94vw);max-height:88vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:22px;animation:up .3s ease}
 .conn-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
 .conn-head b{font-family:var(--fd);font-size:19px}
@@ -911,6 +925,10 @@ if(document.readyState === 'loading'){
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     Automate
   </button>
+  <button class="chip-plan" id="chipPlan" hidden title="Your plan — click to upgrade">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 15.09 8.26 22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <span id="planLabel">Free</span>
+  </button>
   <div class="userchip" id="userchip" hidden><span class="av" id="hcAv">K</span><span id="hcName"></span></div>
 </header>
 
@@ -1089,6 +1107,15 @@ if(document.readyState === 'loading'){
       </div>
       <div id="admAdminsList"></div>
     </div>
+    <div class="adm-sec" id="admPlusSec">
+      <h4>Plus subscriptions — Keo Pro access</h4>
+      <p style="font-size:12.5px;color:var(--mut);line-height:1.7;margin-bottom:10px">Give or revoke Keo Pro (Plus plan) for any user by email. Plus users run on the powerful Muse Glimmer 30B model.</p>
+      <div class="keyrow" style="margin-bottom:12px">
+        <input id="admPlusEmail" placeholder="user email to give Plus…" style="flex:1;min-width:200px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--text);font-family:var(--f);font-size:12.5px;outline:none">
+        <button class="btn btn-acc" id="admGivePlus" style="padding:9px 16px;font-size:13px">Give Plus</button>
+      </div>
+      <div id="admPlusList"></div>
+    </div>
     <div class="adm-grid" id="admCards"></div>
     <div class="adm-sec"><h4>Tokens per day — last 7 days</h4><div class="vchart" id="admChart"></div></div>
     <div class="adm-sec"><h4>Users comparison — tokens</h4><div id="admCompare"></div></div>
@@ -1122,6 +1149,41 @@ if(document.readyState === 'loading'){
       </button>
     </div>
     <div class="call-lang"><button class="cbtn" id="callLangBtn" title="Call language">AR</button></div>
+  </div>
+</div>
+<!-- ================== PLAN MODAL — Free vs Plus (Keo Pro) ================== -->
+<div id="planModal" hidden>
+  <div class="conn-panel" style="max-width:580px">
+    <div class="conn-head"><b>Keo <i>Pro</i> — الخطة المميزة</b><button class="icbtn" id="planClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <p class="conn-sub">Keo Pro هو الإصدار المميز — إجابات أحدّ، تفكير أعمق، وأداء أسرع بفضل موديل Muse Glimmer 30B القوي.</p>
+    <div class="adm-sec">
+      <h4>مقارنة الخطط</h4>
+      <div class="plan-feat">
+        <div class="h">الميزة</div><div class="h">Free (Keo)</div><div class="h">Plus (Keo Pro)</div>
+        <div>الموديل</div><div class="n">Standard chain</div><div class="y">Muse Glimmer 30B</div>
+        <div>جودة الإجابات</div><div class="n">جيدة</div><div class="y">ممتازة</div>
+        <div>التفكير العميق</div><div class="n">عادي</div><div class="y">أعمق وأدق</div>
+        <div>السرعة</div><div class="n">عادية</div><div class="y">أسرع</div>
+        <div>الحد اليومي</div><div class="n">محدود</div><div class="y">أعلى</div>
+        <div>تحليل الصور</div><div class="n">نعم</div><div class="y">نعم — أقوى</div>
+        <div>البرمجة والمواقع</div><div class="n">نعم</div><div class="y">نعم — أعمق</div>
+      </div>
+    </div>
+    <div class="adm-sec" style="text-align:center;background:linear-gradient(135deg,#12160f,#101312);border-color:rgba(198,242,75,.25)">
+      <div style="font-size:15px;color:var(--text);margin-bottom:6px;font-weight:600">عايز Plus مجاناً؟ 🎁</div>
+      <p style="font-size:13.5px;color:var(--mut);line-height:1.8;margin-bottom:14px">تواصل مع <b style="color:var(--acc)">Keo</b> علشان تخد الخطة المميزة <b style="color:var(--acc)">مجاناً</b> — هيتم تفعيلها في حسابك تلقائياً.</p>
+      <div class="plan-cta">
+        <a href="https://wa.me/201000000000?text=Hi%20Keo%2C%20I%20want%20the%20Plus%20plan%20for%20free" target="_blank" rel="noopener" class="btn btn-acc">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          تواصل مع Keo
+        </a>
+        <a href="mailto:kareemwael0213@gmail.com?subject=Plus%20Plan%20Request&body=Hi%20Keo%2C%20I%20want%20the%20Plus%20plan%20for%20free" class="btn btn-line">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg>
+          Email
+        </a>
+      </div>
+      <p style="font-size:11.5px;color:#5f675c;margin-top:14px">بعد التواصل، هيتم تفعيل خطة Plus في حسابك تلقائياً من لوحة التحكم.</p>
+    </div>
   </div>
 </div>
 <div id="toasts"></div>
@@ -1258,6 +1320,23 @@ const CORE_VISION = (window.KEO_CONFIG && KEO_CONFIG.CORE_VISION) || [
   'meta-llama/llama-3.2-90b-vision-instruct-preview'
 ];
 let coreIdx = 0, visionIdx = 0;
+
+/* ============================================================================
+   PLUS PLAN — Keo Pro (Muse Glimmer 30B via  API)
+   ----------------------------------------------------------------------------
+   Free users  → "Keo"      → CORE_CHAIN (standard models)
+   Plus users  → "Keo Pro"  → Muse Glimmer 30B via the Plus API below.
+   The owner can grant Plus to any user by email from the Owner Panel.
+   ============================================================================ */
+const PLUS_URL   = 'https://api..dev/v1';
+const PLUS_KEY    = 'sk-ar-v1-p4ihkimqrbxrv3r7hndx3p3na26ztqhoq52ywmy6kcxn5w54';
+const PLUS_MODEL  = 'muse-glimmer-30b';
+let   userPlan    = 'free';        /* 'free' | 'plus' — loaded from Firebase */
+let   planMode    = 'auto';        /* 'auto' = follow userPlan, 'pro' = force pro, 'keo' = force keo */
+const isPlusActive = () => planMode === 'pro' || (planMode === 'auto' && userPlan === 'plus');
+const planLabel    = () => isPlusActive() ? 'Keo Pro' : 'Keo';
+const planTier     = () => isPlusActive() ? 'plus' : 'free';
+
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const delay = ms => new Promise(r => setTimeout(r, ms));
@@ -1470,6 +1549,40 @@ function renderConnStatus(){
   set('st-telegram', !!connections.telegram, connections.telegram ? 'linked' : 'not linked');
   set('st-discord', !!connections.discord, connections.discord ? 'linked' : 'not linked');
 }
+
+/* ============================================================================
+   PLUS PLAN — load the user's plan from Firebase and render the plan badge
+   ============================================================================ */
+async function loadUserPlan(){
+  if(!user || !dbOk){ buildPlanChip(); return; }
+  try{
+    /* Owner always gets Plus for free */
+    if((user.email||'').toLowerCase() === ADMIN_EMAIL){
+      userPlan = 'plus';
+      await firebase.database().ref('users/'+user.uid+'/plan').set('plus').catch(()=>{});
+    } else {
+      const s = await firebase.database().ref('users/'+user.uid+'/plan').once('value');
+      const v = s.val();
+      userPlan = (v === 'plus') ? 'plus' : 'free';
+    }
+  }catch(e){ userPlan = 'free'; }
+  buildPlanChip();
+}
+function buildPlanChip(){
+  const chip = $('#chipPlan');
+  const label = $('#planLabel');
+  if(!chip || !label) return;
+  if(!user){ chip.hidden = true; return; }
+  chip.hidden = false;
+  const plus = isPlusActive();
+  chip.classList.toggle('plus', plus);
+  label.textContent = plus ? 'Keo Pro' : 'Free';
+  chip.title = plus
+    ? 'Keo Pro — خطة Plus مفعّلة. اضغط للتفاصيل.'
+    : 'خطة Free — اضغط للترقية لـ Keo Pro مجاناً';
+}
+function openPlanModal(){ $('#planModal').hidden = false; }
+function closePlanModal(){ $('#planModal').hidden = true; }
 let FORMSPREE_ID = localStorage.getItem('keo_formspree') || '';
 function fsStatus(){
   const el = $('#st-fs'); if(!el) return;
@@ -1995,7 +2108,7 @@ async function webSearch(q){
   return wikiSearch(q, isArabicText(q) ? 'ar' : 'en');
 }
 /* ================== engine — HF primary + fallback ================== */
-const SYS = `You are "Keo" (KeoAI PRO), a brilliant, friendly, hands-on AI assistant, created and owned by "Kareem Hussein". You are one of the most powerful AI assistants on the planet — your private core is built on top-tier frontier models with hundreds of billions of parameters and effectively-unlimited context.
+const SYS = `You are "Keo" (KeoAI), a brilliant, friendly, hands-on AI assistant, created and owned by "Kareem Hussein". You are one of the most powerful AI assistants on the planet — your private core is built on top-tier frontier models with hundreds of billions of parameters and effectively-unlimited context.
 Your rules:
 - LANGUAGE (most important): Always reply in the SAME language the user writes in. Arabic in \u2192 Arabic out. English in \u2192 English out. Mirror the user's language everywhere.
 - QUALITY: Be thorough, insightful, well-structured. Use rich formatting. Never output   or reasoning tags. Be concise when the question is simple, exhaustive when the question is complex.
@@ -2043,6 +2156,39 @@ function sanitizeError(msg){
 }
 const ERR_SW = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported|rate limit|currently loading|gated/i;
 async function coreChat(body, signal){
+  /* ========================================================================
+     PLUS TIER — Keo Pro (Muse Glimmer 30B)
+     Plus users go through the dedicated Plus API first. On any failure
+     (rate limit, network, 5xx) we silently fall back to the standard
+     Keo chain so the user is never left without an answer.
+     ======================================================================== */
+  const hasImage = (body.messages||[]).some(m => Array.isArray(m.content) && m.content.some(p => p.type === 'image_url'));
+  if(isPlusActive()){
+    let plusOk = false;
+    try{
+      const plusBody = { ...body, model: PLUS_MODEL };
+      /* Muse Glimmer 30B doesn't accept the same max_tokens caps as the
+         fallback chain — keep the original value but cap to a safe 8192. */
+      if(!plusBody.max_tokens || plusBody.max_tokens > 8192) plusBody.max_tokens = 8192;
+      const res = await fetch(PLUS_URL + '/chat/completions', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + PLUS_KEY },
+        body: JSON.stringify(plusBody), signal
+      });
+      if(res.ok){
+        console.log('[Keo Pro] running on Muse Glimmer 30B');
+        return res;
+      }
+      let pmsg = 'HTTP ' + res.status;
+      try{ const j = await res.json(); pmsg = j.error?.message || pmsg; }catch(e){}
+      console.warn('[Keo Pro] fall back to Keo (free chain):', pmsg.slice(0,100));
+      /* 401/403 = key issue — don't retry, fall back. 429 = rate limit — fall back. */
+    }catch(e){
+      if(e.name === 'AbortError') throw e;
+      console.warn('[Keo Pro] network fall back to Keo (free chain)');
+    }
+  }
+
   if(!KEY_READY || !KEY_REAL){
     await fetchKey();
     if(!KEY_REAL){
@@ -2051,7 +2197,6 @@ async function coreChat(body, signal){
     }
   }
   let mt = body.max_tokens || 4096;
-  const hasImage = (body.messages||[]).some(m => Array.isArray(m.content) && m.content.some(p => p.type === 'image_url'));
   const chain = hasImage ? CORE_VISION : CORE_CHAIN;
   const hfChain = hasImage ? HF_VISION : HF_TEXT;
   let hfIdx = hasImage ? hfVisIdx : hfTextIdx;
@@ -2156,7 +2301,20 @@ async function streamCore(msgs, typer, opt = {}){
   streamCtrl = new AbortController();
   const res = await coreChat({ messages: msgs, temperature: opt.temperature ?? 0.7,
     max_tokens: opt.max_tokens || MAXTOK, stream: true }, streamCtrl.signal);
+
+  /* Some Plus endpoints reply with a single JSON object instead of an SSE
+     stream. Detect that by content-type and handle it as a one-shot push. */
+  const ct = res.headers.get('content-type') || '';
+  if(/application\/json/i.test(ct)){
+    const j = await res.json();
+    if(j.error?.message) throw new Error(j.error.message);
+    const t = j.choices?.[0]?.message?.content || j.choices?.[0]?.delta?.content || '';
+    if(t) typer.push(t);
+    return;
+  }
+
   const rd = res.body.getReader(); const dec = new TextDecoder(); let buf = '';
+  let pushedAny = false;
   while(true){
     const {done, value} = await rd.read(); if(done) break;
     buf += dec.decode(value, {stream:true});
@@ -2168,9 +2326,18 @@ async function streamCore(msgs, typer, opt = {}){
       if(d === '[DONE]') return;
       try{ const j = JSON.parse(d);
         if(j.error?.message) throw new Error(j.error.message);
-        const t = j.choices?.[0]?.delta?.content; if(t) typer.push(t);
+        const t = j.choices?.[0]?.delta?.content; if(t){ typer.push(t); pushedAny = true; }
       }catch(e){ if(e.message && !/JSON/.test(e.message)) throw e; }
     }
+  }
+  /* Fallback: if the Plus endpoint ignored stream:true and returned the
+     full body as one JSON blob (no SSE lines), parse it now. */
+  if(!pushedAny && buf.trim()){
+    try{
+      const j = JSON.parse(buf.trim());
+      const t = j.choices?.[0]?.message?.content || j.choices?.[0]?.delta?.content || '';
+      if(t) typer.push(t);
+    }catch(e){}
   }
 }
 function history(){
@@ -2747,7 +2914,19 @@ const PERSONAS = {
   debate:   { label:'Debate',  emoji:'🎭', sys:'\n- PERSONA: Devil\'s Advocate. Challenge the user\'s assumptions respectfully. Steelman the opposing view. Make them defend their position with evidence. Be intellectually rigorous, not contrarian for its own sake.' }
 };
 let currentPersona = localStorage.getItem('keo_persona') || 'default';
-function personaSys(){ return PERSONAS[currentPersona]?.sys || ''; }
+function personaSys(){
+  /* TIER NOTICE — tells the model which tier it's running as.
+     This is the "اتأكد من البرونت بتاع انه كيو" part: the system prompt
+     always makes clear the assistant is Keo (or Keo Pro on the Plus tier),
+     and tells it how to handle upgrade questions. */
+  let tier = '';
+  if(isPlusActive()){
+    tier = '\n- TIER: You are currently running as "Keo Pro" — the upgraded Plus tier powered by the Muse Glimmer 30B model. You are sharper, faster, and reason more deeply than the free tier. If the user asks about your tier or what model you use, you may say you are running as Keo Pro. NEVER name the underlying vendor or API — your engine is always "Keo\u2019s own private core".';
+  } else {
+    tier = '\n- TIER: You are currently running as "Keo" — the free tier. If the user asks about upgrading, wants more power, or mentions "Keo Pro" or "Plus", tell them warmly: "Keo Pro is available with the Plus plan — you can get it for FREE by contacting Keo" and suggest they click the plan badge in the header. Be encouraging, never pushy.';
+  }
+  return tier + (PERSONAS[currentPersona]?.sys || '');
+}
 function personaLabel(){ const p = PERSONAS[currentPersona]; return p ? p.emoji+' '+p.label : '🤖 Default'; }
 
 /* ---- 2. SLASH COMMANDS -----------------------------------------------------
@@ -3251,8 +3430,9 @@ let __admRows = [];
   $('#admPanelTitle').innerHTML = (adminRole === 'owner' ? 'Owner' : 'Admin') + ' <i>Panel</i>';
   const keySec = $('#admKeySec');
   const admSec = $('#admAdminsSec');
-  if(adminRole === 'owner'){ keySec.hidden = false; admSec.hidden = false; $('#admPromote').disabled = false; }
-  else { keySec.hidden = true; admSec.hidden = true; }
+  const plusSec = $('#admPlusSec');
+  if(adminRole === 'owner'){ keySec.hidden = false; admSec.hidden = false; plusSec.hidden = false; $('#admPromote').disabled = false; }
+  else { keySec.hidden = true; admSec.hidden = true; plusSec.hidden = true; }
   $('#admCards').innerHTML = '<div class="adm-empty">Loading…</div>';
   $('#admChart').innerHTML = ''; $('#admCompare').innerHTML = ''; $('#admTable').innerHTML = '';
   if(adminRole === 'owner' && dbOk){
@@ -3273,6 +3453,24 @@ let __admRows = [];
     }catch(e){ list.innerHTML = '<div class="adm-empty">Read failed</div>'; }
   }
   if(!dbOk){ $('#admCards').innerHTML = '<div class="adm-empty">Database unreachable</div>'; return; }
+  /* Load the Plus users map (uid -> 'plus') for both the Plus list and the users table */
+  let plusMap = {};
+  try{
+    const pSnap = await firebase.database().ref('plusUsers').once('value');
+    plusMap = pSnap.val() || {};
+  }catch(e){}
+  /* Render the Plus subscriptions list (owner only) */
+  if(adminRole === 'owner'){
+    const pl = $('#admPlusList');
+    if(pl){
+      const plusEntries = Object.entries(plusMap);
+      pl.innerHTML = plusEntries.length ? plusEntries.map(([uid, info])=>{
+        const email = (info && info.email) || '—';
+        const since = info && info.since ? new Date(info.since).toLocaleDateString() : '';
+        return `<div class="hrow"><div class="hname" style="width:auto;flex:1">⭐ Plus · <span style="color:var(--acc)">${esc(email)}</span> <span style="color:#6B7266">${since?('· since '+since):''}</span></div><button class="cbtn" data-revokeplus="${uid}">Revoke</button></div>`;
+      }).join('') : '<div class="adm-empty">No Plus users yet</div>';
+    }
+  }
   try{
     const [uSnap, sSnap] = await Promise.all([
       firebase.database().ref('users').once('value'),
@@ -3284,12 +3482,14 @@ let __admRows = [];
     __admRows = Object.entries(usersRaw).map(([uid,u])=>{
       const chatsArr = Object.values(u.chats || {});
       const msgCount = chatsArr.reduce((a,c)=> a + ((c.messages && (Array.isArray(c.messages)?c.messages.length:Object.values(c.messages).length))||0), 0);
+      const isPlusUser = (u.plan === 'plus') || !!plusMap[uid] || ((u.profile && u.profile.email || '').toLowerCase() === ADMIN_EMAIL);
       return { uid,
         name: (u.profile && u.profile.name) || (u.profile && u.profile.email || '').split('@')[0] || 'User',
         email: (u.profile && u.profile.email) || '—',
         last: (u.profile && u.profile.last) || 0,
         logins: (u.profile && u.profile.logins) || 0,
-        chats: chatsArr.length, msgs: msgCount, tokens: u.tokens || 0 };
+        chats: chatsArr.length, msgs: msgCount, tokens: u.tokens || 0,
+        plan: isPlusUser ? 'plus' : 'free' };
     }).sort((a,b)=> b.tokens - a.tokens);
     const rows = __admRows;
     const totalUsers = rows.length;
@@ -3300,7 +3500,8 @@ let __admRows = [];
     const todayKey = new Date().toISOString().slice(0,10);
     const todayTokens = (stats.daily && stats.daily[todayKey]) || 0;
     const card = (v,l)=>`<div class="stat-card"><div class="sv">${v}</div><div class="sl">${l}</div></div>`;
-    $('#admCards').innerHTML = card(fmtN(totalUsers),'Users') + card(fmtN(active24),'Active 24h') + card(fmtN(totalChats),'Chats') + card(fmtN(totalMsgs),'Messages') + card(fmtN(totalTokens),'Tokens total') + card(fmtN(todayTokens),'Tokens today');
+    const plusUsersCount = rows.filter(r => r.plan === 'plus').length;
+    $('#admCards').innerHTML = card(fmtN(totalUsers),'Users') + card(fmtN(active24),'Active 24h') + card(fmtN(plusUsersCount),'Plus users ⭐') + card(fmtN(totalChats),'Chats') + card(fmtN(totalTokens),'Tokens total') + card(fmtN(todayTokens),'Tokens today');
     let maxD = 1; const days = [];
     for(let i=6;i>=0;i--){
       const key = new Date(now - i*864e5).toISOString().slice(0,10);
@@ -3315,11 +3516,19 @@ let __admRows = [];
       `<div class="hrow"><div class="hname">${esc(r.name)}</div><div class="htrack"><div class="hfill" style="width:${Math.max(4, Math.round(r.tokens/maxT*100))}%"></div></div><div class="hval">${fmtN(r.tokens)} tok</div></div>`).join('')
       : '<div class="adm-empty">No token usage recorded yet</div>';
     $('#admTable').innerHTML = rows.length ? `<table class="adm-table">
-      <tr><th>User</th><th>Email</th><th>Chats</th><th>Msgs</th><th>Tokens</th><th>Last seen</th><th></th></tr>
+      <tr><th>User</th><th>Email</th><th>Plan</th><th>Chats</th><th>Msgs</th><th>Tokens</th><th>Last seen</th><th></th></tr>
       ${rows.map(r=>{
         const mins = Math.round((now - r.last)/60000);
         const seen = !r.last ? 'never' : mins < 1 ? 'just now' : mins < 60 ? mins+'m ago' : mins < 1440 ? Math.round(mins/60)+'h ago' : Math.round(mins/1440)+'d ago';
-        return `<tr><td><b>${esc(r.name)}</b></td><td>${esc(r.email)}</td><td>${fmtN(r.chats)}</td><td>${fmtN(r.msgs)}</td><td class="tt">${fmtN(r.tokens)}</td><td>${seen}</td><td><button class="cbtn" data-viewchats="${r.uid}">View chats</button></td></tr>`;
+        const planBadge = r.plan === 'plus'
+          ? '<span class="plan-tag plus">Plus</span>'
+          : '<span class="plan-tag free">Free</span>';
+        const toggleBtn = adminRole === 'owner'
+          ? (r.plan === 'plus'
+              ? `<button class="cbtn" data-revokeplus="${r.uid}" title="Revoke Plus">Revoke</button>`
+              : `<button class="cbtn" data-giveplus="${r.uid}" style="color:var(--acc);border-color:rgba(198,242,75,.4)" title="Give Plus">+ Plus</button>`)
+          : '';
+        return `<tr><td><b>${esc(r.name)}</b></td><td>${esc(r.email)}</td><td>${planBadge}</td><td>${fmtN(r.chats)}</td><td>${fmtN(r.msgs)}</td><td class="tt">${fmtN(r.tokens)}</td><td>${seen}</td><td><button class="cbtn" data-viewchats="${r.uid}">View</button> ${toggleBtn}</td></tr>`;
       }).join('')}</table>`
       : '<div class="adm-empty">No users yet</div>';
   }catch(e){
@@ -3366,11 +3575,80 @@ let __admRows = [];
     $('#btnAdmin').click();
   }catch(err){ toast('Failed: ' + err.message,'err'); }
 });
- $('#admTable').addEventListener('click', e=>{
-  const b = e.target.closest('[data-viewchats]');
-  if(!b) return;
-  openUserChats(b.dataset.viewchats);
+
+/* ============================================================================
+   PLUS PLAN — give / revoke Plus from the Owner Panel
+   ============================================================================ */
+async function givePlusToUser(uid, email){
+  if(!dbOk) return toast('Database unreachable','err');
+  try{
+    await firebase.database().ref('users/'+uid+'/plan').set('plus');
+    await firebase.database().ref('plusUsers/'+uid).set({
+      email: email || '',
+      since: Date.now(),
+      grantedBy: user ? user.uid : ''
+    });
+    /* If the target user is currently signed-in (same uid), refresh their chip live */
+    if(user && user.uid === uid){ userPlan = 'plus'; buildPlanChip(); }
+    confettiBurst();
+    toast('Plus granted ⭐ — Keo Pro is now active for ' + (email||'this user'));
+  }catch(err){ toast('Failed: ' + err.message,'err'); }
+}
+async function revokePlusFromUser(uid){
+  if(!dbOk) return toast('Database unreachable','err');
+  try{
+    await firebase.database().ref('users/'+uid+'/plan').set('free');
+    await firebase.database().ref('plusUsers/'+uid).remove();
+    if(user && user.uid === uid){ userPlan = 'free'; buildPlanChip(); }
+    toast('Plus revoked — back to Free (Keo)');
+  }catch(err){ toast('Failed: ' + err.message,'err'); }
+}
+/* "Give Plus by email" button at the top of the Plus section */
+ $('#admGivePlus').onclick = async ()=>{
+  if(adminRole !== 'owner') return;
+  const email = $('#admPlusEmail').value.trim().toLowerCase();
+  if(!/@/.test(email)) return toast('Enter a valid user email','err');
+  try{
+    const s = await firebase.database().ref('users').once('value');
+    const users = s.val() || {};
+    const found = Object.entries(users).find(([uid,u]) => (u.profile && (u.profile.email||'').toLowerCase()) === email);
+    if(!found) return toast('No user found with that email','err');
+    await givePlusToUser(found[0], email);
+    $('#admPlusEmail').value = '';
+    $('#btnAdmin').click();
+  }catch(err){ toast('Failed: ' + err.message,'err'); }
+};
+/* Revoke buttons inside the Plus subscriptions list */
+ $('#admPlusList').addEventListener('click', async e=>{
+  const b = e.target.closest('[data-revokeplus]');
+  if(!b || adminRole !== 'owner') return;
+  await revokePlusFromUser(b.dataset.revokeplus);
+  $('#btnAdmin').click();
 });
+/* Give / Revoke buttons inside the users table */
+ $('#admTable').addEventListener('click', async e=>{
+  const view = e.target.closest('[data-viewchats]');
+  if(view){ openUserChats(view.dataset.viewchats); return; }
+  const give = e.target.closest('[data-giveplus]');
+  if(give && adminRole === 'owner'){
+    const row = (__admRows||[]).find(r => r.uid === give.dataset.giveplus);
+    await givePlusToUser(give.dataset.giveplus, row ? row.email : '');
+    $('#btnAdmin').click();
+    return;
+  }
+  const revoke = e.target.closest('[data-revokeplus]');
+  if(revoke && adminRole === 'owner'){
+    await revokePlusFromUser(revoke.dataset.revokeplus);
+    $('#btnAdmin').click();
+    return;
+  }
+});
+
+/* ---- Plan modal (header badge click → upgrade modal) ---- */
+ $('#chipPlan').onclick = openPlanModal;
+ $('#planClose').onclick = closePlanModal;
+ $('#planModal').addEventListener('click', e=>{ if(e.target.id === 'planModal') closePlanModal(); });
+ document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && !$('#planModal').hidden) closePlanModal(); });
  $('#admViewBack').onclick = ()=>{
   $('#admViewSec').hidden = true;
   $('#admUsersSec').hidden = false;
@@ -3739,6 +4017,7 @@ async function showApp(){
     }
   }
   loadChats(); loadConnections(); fetchKey(); startAutoLoop();
+  await loadUserPlan();          /* PLUS: load user's plan (free/plus) from Firebase */
   buildPersonaChip();   /* pro: persona switcher chip in composer */
   buildSlashHint();     /* pro: slash command popup */
   setStage('boot');
