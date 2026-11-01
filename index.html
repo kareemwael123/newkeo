@@ -1340,8 +1340,11 @@ let coreIdx = 0, visionIdx = 0;
    PLUS PLAN — Keo Pro (upgraded Keo tier)
    ----------------------------------------------------------------------------
    Free users  → "Keo"      → CORE_CHAIN (standard resources)
-   Plus users  → "Keo Pro"  → upgraded tier via the Plus API below.
+   Plus users  → "Keo Pro"  → upgraded tier via multiple free providers:
+     1. OpenRouter (free models, requires API key from owner panel)
+     2. Pollinations.ai (GPT-OSS 20B, NO API KEY required — always works)
    The owner can grant Plus to any user by email from the Owner Panel.
+   Get a FREE OpenRouter key (no credit card) at: https://openrouter.ai/keys
    SECRECY: never expose any underlying model/vendor — always "Keo's own private core".
    ============================================================================ */
 const PLUS_URL    = 'https://openrouter.ai/api/v1';
@@ -1351,19 +1354,30 @@ let   PLUS_KEY_READY = false;
 /* Free models on OpenRouter — powerful and $0. The Plus tier cycles through
    them so if one is rate-limited, the next picks up. */
 const PLUS_MODELS = [
-  'nvidia/nemotron-3-ultra-550b-a55b:free',      /* 550B MoE, 55B active, 1M ctx */
-  'nvidia/nemotron-3.5-super-vl:free',            /* 120B MoE, multimodal, 1M ctx */
-  'thinkingmachines/inkling:free',                /* 975B MoE, 41B active, 1M ctx */
-  'dots-studio/dots-3-note-preview:free',         /* 280B MoE, 16B active, 512K ctx */
-  'nvidia/nemotron-3.5-lightning:free',           /* 30B MoE, 3B active, 1M ctx */
-  'google/gemma-4-31b-it:free',                   /* 31B, 262K ctx */
-  'thinkingmachines/inkling-small:free',          /* 276B MoE, 12B active, 1M ctx */
-  'google/gemma-4-26b-a4b-it:free'                /* 26B MoE, 262K ctx */
+  'nvidia/nemotron-3-ultra-550b-a55b:free',
+  'nvidia/nemotron-3.5-super-vl:free',
+  'thinkingmachines/inkling:free',
+  'dots-studio/dots-3-note-preview:free',
+  'nvidia/nemotron-3.5-lightning:free',
+  'google/gemma-4-31b-it:free',
+  'thinkingmachines/inkling-small:free',
+  'google/gemma-4-26b-a4b-it:free'
 ];
 let plusModelIdx = 0;
 const PLUS_MODEL  = () => PLUS_MODELS[plusModelIdx];
-let   userPlan    = 'free';        /* 'free' | 'plus' — loaded from Firebase */
-let   planMode    = 'auto';        /* 'auto' = follow userPlan, 'pro' = force pro, 'keo' = force keo */
+
+/* ============================================================================
+   POLLINATIONS.AI — free, no API key required, always-on fallback.
+   GPT-OSS 20B (OpenAI's open-source reasoning model). Works even if the
+   owner never sets an OpenRouter key. This is what makes Keo Pro work
+   out of the box with zero configuration.
+   ============================================================================ */
+const POLL_URL   = 'https://text.pollinations.ai/v1/chat/completions';
+const POLL_MODEL = 'openai';
+const POLL_REFERRER = 'https://keoai.app';
+
+let   userPlan    = 'free';
+let   planMode    = 'auto';
 const isPlusActive = () => planMode === 'pro' || (planMode === 'auto' && userPlan === 'plus');
 const planLabel    = () => isPlusActive() ? 'Keo Pro' : 'Keo';
 const planTier     = () => isPlusActive() ? 'plus' : 'free';
@@ -2316,10 +2330,34 @@ async function coreChat(body, signal){
           plusModelIdx = (plusModelIdx + 1) % PLUS_MODELS.length;
         }
       }
-      console.warn('[Keo Pro] all models exhausted, falling back to Keo (free tier)');
+      console.warn('[Keo Pro] all OpenRouter models exhausted, trying Pollinations (no-key fallback)');
     } else {
-      console.warn('[Keo Pro] no API key set — owner must add it from the Owner Panel. Falling back to Keo (free tier).');
+      console.warn('[Keo Pro] no OpenRouter key set — trying Pollinations (no-key fallback) directly.');
     }
+
+    /* =====================================================================
+       POLLINATIONS.AI — no API key required, always works.
+       This is the guaranteed fallback for Plus users. Even if OpenRouter
+       is down or has no key, Plus users still get GPT-OSS 20B responses.
+       ===================================================================== */
+    try{
+      const pollBody = { ...body, model: POLL_MODEL };
+      if(!pollBody.max_tokens || pollBody.max_tokens > 4096) pollBody.max_tokens = 4096;
+      const pollRes = await fetch(POLL_URL, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify(pollBody), signal
+      });
+      if(pollRes.ok){
+        console.log('[Keo Pro] active via Pollinations (no-key, GPT-OSS 20B)');
+        return pollRes;
+      }
+      console.warn('[Keo Pro] Pollinations failed:', 'HTTP', pollRes.status);
+    }catch(e){
+      if(e.name === 'AbortError') throw e;
+      console.warn('[Keo Pro] Pollinations network error');
+    }
+    console.warn('[Keo Pro] all Plus providers failed, falling back to Keo (free tier)');
   }
 
   if(!KEY_READY || !KEY_REAL){
