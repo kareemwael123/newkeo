@@ -1333,9 +1333,9 @@ let coreIdx = 0, visionIdx = 0;
    The owner can grant Plus to any user by email from the Owner Panel.
    SECRECY: never expose any underlying model/vendor — always "Keo's own private core".
    ============================================================================ */
-const PLUS_URL   = 'https://an..dev/api/v1';
+const PLUS_URL   = 'https://anyrouter.dev/api/v1';
 const PLUS_KEY    = 'sk-ar-v1-p4ihkimqrbxrv3r7hndx3p3na26ztqhoq52ywmy6kcxn5w54';
-const PLUS_MODEL  = 'muse-glimmer-30b';
+const PLUS_MODEL  = 'meta/muse-glimmer-30b';
 let   userPlan    = 'free';        /* 'free' | 'plus' — loaded from Firebase */
 let   planMode    = 'auto';        /* 'auto' = follow userPlan, 'pro' = force pro, 'keo' = force keo */
 const isPlusActive = () => planMode === 'pro' || (planMode === 'auto' && userPlan === 'plus');
