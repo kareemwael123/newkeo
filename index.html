@@ -1094,12 +1094,23 @@ if(document.readyState === 'loading'){
     <div class="conn-head"><b id="admPanelTitle">Owner <i>Panel</i></b><button class="icbtn" id="admClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <p class="conn-sub">Manage Keo's engine credential, admins, and watch live numbers.</p>
     <div class="adm-sec" id="admKeySec">
-      <h4>Engine Credential (fallback)</h4>
+      <h4>Engine Credential (fallback — Keo free tier)</h4>
       <div class="keycard">
         <input id="admKey" type="password" placeholder="Paste fallback credential (gsk_…)">
         <div class="keyrow">
           <button class="btn btn-acc" id="keySave" style="padding:9px 16px;font-size:13px">Save to Firebase</button>
           <span class="keystat" id="keyState">loading…</span>
+        </div>
+      </div>
+    </div>
+    <div class="adm-sec" id="admPlusKeySec">
+      <h4>Keo Pro API Key (OpenRouter — free) ⭐</h4>
+      <p style="font-size:12.5px;color:var(--mut);line-height:1.7;margin-bottom:10px">ده المفتاح اللي بيشغّل Keo Pro للمستخدمين اللي معاهم Plus. احصل على مفتاح <b style="color:var(--acc)">مجاني</b> من <a href="https://openrouter.ai/keys" target="_blank" rel="noopener" style="color:var(--acc)">openrouter.ai/keys</a> — من غير كارت ائتمان، اشتراك مجاني في ثوانيتين.</p>
+      <div class="keycard">
+        <input id="admPlusKey" type="password" placeholder="Paste OpenRouter API key (sk-or-v1-…)">
+        <div class="keyrow">
+          <button class="btn btn-acc" id="plusKeySave" style="padding:9px 16px;font-size:13px">Save to Firebase</button>
+          <span class="keystat" id="plusKeyState">loading…</span>
         </div>
       </div>
     </div>
@@ -1333,9 +1344,24 @@ let coreIdx = 0, visionIdx = 0;
    The owner can grant Plus to any user by email from the Owner Panel.
    SECRECY: never expose any underlying model/vendor — always "Keo's own private core".
    ============================================================================ */
-const PLUS_URL   = 'https://anyrouter.dev/api/v1';
-const PLUS_KEY    = 'sk-ar-v1-p4ihkimqrbxrv3r7hndx3p3na26ztqhoq52ywmy6kcxn5w54';
-const PLUS_MODEL  = 'meta/muse-glimmer-30b';
+const PLUS_URL    = 'https://openrouter.ai/api/v1';
+const PLUS_KEY_DEF = ''; /* default empty — owner sets it from the panel */
+let   PLUS_KEY     = localStorage.getItem('keo_plus_key') || PLUS_KEY_DEF;
+let   PLUS_KEY_READY = false;
+/* Free models on OpenRouter — powerful and $0. The Plus tier cycles through
+   them so if one is rate-limited, the next picks up. */
+const PLUS_MODELS = [
+  'nvidia/nemotron-3-ultra-550b-a55b:free',      /* 550B MoE, 55B active, 1M ctx */
+  'nvidia/nemotron-3.5-super-vl:free',            /* 120B MoE, multimodal, 1M ctx */
+  'thinkingmachines/inkling:free',                /* 975B MoE, 41B active, 1M ctx */
+  'dots-studio/dots-3-note-preview:free',         /* 280B MoE, 16B active, 512K ctx */
+  'nvidia/nemotron-3.5-lightning:free',           /* 30B MoE, 3B active, 1M ctx */
+  'google/gemma-4-31b-it:free',                   /* 31B, 262K ctx */
+  'thinkingmachines/inkling-small:free',          /* 276B MoE, 12B active, 1M ctx */
+  'google/gemma-4-26b-a4b-it:free'                /* 26B MoE, 262K ctx */
+];
+let plusModelIdx = 0;
+const PLUS_MODEL  = () => PLUS_MODELS[plusModelIdx];
 let   userPlan    = 'free';        /* 'free' | 'plus' — loaded from Firebase */
 let   planMode    = 'auto';        /* 'auto' = follow userPlan, 'pro' = force pro, 'keo' = force keo */
 const isPlusActive = () => planMode === 'pro' || (planMode === 'auto' && userPlan === 'plus');
@@ -1521,6 +1547,23 @@ async function fetchKey(){
     }
     KEY_READY = !!KEY_REAL;
   }catch(e){}
+}
+/* Load the Keo Pro (OpenRouter) API key from Firebase. The owner sets it
+   from the Owner Panel — no code editing needed. Falls back to localStorage
+   so the key survives even if Firebase is unreachable. */
+async function fetchPlusKey(){
+  if(!dbOk){ PLUS_KEY_READY = !!PLUS_KEY; return; }
+  try{
+    const s = await firebase.database().ref('config/plusKey').once('value');
+    const v = (s.val()||'').trim();
+    if(v && v !== PLUS_KEY){
+      PLUS_KEY = v;
+      localStorage.setItem('keo_plus_key', v);
+      plusModelIdx = 0;
+      console.log('[Keo Pro] credential refreshed');
+    }
+    PLUS_KEY_READY = !!PLUS_KEY;
+  }catch(e){ PLUS_KEY_READY = !!PLUS_KEY; }
 }
 /* ================== app state ================== */
 let messages = [], chats = {}, currentChatId = null, chatTitle = '';
@@ -2222,34 +2265,60 @@ function sanitizeError(msg){
 const ERR_SW = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported|rate limit|currently loading|gated/i;
 async function coreChat(body, signal){
   /* ========================================================================
-     PLUS TIER — Keo Pro (upgraded Keo tier)
-     Plus users go through the dedicated Plus API first. On any failure
-     (rate limit, network, 5xx) we silently fall back to the standard
-     Keo chain so the user is never left without an answer.
+     PLUS TIER — Keo Pro (upgraded Keo tier via OpenRouter free models)
+     Plus users go through OpenRouter first, cycling through free models.
+     On any failure (rate limit, network, 5xx) we silently fall back to
+     the standard Keo chain so the user is never left without an answer.
      ======================================================================== */
   const hasImage = (body.messages||[]).some(m => Array.isArray(m.content) && m.content.some(p => p.type === 'image_url'));
   if(isPlusActive()){
-    try{
-      const plusBody = { ...body, model: PLUS_MODEL };
-      /* The Plus tier doesn't accept the same max_tokens caps as the
-         fallback chain — keep the original value but cap to a safe 8192. */
-      if(!plusBody.max_tokens || plusBody.max_tokens > 8192) plusBody.max_tokens = 8192;
-      const res = await fetch(PLUS_URL + '/chat/completions', {
-        method:'POST',
-        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + PLUS_KEY },
-        body: JSON.stringify(plusBody), signal
-      });
-      if(res.ok){
-        console.log('[Keo Pro] upgraded tier active');
-        return res;
+    /* Make sure we have a Plus key — load from Firebase if needed */
+    if(!PLUS_KEY_READY){
+      await fetchPlusKey();
+    }
+    if(PLUS_KEY){
+      /* Try up to 3 free models before falling back to Keo (free tier) */
+      for(let attempt = 0; attempt < Math.min(3, PLUS_MODELS.length); attempt++){
+        try{
+          const plusBody = { ...body, model: PLUS_MODEL() };
+          /* OpenRouter free models accept up to ~8192 output tokens */
+          if(!plusBody.max_tokens || plusBody.max_tokens > 8192) plusBody.max_tokens = 8192;
+          const res = await fetch(PLUS_URL + '/chat/completions', {
+            method:'POST',
+            headers:{
+              'Content-Type':'application/json',
+              'Authorization':'Bearer ' + PLUS_KEY,
+              /* OpenRouter recommends these optional headers for analytics */
+              'HTTP-Referer': location.origin || 'https://keoai.app',
+              'X-Title': 'KeoAI'
+            },
+            body: JSON.stringify(plusBody), signal
+          });
+          if(res.ok){
+            console.log('[Keo Pro] active, model:', PLUS_MODEL());
+            return res;
+          }
+          let pmsg = 'HTTP ' + res.status;
+          try{ const j = await res.json(); pmsg = j.error?.message || pmsg; }catch(e){}
+          console.warn('[Keo Pro] model', PLUS_MODEL(), 'failed:', pmsg.slice(0,100));
+          /* 401 = bad key — don't try more models, fall back to Keo */
+          if(res.status === 401 || res.status === 403) break;
+          /* 429 = rate limit on this model → try the next free model */
+          if(res.status === 429 || res.status === 402){
+            plusModelIdx = (plusModelIdx + 1) % PLUS_MODELS.length;
+            continue;
+          }
+          /* Other errors → try next model */
+          plusModelIdx = (plusModelIdx + 1) % PLUS_MODELS.length;
+        }catch(e){
+          if(e.name === 'AbortError') throw e;
+          console.warn('[Keo Pro] network error, trying next model');
+          plusModelIdx = (plusModelIdx + 1) % PLUS_MODELS.length;
+        }
       }
-      let pmsg = 'HTTP ' + res.status;
-      try{ const j = await res.json(); pmsg = j.error?.message || pmsg; }catch(e){}
-      console.warn('[Keo Pro] fall back to Keo (free tier):', pmsg.slice(0,100));
-      /* 401/403 = key issue — don't retry, fall back. 429 = rate limit — fall back. */
-    }catch(e){
-      if(e.name === 'AbortError') throw e;
-      console.warn('[Keo Pro] network fall back to Keo (free tier)');
+      console.warn('[Keo Pro] all models exhausted, falling back to Keo (free tier)');
+    } else {
+      console.warn('[Keo Pro] no API key set — owner must add it from the Owner Panel. Falling back to Keo (free tier).');
     }
   }
 
@@ -3493,10 +3562,11 @@ let __admRows = [];
   $('#admUsersSec').hidden = false;
   $('#admPanelTitle').innerHTML = (adminRole === 'owner' ? 'Owner' : 'Admin') + ' <i>Panel</i>';
   const keySec = $('#admKeySec');
+  const plusKeySec = $('#admPlusKeySec');
   const admSec = $('#admAdminsSec');
   const plusSec = $('#admPlusSec');
-  if(adminRole === 'owner'){ keySec.hidden = false; admSec.hidden = false; plusSec.hidden = false; $('#admPromote').disabled = false; }
-  else { keySec.hidden = true; admSec.hidden = true; plusSec.hidden = true; }
+  if(adminRole === 'owner'){ keySec.hidden = false; plusKeySec.hidden = false; admSec.hidden = false; plusSec.hidden = false; $('#admPromote').disabled = false; }
+  else { keySec.hidden = true; plusKeySec.hidden = true; admSec.hidden = true; plusSec.hidden = true; }
   $('#admCards').innerHTML = '<div class="adm-empty">Loading…</div>';
   $('#admChart').innerHTML = ''; $('#admCompare').innerHTML = ''; $('#admTable').innerHTML = '';
   if(adminRole === 'owner' && dbOk){
@@ -3505,6 +3575,12 @@ let __admRows = [];
       const v = (s.val()||'').trim();
       $('#keyState').innerHTML = v ? 'armed \u2705 (' + v.slice(0,7) + '…' + v.slice(-4) + ')' : 'not armed \u26a0';
     }catch(e){ $('#keyState').textContent = 'read failed'; }
+    /* Load Plus key state */
+    try{
+      const ps = await firebase.database().ref('config/plusKey').once('value');
+      const pv = (ps.val()||'').trim();
+      $('#plusKeyState').innerHTML = pv ? 'armed \u2705 (' + pv.slice(0,10) + '…' + pv.slice(-4) + ')' : 'not armed \u26a0 — Keo Pro won\'t work';
+    }catch(e){ $('#plusKeyState').textContent = 'read failed'; }
     const list = $('#admAdminsList');
     list.innerHTML = '<div class="adm-empty">Loading…</div>';
     try{
@@ -3612,6 +3688,25 @@ let __admRows = [];
     confettiBurst();
     toast('Fallback engine armed \u2705');
     $('#keyState').innerHTML = 'armed \u2705 (' + v.slice(0,7) + '…' + v.slice(-4) + ')';
+  }catch(err){ toast('Save failed: ' + err.message, 'err'); }
+};
+/* Save the Keo Pro (OpenRouter) API key to Firebase */
+ $('#plusKeySave').onclick = async ()=>{
+  if(adminRole !== 'owner') return;
+  const v = $('#admPlusKey').value.trim();
+  if(!v.startsWith('sk-or-')) return toast('OpenRouter keys start with sk-or-','err');
+  if(v.length < 30) return toast('That key looks too short','err');
+  try{
+    await firebase.database().ref('config/plusKey').set(v);
+    /* Update the live variable too so it takes effect immediately */
+    PLUS_KEY = v;
+    PLUS_KEY_READY = true;
+    localStorage.setItem('keo_plus_key', v);
+    plusModelIdx = 0;
+    $('#admPlusKey').value = '';
+    confettiBurst();
+    toast('Keo Pro armed \u2B50 — OpenRouter key saved');
+    $('#plusKeyState').innerHTML = 'armed \u2705 (' + v.slice(0,10) + '…' + v.slice(-4) + ')';
   }catch(err){ toast('Save failed: ' + err.message, 'err'); }
 };
  $('#admPromote').onclick = async ()=>{
@@ -4096,7 +4191,7 @@ async function showApp(){
       $('#btnAdmin').lastChild.textContent = adminRole === 'owner' ? 'Owner' : 'Admin';
     }
   }
-  loadChats(); loadConnections(); fetchKey(); startAutoLoop();
+  loadChats(); loadConnections(); fetchKey(); fetchPlusKey(); startAutoLoop();
   await loadUserPlan();          /* PLUS: load user's plan (free/plus) from Firebase */
   buildPersonaChip();   /* pro: persona switcher chip in composer */
   buildSlashHint();     /* pro: slash command popup */
