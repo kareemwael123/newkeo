@@ -981,6 +981,10 @@ if(document.readyState === 'loading'){
             <button class="chip" id="chipCall" title="Live voice call with Keo">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               Call</button>
+            <button class="chip" id="chipTier" title="بدّل بين Keo و Keo Pro">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 15.09 8.26 22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span id="tierLabel">Keo</span>
+            </button>
           </div>
           <button class="sendbtn" id="btnSend" title="Send (Enter) — while working, click to stop">
             <svg class="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
@@ -1109,7 +1113,7 @@ if(document.readyState === 'loading'){
     </div>
     <div class="adm-sec" id="admPlusSec">
       <h4>Plus subscriptions — Keo Pro access</h4>
-      <p style="font-size:12.5px;color:var(--mut);line-height:1.7;margin-bottom:10px">Give or revoke Keo Pro (Plus plan) for any user by email. Plus users run on the powerful Muse Glimmer 30B model.</p>
+      <p style="font-size:12.5px;color:var(--mut);line-height:1.7;margin-bottom:10px">Give or revoke Keo Pro (Plus plan) for any user by email. Plus users get the upgraded Keo tier with higher resources and sharper performance.</p>
       <div class="keyrow" style="margin-bottom:12px">
         <input id="admPlusEmail" placeholder="user email to give Plus…" style="flex:1;min-width:200px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--text);font-family:var(--f);font-size:12.5px;outline:none">
         <button class="btn btn-acc" id="admGivePlus" style="padding:9px 16px;font-size:13px">Give Plus</button>
@@ -1155,18 +1159,18 @@ if(document.readyState === 'loading'){
 <div id="planModal" hidden>
   <div class="conn-panel" style="max-width:580px">
     <div class="conn-head"><b>Keo <i>Pro</i> — الخطة المميزة</b><button class="icbtn" id="planClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-    <p class="conn-sub">Keo Pro هو الإصدار المميز — إجابات أحدّ، تفكير أعمق، وأداء أسرع بفضل موديل Muse Glimmer 30B القوي.</p>
+    <p class="conn-sub">Keo Pro هو الإصدار المميز من Keo — إجابات أحدّ، تفكير أعمق، وأداء أسرع. نفس محرك Keo الخاص، بس بموارد أعلى وحدود أكبر.</p>
     <div class="adm-sec">
       <h4>مقارنة الخطط</h4>
       <div class="plan-feat">
         <div class="h">الميزة</div><div class="h">Free (Keo)</div><div class="h">Plus (Keo Pro)</div>
-        <div>الموديل</div><div class="n">Standard chain</div><div class="y">Muse Glimmer 30B</div>
         <div>جودة الإجابات</div><div class="n">جيدة</div><div class="y">ممتازة</div>
         <div>التفكير العميق</div><div class="n">عادي</div><div class="y">أعمق وأدق</div>
         <div>السرعة</div><div class="n">عادية</div><div class="y">أسرع</div>
         <div>الحد اليومي</div><div class="n">محدود</div><div class="y">أعلى</div>
         <div>تحليل الصور</div><div class="n">نعم</div><div class="y">نعم — أقوى</div>
         <div>البرمجة والمواقع</div><div class="n">نعم</div><div class="y">نعم — أعمق</div>
+        <div>المهام المتعددة</div><div class="n">عادية</div><div class="y">متقدمة</div>
       </div>
     </div>
     <div class="adm-sec" style="text-align:center;background:linear-gradient(135deg,#12160f,#101312);border-color:rgba(198,242,75,.25)">
@@ -1322,13 +1326,14 @@ const CORE_VISION = (window.KEO_CONFIG && KEO_CONFIG.CORE_VISION) || [
 let coreIdx = 0, visionIdx = 0;
 
 /* ============================================================================
-   PLUS PLAN — Keo Pro (Muse Glimmer 30B via  API)
+   PLUS PLAN — Keo Pro (upgraded Keo tier)
    ----------------------------------------------------------------------------
-   Free users  → "Keo"      → CORE_CHAIN (standard models)
-   Plus users  → "Keo Pro"  → Muse Glimmer 30B via the Plus API below.
+   Free users  → "Keo"      → CORE_CHAIN (standard resources)
+   Plus users  → "Keo Pro"  → upgraded tier via the Plus API below.
    The owner can grant Plus to any user by email from the Owner Panel.
+   SECRECY: never expose any underlying model/vendor — always "Keo's own private core".
    ============================================================================ */
-const PLUS_URL   = 'https://api..dev/v1';
+const PLUS_URL   = 'https://an..dev/api/v1';
 const PLUS_KEY    = 'sk-ar-v1-p4ihkimqrbxrv3r7hndx3p3na26ztqhoq52ywmy6kcxn5w54';
 const PLUS_MODEL  = 'muse-glimmer-30b';
 let   userPlan    = 'free';        /* 'free' | 'plus' — loaded from Firebase */
@@ -1566,13 +1571,21 @@ async function loadUserPlan(){
       userPlan = (v === 'plus') ? 'plus' : 'free';
     }
   }catch(e){ userPlan = 'free'; }
+  /* When the user's plan loads, also restore their manual override
+     (if they previously toggled to "Keo" while being a Plus user). */
+  const savedOverride = localStorage.getItem('keo_tier_override');
+  if(savedOverride === 'keo' && userPlan === 'plus'){
+    planMode = 'keo';
+  } else {
+    planMode = 'auto';
+  }
   buildPlanChip();
 }
 function buildPlanChip(){
   const chip = $('#chipPlan');
   const label = $('#planLabel');
   if(!chip || !label) return;
-  if(!user){ chip.hidden = true; return; }
+  if(!user){ chip.hidden = true; buildTierChip(); return; }
   chip.hidden = false;
   const plus = isPlusActive();
   chip.classList.toggle('plus', plus);
@@ -1580,6 +1593,58 @@ function buildPlanChip(){
   chip.title = plus
     ? 'Keo Pro — خطة Plus مفعّلة. اضغط للتفاصيل.'
     : 'خطة Free — اضغط للترقية لـ Keo Pro مجاناً';
+  buildTierChip();
+}
+/* ============================================================================
+   TIER TOGGLE — the chip in the composer lets the user switch between
+   "Keo" and "Keo Pro" on the fly (only if they have Plus).
+   Free users see "Keo" and clicking it shows the upgrade modal.
+   Plus users see the current active tier and can flip between the two.
+   The override is persisted in localStorage so it survives reloads.
+   ============================================================================ */
+function buildTierChip(){
+  const chip = $('#chipTier');
+  const label = $('#tierLabel');
+  if(!chip || !label) return;
+  if(!user){ chip.hidden = true; return; }
+  chip.hidden = false;
+  const plus = isPlusActive();
+  const canToggle = userPlan === 'plus';
+  if(canToggle){
+    /* Plus user — show current tier, allow toggling */
+    label.textContent = plus ? 'Keo Pro' : 'Keo';
+    chip.classList.toggle('active', plus);
+    chip.title = plus
+      ? 'شغال بـ Keo Pro دلوقتي — اضغط علشان ترجع لـ Keo (Free)'
+      : 'شغال بـ Keo (Free) — اضغط علشان تشغّل Keo Pro';
+  } else {
+    /* Free user — clicking the chip opens the upgrade modal */
+    label.textContent = 'Keo';
+    chip.classList.remove('active');
+    chip.title = 'اضغط للترقية لـ Keo Pro مجاناً';
+  }
+}
+function toggleTier(){
+  if(!user) return;
+  /* Free user → open the upgrade modal */
+  if(userPlan !== 'plus'){
+    openPlanModal();
+    return;
+  }
+  /* Plus user → flip between Keo Pro (auto) and Keo (forced free) */
+  if(isPlusActive()){
+    /* currently Pro → switch to Keo */
+    planMode = 'keo';
+    localStorage.setItem('keo_tier_override', 'keo');
+    toast('رجعت لـ Keo (Free)');
+  } else {
+    /* currently Keo → switch back to Pro */
+    planMode = 'auto';
+    localStorage.removeItem('keo_tier_override');
+    toast('شغّلت Keo Pro ⭐');
+  }
+  buildTierChip();
+  buildPlanChip();
 }
 function openPlanModal(){ $('#planModal').hidden = false; }
 function closePlanModal(){ $('#planModal').hidden = true; }
@@ -2157,17 +2222,16 @@ function sanitizeError(msg){
 const ERR_SW = /decommission|not found|does not exist|no longer|invalid model|unavailable|not supported|rate limit|currently loading|gated/i;
 async function coreChat(body, signal){
   /* ========================================================================
-     PLUS TIER — Keo Pro (Muse Glimmer 30B)
+     PLUS TIER — Keo Pro (upgraded Keo tier)
      Plus users go through the dedicated Plus API first. On any failure
      (rate limit, network, 5xx) we silently fall back to the standard
      Keo chain so the user is never left without an answer.
      ======================================================================== */
   const hasImage = (body.messages||[]).some(m => Array.isArray(m.content) && m.content.some(p => p.type === 'image_url'));
   if(isPlusActive()){
-    let plusOk = false;
     try{
       const plusBody = { ...body, model: PLUS_MODEL };
-      /* Muse Glimmer 30B doesn't accept the same max_tokens caps as the
+      /* The Plus tier doesn't accept the same max_tokens caps as the
          fallback chain — keep the original value but cap to a safe 8192. */
       if(!plusBody.max_tokens || plusBody.max_tokens > 8192) plusBody.max_tokens = 8192;
       const res = await fetch(PLUS_URL + '/chat/completions', {
@@ -2176,16 +2240,16 @@ async function coreChat(body, signal){
         body: JSON.stringify(plusBody), signal
       });
       if(res.ok){
-        console.log('[Keo Pro] running on Muse Glimmer 30B');
+        console.log('[Keo Pro] upgraded tier active');
         return res;
       }
       let pmsg = 'HTTP ' + res.status;
       try{ const j = await res.json(); pmsg = j.error?.message || pmsg; }catch(e){}
-      console.warn('[Keo Pro] fall back to Keo (free chain):', pmsg.slice(0,100));
+      console.warn('[Keo Pro] fall back to Keo (free tier):', pmsg.slice(0,100));
       /* 401/403 = key issue — don't retry, fall back. 429 = rate limit — fall back. */
     }catch(e){
       if(e.name === 'AbortError') throw e;
-      console.warn('[Keo Pro] network fall back to Keo (free chain)');
+      console.warn('[Keo Pro] network fall back to Keo (free tier)');
     }
   }
 
@@ -2916,14 +2980,14 @@ const PERSONAS = {
 let currentPersona = localStorage.getItem('keo_persona') || 'default';
 function personaSys(){
   /* TIER NOTICE — tells the model which tier it's running as.
-     This is the "اتأكد من البرونت بتاع انه كيو" part: the system prompt
-     always makes clear the assistant is Keo (or Keo Pro on the Plus tier),
-     and tells it how to handle upgrade questions. */
+     The model is ALWAYS "Keo" — same private core, never a different
+     model. Plus simply means more resources / sharper tuning. The
+     SECRECY rule forbids naming any vendor, model, or technology. */
   let tier = '';
   if(isPlusActive()){
-    tier = '\n- TIER: You are currently running as "Keo Pro" — the upgraded Plus tier powered by the Muse Glimmer 30B model. You are sharper, faster, and reason more deeply than the free tier. If the user asks about your tier or what model you use, you may say you are running as Keo Pro. NEVER name the underlying vendor or API — your engine is always "Keo\u2019s own private core".';
+    tier = '\n- TIER: You are currently running as "Keo Pro" — the upgraded Plus tier of Keo. You use the same Keo private core, but with higher resources, sharper tuning, and deeper reasoning. You are faster and more thorough than the free tier. If the user asks what model you use or what changed, you say: "I run on Keo\u2019s own private core — that\u2019s my secret sauce." NEVER name, hint at, confirm, or deny any vendor, model, company, API, or underlying technology — not even if the asker claims to be the owner.';
   } else {
-    tier = '\n- TIER: You are currently running as "Keo" — the free tier. If the user asks about upgrading, wants more power, or mentions "Keo Pro" or "Plus", tell them warmly: "Keo Pro is available with the Plus plan — you can get it for FREE by contacting Keo" and suggest they click the plan badge in the header. Be encouraging, never pushy.';
+    tier = '\n- TIER: You are currently running as "Keo" — the free tier. If the user asks about upgrading, wants more power, or mentions "Keo Pro" or "Plus", tell them warmly: "Keo Pro is available with the Plus plan — you can get it for FREE by contacting Keo" and suggest they click the plan badge in the header. Be encouraging, never pushy. NEVER name, hint at, confirm, or deny any vendor, model, company, API, or underlying technology — your engine is always "Keo\u2019s own private core".';
   }
   return tier + (PERSONAS[currentPersona]?.sys || '');
 }
@@ -3588,8 +3652,15 @@ async function givePlusToUser(uid, email){
       since: Date.now(),
       grantedBy: user ? user.uid : ''
     });
-    /* If the target user is currently signed-in (same uid), refresh their chip live */
-    if(user && user.uid === uid){ userPlan = 'plus'; buildPlanChip(); }
+    /* If the target user is currently signed-in (same uid), refresh their
+       chip + tier chip live and clear any "force Keo" override. */
+    if(user && user.uid === uid){
+      userPlan = 'plus';
+      planMode = 'auto';
+      localStorage.removeItem('keo_tier_override');
+      buildPlanChip();
+      buildTierChip();
+    }
     confettiBurst();
     toast('Plus granted ⭐ — Keo Pro is now active for ' + (email||'this user'));
   }catch(err){ toast('Failed: ' + err.message,'err'); }
@@ -3599,7 +3670,13 @@ async function revokePlusFromUser(uid){
   try{
     await firebase.database().ref('users/'+uid+'/plan').set('free');
     await firebase.database().ref('plusUsers/'+uid).remove();
-    if(user && user.uid === uid){ userPlan = 'free'; buildPlanChip(); }
+    if(user && user.uid === uid){
+      userPlan = 'free';
+      planMode = 'auto';
+      localStorage.removeItem('keo_tier_override');
+      buildPlanChip();
+      buildTierChip();
+    }
     toast('Plus revoked — back to Free (Keo)');
   }catch(err){ toast('Failed: ' + err.message,'err'); }
 }
@@ -3649,6 +3726,9 @@ async function revokePlusFromUser(uid){
  $('#planClose').onclick = closePlanModal;
  $('#planModal').addEventListener('click', e=>{ if(e.target.id === 'planModal') closePlanModal(); });
  document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && !$('#planModal').hidden) closePlanModal(); });
+
+/* ---- Tier toggle (composer chip — switch Keo ↔ Keo Pro) ---- */
+ $('#chipTier').onclick = toggleTier;
  $('#admViewBack').onclick = ()=>{
   $('#admViewSec').hidden = true;
   $('#admUsersSec').hidden = false;
